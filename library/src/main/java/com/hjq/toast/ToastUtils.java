@@ -2,8 +2,10 @@ package com.hjq.toast;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Looper;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,12 +48,18 @@ public final class ToastUtils {
         textView.setPadding(DimensUtils.dp2px(context, sDefaultStyle.getPaddingLeft()), DimensUtils.dp2px(context, sDefaultStyle.getPaddingTop()),
                 DimensUtils.dp2px(context, sDefaultStyle.getPaddingRight()), DimensUtils.dp2px(context, sDefaultStyle.getPaddingBottom()));
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        textView.setBackgroundDrawable(drawable);
+        //setBackground API版本兼容
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            textView.setBackground(drawable);
+        }else {
+            textView.setBackgroundDrawable(drawable);
+        }
+
         if (sDefaultStyle.getMaxLines() > 0) {
             textView.setMaxLines(sDefaultStyle.getMaxLines());
         }
 
-        sToast = new Toast(context);
+        sToast = new XToast(context);
         sToast.setGravity(sDefaultStyle.getGravity(), sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
         sToast.setView(textView);
     }
@@ -76,26 +84,32 @@ public final class ToastUtils {
      */
     public static void show(CharSequence text) {
 
-        if (sToast == null || text == null || text.equals("")) return;
+        //吐司工具类还没有被初始化，必须要先调用init方法进行初始化
+        if (sToast == null) {
+            throw new IllegalStateException("ToastUtils has not been initialized");
+        }
 
-        //如果显示的文字超过了10个就显示长吐司，否则显示短吐司
+        if (text == null || text.equals("")) return;
+
+       //如果显示的文字超过了10个就显示长吐司，否则显示短吐司
         if (text.length() > 20) {
             sToast.setDuration(Toast.LENGTH_LONG);
         } else {
             sToast.setDuration(Toast.LENGTH_SHORT);
         }
 
-        //子线程中异常情况处理
         try {
-            ((TextView) sToast.getView()).setText(text);
-            sToast.show();
-        } catch (RuntimeException e) {
-            try {
+            //判断是否在主线程中执行
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                sToast.setText(text);
+                sToast.show();
+            }else {
+                //在子线程中显示处理
                 Looper.prepare();
-                ((TextView) sToast.getView()).setText(text);
+                sToast.setText(text);
                 sToast.show();
                 Looper.loop();
-            } catch (Exception ignored) {}
+            }
         } catch (Exception ignored) {}
     }
 
@@ -107,6 +121,13 @@ public final class ToastUtils {
     }
 
     /**
+     * 给当前Toast设置新的布局
+     */
+    public static void setView(View view) {
+        sToast.setView(view);
+    }
+
+    /**
      * 初始化Toast样式
      *
      * @param style         样式实现类
@@ -115,6 +136,9 @@ public final class ToastUtils {
         ToastUtils.sDefaultStyle = style;
         //如果吐司已经创建，就重新初始化吐司
         if (sToast != null) {
+            //取消原有吐司的显示
+            sToast.cancel();
+            //重新初始化吐司类
             init(sToast.getView().getContext().getApplicationContext());
         }
     }

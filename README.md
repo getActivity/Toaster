@@ -4,35 +4,42 @@
 
 > 已投入公司项目多时，没有任何毛病，可胜任任何需求，[点击此处下载Demo](https://raw.githubusercontent.com/getActivity/ToastUtils/master/ToastUtils.apk)
 
-> 想了解实现原理的可以点击此链接查看ToastUtils源码：[ToastUtils](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/bar/ToastUtils.java)
+> 想了解实现原理的可以点击此链接查看ToastUtils源码：[ToastUtils](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/toast/ToastUtils.java)
 
 ![](ToastUtils.gif)
 
 #### 集成步骤
 
     dependencies {
-        implementation 'com.hjq:toast:1.5'
+        implementation 'com.hjq:toast:2.0'
     }
 
 #### 初始化Toast
 
-	//建议在Application中初始化
+    //建议在Application中初始化
     ToastUtils.init(getApplicationContext());
 
 #### 显示Toast
 
-	ToastUtils.show("我是吐司");
+    ToastUtils.show("我是吐司");
+
+#### 获取Toast对象
+
+    ToastUtils.getToast();
+
+#### 设置Toast布局
+
+    ToastUtils.setView();
 
 #### 自定义Toast样式
 
-> 如果对Toast的默认样式不满意，可以在Application初始化样式，具体可参考[ToastBlackStyle](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/bar/ToastBlackStyle.java)类的实现
+> 如果对Toast的默认样式不满意，可以在Application初始化样式，具体可参考[ToastBlackStyle](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/toast/ToastBlackStyle.java)类的实现
 
-	ToastUtils.initStyle(new IToastStyle());
-	ToastUtils.init(getApplicationContext());
+    ToastUtils.initStyle(new IToastStyle());
 
 #### 框架亮点
 
-* 功能强大：不分主次线程都可以弹出Toast，支持打印对象
+* 功能强大：不分主次线程都可以弹出Toast，防崩溃处理
 
 * 使用简单：只需传入文本，会自动根据文本长度决定吐司显示的时长
 
@@ -42,13 +49,13 @@
 
 * 支持多种样式：默认为黑色样式，夜间模式可使用白色样式，还有仿QQ吐司样式
 
-* 支持自定义样式：吐司（背景，圆角，重心，偏移），文字（大小，颜色，边距）
+* 支持自定义样式：吐司（背景、圆角、重心、偏移），文字（大小、颜色、边距）
 
-* 支持自定义扩展：可以在代码中获取Toast对象，可以调用Toast的任意API
+* 支持自定义扩展：支持获取ToastUtils中的Toast对象，支持重新自定义Toast布局
 
-* 框架兼容性良好：本框架不依赖任何第三方库，支持Eclipse和Studio的使用
+* 支持全局配置样式：可以在Application中初始化Toast样式，达到一劳永逸的效果
 
-* 支持全局配置样式：可以在Application中初始化ToastUtils样式，达到一劳永逸的效果
+* 框架兼容性良好：本框架不依赖任何第三方库，支持Eclipse和Studio的集成使用
 
 #### Android技术讨论Q群：78797078
 
