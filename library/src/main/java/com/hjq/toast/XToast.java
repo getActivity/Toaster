@@ -1,7 +1,6 @@
 package com.hjq.toast;
 
 import android.content.Context;
-import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,11 +17,7 @@ final class XToast extends Toast {
     private TextView mTextView;
 
     XToast(Context context) {
-        this(context, Looper.getMainLooper());
-    }
-
-    XToast(Context context, Looper looper) {
-        super(context, looper);
+        super(context);
     }
 
     @Override
@@ -39,7 +34,7 @@ final class XToast extends Toast {
                 }
             }
         }
-        //如果设置的布局没有包含一个TextView则抛出异常，必须要有一个TextView
+        //如果设置的布局没有包含一个TextView则抛出异常，必须要包含一个TextView作为Message对象
         throw new IllegalArgumentException("The layout must contain a TextView");
     }
 

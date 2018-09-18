@@ -1,6 +1,7 @@
 package com.hjq.toast;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Looper;
@@ -70,10 +71,28 @@ public final class ToastUtils {
      * @param object      对象
      */
     public static void show(Object object) {
-        if (object != null) {
-            show(object.toString());
-        }else {
-            show("null");
+        show(object != null ? object.toString() : "null");
+    }
+
+    /**
+     * 显示一个吐司
+     *
+     * @param id      如果传入的是正确的string id就显示对应字符串
+     *                如果不是则显示一个整数的string
+     */
+    public static void show(int id) {
+
+        //吐司工具类还没有被初始化，必须要先调用init方法进行初始化
+        if (sToast == null) {
+            throw new IllegalStateException("ToastUtils has not been initialized");
+        }
+
+        try {
+            //如果这是一个资源id
+            show(sToast.getView().getContext().getResources().getText(id));
+        } catch (Resources.NotFoundException ignored) {
+            //如果这是一个int类型
+            show(String.valueOf(id));
         }
     }
 
@@ -124,6 +143,9 @@ public final class ToastUtils {
      * 给当前Toast设置新的布局
      */
     public static void setView(View view) {
+        if (view == null) {
+            throw new IllegalArgumentException("Views cannot be empty");
+        }
         sToast.setView(view);
     }
 

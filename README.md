@@ -11,7 +11,7 @@
 #### 集成步骤
 
     dependencies {
-        implementation 'com.hjq:toast:2.0'
+        implementation 'com.hjq:toast:2.2'
     }
 
 #### 初始化Toast
@@ -39,7 +39,7 @@
 
 #### 框架亮点
 
-* 功能强大：不分主次线程都可以弹出Toast，防崩溃处理
+* 功能强大：不分主次线程都可以弹出Toast，自动区分资源id和int类型
 
 * 使用简单：只需传入文本，会自动根据文本长度决定吐司显示的时长
 
