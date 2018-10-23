@@ -11,7 +11,7 @@
 #### 集成步骤
 
     dependencies {
-        implementation 'com.hjq:toast:2.2'
+        implementation 'com.hjq:toast:2.5'
     }
 
 #### 初始化Toast
@@ -33,7 +33,7 @@
 
 #### 自定义Toast样式
 
-> 如果对Toast的默认样式不满意，可以在Application初始化样式，具体可参考[ToastBlackStyle](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/toast/ToastBlackStyle.java)类的实现
+> 如果对Toast的默认样式不满意，可以在Application初始化样式，具体可参考[ToastBlackStyle](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/toast/style/ToastBlackStyle.java)类的实现
 
     ToastUtils.initStyle(new IToastStyle());
 

@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.hjq.toast.ToastBlackStyle;
-import com.hjq.toast.ToastQQStyle;
 import com.hjq.toast.ToastUtils;
-import com.hjq.toast.ToastWhiteStyle;
+import com.hjq.toast.style.ToastBlackStyle;
+import com.hjq.toast.style.ToastQQStyle;
+import com.hjq.toast.style.ToastWhiteStyle;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void show1(View v) {
+    public void show1(final View v) {
         ToastUtils.show("我是吐司");
     }
 
@@ -46,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void show6(View v) {
+        ToastUtils.setView(this, R.layout.toast_custom_view);
+        ToastUtils.show("我是自定义Toast");
+    }
+
+    public void show7(View v) {
         ToastUtils.show(this);
     }
 }

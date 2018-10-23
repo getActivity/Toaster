@@ -70,6 +70,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:onClick="show6"
+                android:text="点我自定义Toast布局" />
+
+            <Button
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:onClick="show7"
                 android:text="打印当前Activity对象" />
         </LinearLayout>
 

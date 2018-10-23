@@ -1,14 +1,16 @@
-package com.hjq.toast;
+package com.hjq.toast.style;
 
 import android.view.Gravity;
+
+import com.hjq.toast.IToastStyle;
 
 /**
  *    author : HJQ
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/09/01
- *    desc   : 默认黑色样式实现
+ *    desc   : QQ样式实现
  */
-public class ToastBlackStyle implements IToastStyle {
+public class ToastQQStyle implements IToastStyle {
 
     @Override
     public int getGravity() {
@@ -26,23 +28,28 @@ public class ToastBlackStyle implements IToastStyle {
     }
 
     @Override
+    public int getZ() {
+        return 0;
+    }
+
+    @Override
     public int getCornerRadius() {
-        return 7;
+        return 4;
     }
 
     @Override
     public int getBackgroundColor() {
-        return 0X88000000;
+        return 0XFF333333;
     }
 
     @Override
     public int getTextColor() {
-        return 0XEEFFFFFF;
+        return 0XFFE3E3E3;
     }
 
     @Override
     public float getTextSize() {
-        return 16;
+        return 12;
     }
 
     @Override
@@ -52,12 +59,12 @@ public class ToastBlackStyle implements IToastStyle {
 
     @Override
     public int getPaddingLeft() {
-        return 30;
+        return 16;
     }
 
     @Override
     public int getPaddingTop() {
-        return 20;
+        return 14;
     }
 
     @Override
