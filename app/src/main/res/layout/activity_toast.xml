@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".ToastActivity">
 
     <com.hjq.bar.TitleBar
         android:layout_width="match_parent"
@@ -17,7 +17,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -78,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:onClick="show7"
-                android:text="打印当前Activity对象" />
+                android:text="判断当前是否有通知栏权限" />
         </LinearLayout>
 
     </FrameLayout>

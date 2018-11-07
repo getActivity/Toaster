@@ -4,20 +4,20 @@
 
 > 已投入公司项目多时，没有任何毛病，可胜任任何需求，[点击此处下载Demo](https://raw.githubusercontent.com/getActivity/ToastUtils/master/ToastUtils.apk)
 
-> 想了解实现原理的可以点击此链接查看：[XToast](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/toast/XToast.java) 和 [ToastUtils](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/toast/ToastUtils.java) 源码
+> 想了解实现原理的可以点击此链接查看：[ToastUtils](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/toast/ToastUtils.java) 源码
 
 ![](ToastUtils.gif)
 
 #### 集成步骤
 
     dependencies {
-        implementation 'com.hjq:toast:2.5'
+        implementation 'com.hjq:toast:3.0'
     }
 
 #### 初始化Toast
 
-    //建议在Application中初始化
-    ToastUtils.init(getApplicationContext());
+    // 在Application中初始化
+    ToastUtils.init(this);
 
 #### 显示Toast
 
@@ -39,6 +39,8 @@
 
 #### 框架亮点
 
+* 无需权限：不管有没有授予通知栏权限都不影响吐司的弹出
+
 * 功能强大：不分主次线程都可以弹出Toast，自动区分资源id和int类型
 
 * 使用简单：只需传入文本，会自动根据文本长度决定吐司显示的时长
@@ -57,7 +59,19 @@
 
 * 框架兼容性良好：本框架不依赖任何第三方库，支持Eclipse和Studio的集成使用
 
+#### 关于通知栏权限
+
+> 本框架已经完美解决这个问题
+
+![](issue_taobao.gif)
+
+![](issue_utils.gif)
+
 #### Android技术讨论Q群：78797078
+
+#### 如果您觉得我的开源库帮你节省了大量的开发时间，请扫描下方的二维码随意打赏，要是能打赏个 10.24 :monkey_face:就太:thumbsup:了。您的支持将鼓励我继续创作:octocat:
+
+![](pay_ali.png) ![](pay_wechat.png)
 
 ## License
 

@@ -9,12 +9,12 @@ import com.hjq.toast.style.ToastBlackStyle;
 import com.hjq.toast.style.ToastQQStyle;
 import com.hjq.toast.style.ToastWhiteStyle;
 
-public class MainActivity extends AppCompatActivity {
+public class ToastActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_toast);
     }
 
     public void show1(final View v) {
@@ -51,6 +51,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void show7(View v) {
-        ToastUtils.show(this);
+        ToastUtils.show(ToastUtils.isNotificationEnabled(this));
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // 如果通知栏的权限被手动关闭了
+        if (!ToastUtils.isNotificationEnabled(this) && "XToast".equals(ToastUtils.getToast().getClass().getSimpleName())) {
+            // 因为吐司只有初始化的时候才会判断通知权限有没有开启，根据这个通知开关来显示原生的吐司还是兼容的吐司
+            ToastUtils.init(getApplication());
+            recreate();
+            ToastUtils.show("检查到你手动关闭了通知权限，现在只能通过重启应用，吐司才能正常显示出来");
+        }
     }
 }

@@ -5,13 +5,17 @@ import android.app.Application;
 /**
  *    author : HJQ
  *    github : https://github.com/getActivity/ToastUtils
- *    time   : 2018/09/17
- *    desc   : 防止频繁弹出的Toast
+ *    time   : 2018/11/02
+ *    desc   : 不需要通知栏权限的 Toast
  */
-final class XToast extends BaseToast {
+final class SupportToast extends BaseToast {
 
-    XToast(Application application) {
+    // 吐司弹窗显示辅助类
+    private ToastHelper mToastHelper;
+
+    SupportToast(Application application) {
         super(application);
+        mToastHelper = new ToastHelper(this, application);
     }
 
     @Override
@@ -30,7 +34,7 @@ final class XToast extends BaseToast {
         // 设置吐司文本
         getMessageView().setText(getText());
         // 显示吐司
-        super.show();
+        mToastHelper.show();
     }
 
     @Override
@@ -38,6 +42,6 @@ final class XToast extends BaseToast {
         // 移除之前显示吐司的任务
         getHandler().removeCallbacks(this);
         // 取消显示
-        super.cancel();
+        mToastHelper.cancel();
     }
 }
