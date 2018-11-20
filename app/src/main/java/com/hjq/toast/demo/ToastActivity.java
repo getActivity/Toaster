@@ -18,7 +18,7 @@ public class ToastActivity extends AppCompatActivity {
     }
 
     public void show1(final View v) {
-        ToastUtils.show("我是吐司");
+        ToastUtils.show("我是一个普通的吐司");
     }
 
     public void show2(View v) {
@@ -62,7 +62,7 @@ public class ToastActivity extends AppCompatActivity {
             // 因为吐司只有初始化的时候才会判断通知权限有没有开启，根据这个通知开关来显示原生的吐司还是兼容的吐司
             ToastUtils.init(getApplication());
             recreate();
-            ToastUtils.show("检查到你手动关闭了通知权限，现在只能通过重启应用，吐司才能正常显示出来");
+            ToastUtils.show("检查到你手动关闭了通知权限，正在重新初始化框架，只有这样吐司才能正常显示出来");
         }
     }
 }

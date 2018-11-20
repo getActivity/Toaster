@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -26,16 +27,18 @@ import java.lang.reflect.Method;
  *    author : HJQ
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/09/01
- *    desc   : Toast工具类
+ *    desc   : Toast 工具类
  */
 public final class ToastUtils {
+
+    private static ToastHandler sToastHandler;
 
     private static IToastStyle sDefaultStyle;
 
     private static Toast sToast;
 
     /**
-     * 初始化ToastUtils，建议在Application中初始化
+     * 初始化ToastUtils，在Application中初始化
      *
      * @param application       应用的上下文
      */
@@ -52,8 +55,27 @@ public final class ToastUtils {
             sToast = new SupportToast(application);
         }
 
-        sToast.setGravity(sDefaultStyle.getGravity(), sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
+        final int gravity;
+        // 适配 Android 4.2 新特性，布局反方向（开发者选项 - 强制使用从右到左的布局方向）
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            gravity = Gravity.getAbsoluteGravity(sDefaultStyle.getGravity(), application.getResources().getConfiguration().getLayoutDirection());
+        } else {
+            gravity = sDefaultStyle.getGravity();
+        }
+        sToast.setGravity(gravity, sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
+
         sToast.setView(createTextView(application));
+
+        // 创建一个吐司处理类
+        sToastHandler = new ToastHandler(sToast);
+    }
+
+    /**
+     * 初始化 ToastUtils 及样式
+     */
+    public static void init(Application application, IToastStyle style) {
+        initStyle(style);
+        init(application);
     }
 
     /**
@@ -95,23 +117,16 @@ public final class ToastUtils {
 
         if (text == null || text.equals("")) return;
 
-       // 如果显示的文字超过了10个就显示长吐司，否则显示短吐司
-        if (text.length() > 20) {
-            sToast.setDuration(Toast.LENGTH_LONG);
-        } else {
-            sToast.setDuration(Toast.LENGTH_SHORT);
-        }
-
-        sToast.setText(text);
-        sToast.show();
+        sToastHandler.setText(text);
+        sToastHandler.show();
     }
 
     /**
      * 取消吐司的显示
      */
-    public void cancel() {
+    public static void cancel() {
         checkToastState();
-        sToast.cancel();
+        sToastHandler.cancel();
     }
 
     /**
@@ -141,7 +156,7 @@ public final class ToastUtils {
 
         // 如果吐司已经创建，就重新初始化吐司
         if (sToast != null) {
-            //取消原有吐司的显示
+            // 取消原有吐司的显示
             sToast.cancel();
             sToast.setView(view);
         }
@@ -159,9 +174,10 @@ public final class ToastUtils {
         ToastUtils.sDefaultStyle = style;
         // 如果吐司已经创建，就重新初始化吐司
         if (sToast != null) {
-            //取消原有吐司的显示
+            // 取消原有吐司的显示
             sToast.cancel();
             sToast.setView(createTextView(sToast.getView().getContext().getApplicationContext()));
+            sToast.setGravity(sDefaultStyle.getGravity(), sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
         }
     }
 
@@ -169,7 +185,7 @@ public final class ToastUtils {
      * 检查吐司状态，如果未初始化请先调用{@link ToastUtils#init(Application)}
      */
     private static void checkToastState() {
-        //吐司工具类还没有被初始化，必须要先调用init方法进行初始化
+        // 吐司工具类还没有被初始化，必须要先调用init方法进行初始化
         if (sToast == null) {
             throw new IllegalStateException("ToastUtils has not been initialized");
         }
@@ -181,11 +197,13 @@ public final class ToastUtils {
     private static TextView createTextView(Context context) {
 
         GradientDrawable drawable = new GradientDrawable();
-        drawable.setColor(sDefaultStyle.getBackgroundColor()); // 设置背景色
-        drawable.setCornerRadius(dp2px(context, sDefaultStyle.getCornerRadius())); // 设置圆角
+        // 设置背景色
+        drawable.setColor(sDefaultStyle.getBackgroundColor());
+        // 设置圆角大小
+        drawable.setCornerRadius(dp2px(context, sDefaultStyle.getCornerRadius()));
 
         TextView textView = new TextView(context);
-        textView.setId(R.id.toast_main_text_view_id);
+        textView.setId(android.R.id.message);
         textView.setTextColor(sDefaultStyle.getTextColor());
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, sp2px(context, sDefaultStyle.getTextSize()));
         textView.setPadding(dp2px(context, sDefaultStyle.getPaddingLeft()), dp2px(context, sDefaultStyle.getPaddingTop()),
@@ -199,11 +217,13 @@ public final class ToastUtils {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            textView.setZ(sDefaultStyle.getZ()); // 设置 Z 轴阴影
+            // 设置 Z 轴阴影
+            textView.setZ(sDefaultStyle.getZ());
         }
 
         if (sDefaultStyle.getMaxLines() > 0) {
-            textView.setMaxLines(sDefaultStyle.getMaxLines()); // 设置最大显示行数
+            // 设置最大显示行数
+            textView.setMaxLines(sDefaultStyle.getMaxLines());
         }
 
         return textView;

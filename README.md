@@ -11,7 +11,7 @@
 #### 集成步骤
 
     dependencies {
-        implementation 'com.hjq:toast:3.0'
+        implementation 'com.hjq:toast:5.0'
     }
 
 #### 初始化Toast
@@ -61,7 +61,9 @@
 
 #### 关于通知栏权限
 
-> 本框架已经完美解决这个问题
+> 本框架已经完美解决这个问题（禁用通知栏权限后需要重启应用才能后生效，请以[Demo](https://raw.githubusercontent.com/getActivity/ToastUtils/master/ToastUtils.apk)测试为主）
+
+> 具体解决方案可见：[Toast通知栏权限填坑指南](https://www.jianshu.com/p/1d64a5ccbc7c)
 
 ![](issue_taobao.gif)
 
