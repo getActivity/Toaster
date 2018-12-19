@@ -9,12 +9,15 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
- *    author : HJQ
+ *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/11/12
  *    desc   : Toast 显示处理类
  */
 final class ToastHandler extends Handler {
+
+    static final int SHORT_DURATION_TIMEOUT = 2000; // 短吐司显示的时长
+    static final int LONG_DURATION_TIMEOUT = 3500; // 长吐司显示的时长
 
     private static final int TYPE_SHOW = 1; // 显示吐司
     private static final int TYPE_CONTINUE = 2; // 继续显示
@@ -37,7 +40,7 @@ final class ToastHandler extends Handler {
         mToast = toast;
     }
 
-    void setText(CharSequence s) {
+    void add(CharSequence s) {
         if (mQueue.isEmpty() || !mQueue.contains(s)) {
             // 添加一个元素并返回true，如果队列已满，则返回false
             if (!mQueue.offer(s)) {
@@ -101,6 +104,6 @@ final class ToastHandler extends Handler {
      */
     private static int getToastDuration (CharSequence text) {
         // 如果显示的文字超过了10个就显示长吐司，否则显示短吐司
-        return text.length() > 20 ? ToastHelper.LONG_DURATION_TIMEOUT : ToastHelper.SHORT_DURATION_TIMEOUT;
+        return text.length() > 20 ? LONG_DURATION_TIMEOUT : SHORT_DURATION_TIMEOUT;
     }
 }

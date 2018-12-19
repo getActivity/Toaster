@@ -10,7 +10,7 @@ import android.util.ArrayMap;
 import android.view.WindowManager;
 
 /**
- *    author : HJQ
+ *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/11/06
  *    desc   : WindowManager 辅助类（用于获取当前 Activity 的 WindowManager 对象）
@@ -75,7 +75,7 @@ final class WindowHelper implements Application.ActivityLifecycleCallbacks {
     public void onActivityPaused(Activity activity) {
         // 取消这个吐司的显示
         mToastHelper.cancel();
-        // 不能放在 onDestroyed 方法中，因为此时新的 Activity 已经创建完成
+        // 不能放在 onStop 或者 onDestroyed 方法中，因为此时新的 Activity 已经创建完成，必须在这个新的 Activity 未创建之前关闭这个 WindowManager
         // 调用取消显示会直接新的 Activity 的 onCreate 调用显示吐司可能显示不出来的问题（立马显示然后立马消失的效果）
     }
 
@@ -97,7 +97,7 @@ final class WindowHelper implements Application.ActivityLifecycleCallbacks {
     }
 
     /**
-     * 获取一个对象的独立无二的标记
+     * 获取一个对象的独一无二的标记
      */
     private static String getObjectTag(Object object) {
         // 对象所在的包名 + 对象的内存地址

@@ -7,17 +7,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- *    author : HJQ
+ *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/11/03
- *    desc   : Toast 优化类
+ *    desc   : Toast 基类
  */
-class XToast extends Toast {
+class BaseToast extends Toast {
 
     // 吐司消息 View
     private TextView mMessageView;
 
-    XToast(Application application) {
+    BaseToast(Application application) {
         super(application);
     }
 
@@ -26,7 +26,7 @@ class XToast extends Toast {
         super.setView(view);
         if (view instanceof TextView) {
             mMessageView = (TextView) view; return;
-        }else if (view.findViewById(android.R.id.message) instanceof TextView) {
+        } else if (view.findViewById(android.R.id.message) instanceof TextView) {
             mMessageView = ((TextView) view.findViewById(android.R.id.message)); return;
         } else if (view instanceof ViewGroup) {
             if ((mMessageView = findTextView((ViewGroup) view)) != null) return;

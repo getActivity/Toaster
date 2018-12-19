@@ -7,14 +7,14 @@ import com.hjq.toast.IToastStyle;
 /**
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
- *    time   : 2018/09/01
- *    desc   : 默认黑色样式实现
+ *    time   : 2018/12/06
+ *    desc   : 支付宝样式实现
  */
-public class ToastBlackStyle implements IToastStyle {
+public class ToastAlipayStyle implements IToastStyle {
 
     @Override
     public int getGravity() {
-        return Gravity.CENTER;
+        return Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class ToastBlackStyle implements IToastStyle {
 
     @Override
     public int getYOffset() {
-        return 0;
+        return 240;
     }
 
     @Override
@@ -34,22 +34,22 @@ public class ToastBlackStyle implements IToastStyle {
 
     @Override
     public int getCornerRadius() {
-        return 6;
+        return 5;
     }
 
     @Override
     public int getBackgroundColor() {
-        return 0X88000000;
+        return 0XEE575757;
     }
 
     @Override
     public int getTextColor() {
-        return 0XEEFFFFFF;
+        return 0XFFFFFFFF;
     }
 
     @Override
     public float getTextSize() {
-        return 14;
+        return 16;
     }
 
     @Override
@@ -59,12 +59,12 @@ public class ToastBlackStyle implements IToastStyle {
 
     @Override
     public int getPaddingLeft() {
-        return 24;
+        return 16;
     }
 
     @Override
     public int getPaddingTop() {
-        return 16;
+        return 10;
     }
 
     @Override

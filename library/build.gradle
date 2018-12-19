@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         targetSdkVersion 26
-        versionCode 50
-        versionName "5.0"
+        versionCode 52
+        versionName "5.2"
     }
 }
 
@@ -18,7 +18,7 @@ publish {
     userOrg = 'getactivity'//填写bintray用户名，注意大小写
     groupId = 'com.hjq'//定义的maven group id最终引用形式
     artifactId = 'toast'//maven的artifact id
-    version = '5.0'//maven 上发布版本号
+    version = '5.2'//maven 上发布版本号
     description = 'This is a very functional Toast'//描述，自己定义
     website = "https://github.com/getActivity/ToastUtils"//项目在github中的地址
 }

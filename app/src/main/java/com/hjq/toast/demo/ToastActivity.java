@@ -2,13 +2,21 @@ package com.hjq.toast.demo;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.View;
 
 import com.hjq.toast.ToastUtils;
+import com.hjq.toast.style.ToastAlipayStyle;
 import com.hjq.toast.style.ToastBlackStyle;
 import com.hjq.toast.style.ToastQQStyle;
 import com.hjq.toast.style.ToastWhiteStyle;
 
+/**
+ *    author : Android 轮子哥
+ *    github : https://github.com/getActivity/ToastUtils
+ *    time   : 2018/09/01
+ *    desc   : ToastUtils 使用案例
+ */
 public class ToastActivity extends AppCompatActivity {
 
     @Override
@@ -42,15 +50,22 @@ public class ToastActivity extends AppCompatActivity {
 
     public void show5(View v) {
         ToastUtils.initStyle(new ToastQQStyle());
-        ToastUtils.show("QQ样式那种还不简单，分分钟的事");
+        ToastUtils.show("QQ那种还不简单，分分钟的事");
     }
 
     public void show6(View v) {
-        ToastUtils.setView(this, R.layout.toast_custom_view);
-        ToastUtils.show("我是自定义Toast");
+        ToastUtils.initStyle(new ToastAlipayStyle());
+        ToastUtils.show("支付宝那种还不简单，分分钟的事");
     }
 
     public void show7(View v) {
+        // ToastUtils.setView(View.inflate(getApplication(), R.layout.toast_custom_view, null));
+        ToastUtils.setView(R.layout.toast_custom_view);
+        ToastUtils.setGravity(Gravity.CENTER, 0, 0);
+        ToastUtils.show("我是自定义Toast");
+    }
+
+    public void show8(View v) {
         ToastUtils.show(ToastUtils.isNotificationEnabled(this));
     }
 

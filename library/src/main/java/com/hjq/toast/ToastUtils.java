@@ -24,7 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- *    author : HJQ
+ *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/09/01
  *    desc   : Toast 工具类
@@ -50,7 +50,12 @@ public final class ToastUtils {
 
         // 判断有没有通知栏权限
         if (isNotificationEnabled(application)) {
-            sToast = new XToast(application);
+            // Android 7.1 上发现主线程被阻塞后吐司会报错的问题
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
+                sToast = new SafeToast(application);
+            }else {
+                sToast = new BaseToast(application);
+            }
         }else {
             sToast = new SupportToast(application);
         }
@@ -62,9 +67,9 @@ public final class ToastUtils {
         } else {
             gravity = sDefaultStyle.getGravity();
         }
-        sToast.setGravity(gravity, sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
+        setGravity(gravity, sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
 
-        sToast.setView(createTextView(application));
+        setView(createTextView(application.getApplicationContext()));
 
         // 创建一个吐司处理类
         sToastHandler = new ToastHandler(sToast);
@@ -117,7 +122,7 @@ public final class ToastUtils {
 
         if (text == null || text.equals("")) return;
 
-        sToastHandler.setText(text);
+        sToastHandler.add(text);
         sToastHandler.show();
     }
 
@@ -130,28 +135,36 @@ public final class ToastUtils {
     }
 
     /**
-     * 获取当前Toast对象
+     * 设置吐司的位置
+     *
+     * @param gravity           重心
+     * @param xOffset           x轴偏移
+     * @param yOffset           y轴偏移
      */
-    public static Toast getToast() {
-        return sToast;
+    public static void setGravity(int gravity, int xOffset, int yOffset) {
+        sToast.setGravity(gravity, xOffset, yOffset);
     }
 
     /**
-     * 给当前Toast设置新的布局，具体实现可看{@link XToast#setView(View)}
+     * 给当前Toast设置新的布局，具体实现可看{@link BaseToast#setView(View)}
      */
-    public static void setView(Context context, int layoutId) {
-        if (context != context.getApplicationContext()) {
-            context = context.getApplicationContext();
-        }
-        setView(View.inflate(context, layoutId, null));
-    }
+    public static void setView(int layoutId) {
+        checkToastState();
 
+        setView(View.inflate(sToast.getView().getContext().getApplicationContext(), layoutId, null));
+    }
     public static void setView(View view) {
 
         checkToastState();
 
+         // 这个 View 不能为空
         if (view == null) {
             throw new IllegalArgumentException("Views cannot be empty");
+        }
+
+        // 当前必须用 Application 的上下文创建的 View，否则可能会导致内存泄露
+        if (view.getContext() != view.getContext().getApplicationContext()) {
+            throw new IllegalArgumentException("The view must be initialized using the context of the application");
         }
 
         // 如果吐司已经创建，就重新初始化吐司
@@ -179,6 +192,13 @@ public final class ToastUtils {
             sToast.setView(createTextView(sToast.getView().getContext().getApplicationContext()));
             sToast.setGravity(sDefaultStyle.getGravity(), sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
         }
+    }
+
+    /**
+     * 获取当前Toast对象
+     */
+    public static Toast getToast() {
+        return sToast;
     }
 
     /**

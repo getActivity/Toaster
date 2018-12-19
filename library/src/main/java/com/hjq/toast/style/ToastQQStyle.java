@@ -5,7 +5,7 @@ import android.view.Gravity;
 import com.hjq.toast.IToastStyle;
 
 /**
- *    author : HJQ
+ *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/09/01
  *    desc   : QQ样式实现

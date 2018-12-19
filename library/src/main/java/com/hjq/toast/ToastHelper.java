@@ -4,22 +4,17 @@ import android.app.Application;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 /**
- *    author : HJQ
+ *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/11/02
  *    desc   : 自定义 Toast 辅助类
  */
-final class ToastHelper implements Runnable {
-
-    static final int SHORT_DURATION_TIMEOUT = 2000; // 短吐司显示的时长
-    static final int LONG_DURATION_TIMEOUT = 3500; // 长吐司显示的时长
-
-    // WindowManager 处理消息线程
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
+final class ToastHelper extends Handler {
 
     // 当前的吐司对象
     private final Toast mToast;
@@ -33,9 +28,16 @@ final class ToastHelper implements Runnable {
     private boolean isShow;
 
     ToastHelper(Toast toast, Application application) {
+        super(Looper.getMainLooper());
         mToast = toast;
         mPackageName = application.getPackageName();
         mWindowHelper = new WindowHelper(this, application);
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+        // super.handleMessage(msg);
+        cancel();
     }
 
     /***
@@ -90,7 +92,7 @@ final class ToastHelper implements Runnable {
                 // 当前已经显示
                 isShow = true;
                 // 添加一个移除吐司的任务
-                mHandler.postDelayed(this, mToast.getDuration() == Toast.LENGTH_LONG ? LONG_DURATION_TIMEOUT : SHORT_DURATION_TIMEOUT);
+                sendEmptyMessageDelayed(0, mToast.getDuration() == Toast.LENGTH_LONG ? ToastHandler.LONG_DURATION_TIMEOUT : ToastHandler.SHORT_DURATION_TIMEOUT);
             }catch (NullPointerException | IllegalStateException | WindowManager.BadTokenException ignored) {}
         }
     }
@@ -100,7 +102,7 @@ final class ToastHelper implements Runnable {
      */
     void cancel() {
         // 移除之前移除吐司的任务
-        mHandler.removeCallbacks(this);
+        removeMessages(0);
         if (isShow) {
             try {
                 // 如果当前 WindowManager 没有附加这个 View 则会抛出异常
@@ -110,13 +112,5 @@ final class ToastHelper implements Runnable {
             // 当前没有显示
             isShow = false;
         }
-    }
-
-    /**
-     * {@link Runnable}
-     */
-    @Override
-    public void run() {
-        cancel();
     }
 }
