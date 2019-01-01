@@ -142,6 +142,7 @@ public final class ToastUtils {
      * @param yOffset           y轴偏移
      */
     public static void setGravity(int gravity, int xOffset, int yOffset) {
+        checkToastState();
         sToast.setGravity(gravity, xOffset, yOffset);
     }
 
@@ -277,7 +278,7 @@ public final class ToastUtils {
      * 检查通知栏权限有没有开启
      * 参考SupportCompat包中的： NotificationManagerCompat.from(context).areNotificationsEnabled();
      */
-    public static boolean isNotificationEnabled(Context context){
+    private static boolean isNotificationEnabled(Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).areNotificationsEnabled();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
