@@ -23,11 +23,11 @@ final class ToastHandler extends Handler {
     private static final int TYPE_CONTINUE = 2; // 继续显示
     private static final int TYPE_CANCEL = 3; // 取消显示
 
-    // 最大吐司的容量
-    private static final int MAX_TOAST_CAPACITY = 5;
+    // 队列最大容量
+    private static final int MAX_TOAST_CAPACITY = 3;
 
     // 吐司队列
-    private volatile Queue<CharSequence> mQueue = new ArrayBlockingQueue<>(MAX_TOAST_CAPACITY);
+    private volatile Queue<CharSequence> mQueue;
 
     // 当前是否正在执行显示操作
     private volatile boolean isShow;
@@ -38,6 +38,7 @@ final class ToastHandler extends Handler {
     ToastHandler(Toast toast) {
         super(Looper.getMainLooper());
         mToast = toast;
+        mQueue = new ArrayBlockingQueue<>(MAX_TOAST_CAPACITY);
     }
 
     void add(CharSequence s) {
@@ -75,7 +76,7 @@ final class ToastHandler extends Handler {
                     mToast.setText(text);
                     mToast.show();
                     // 等这个 Toast 显示完后再继续显示
-                    sendEmptyMessageDelayed(TYPE_CONTINUE, getToastDuration(text) + 1000);
+                    sendEmptyMessageDelayed(TYPE_CONTINUE, getToastDuration(text));
                 }else {
                     isShow = false;
                 }

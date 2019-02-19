@@ -26,12 +26,15 @@ public class ToastActivity extends AppCompatActivity {
         setContentView(R.layout.activity_toast);
     }
 
-    public void show1(final View v) {
-        ToastUtils.show("我是一个普通的吐司");
+    public void show1(View v) {
+        for (int i = 0; i < 3; i++) {
+            ToastUtils.show("我是第" + (i + 1) + "个吐司");
+        }
     }
 
     public void show2(View v) {
         new Thread(new Runnable() {
+
             @Override
             public void run() {
                 ToastUtils.show("我是子线程中弹出的吐司");
@@ -41,12 +44,12 @@ public class ToastActivity extends AppCompatActivity {
 
     public void show3(View v) {
         ToastUtils.initStyle(new ToastWhiteStyle());
-        ToastUtils.show("动态切换吐司样式成功");
+        ToastUtils.show("动态切换白色吐司样式成功");
     }
 
     public void show4(View v) {
         ToastUtils.initStyle(new ToastBlackStyle());
-        ToastUtils.show("动态切换吐司样式成功");
+        ToastUtils.show("动态切换黑色吐司样式成功");
     }
 
     public void show5(View v) {

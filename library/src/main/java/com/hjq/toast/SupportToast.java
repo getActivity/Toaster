@@ -6,7 +6,7 @@ import android.app.Application;
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/11/02
- *    desc   : 不需要通知栏权限的 Toast
+ *    desc   : Toast 无通知栏权限兼容
  */
 final class SupportToast extends BaseToast {
 

@@ -18,6 +18,7 @@ import android.view.WindowManager;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 final class WindowHelper implements Application.ActivityLifecycleCallbacks {
 
+    // Activity 存放集合
     private final ArrayMap<String, Activity> mActivitySet = new ArrayMap<>();
 
     // 用于 Activity 暂停时移除 WindowManager
@@ -69,14 +70,14 @@ final class WindowHelper implements Application.ActivityLifecycleCallbacks {
     }
 
     // A跳转B页面的生命周期方法执行顺序：
-    // onPause(A)->onCreate(B)--->onStart(B)--->onResume(B)--->onStop(A)--->onDestroyed(A)
+    // onPause(A) ---> onCreate(B) ---> onStart(B) ---> onResume(B) ---> onStop(A) ---> onDestroyed(A)
 
     @Override
     public void onActivityPaused(Activity activity) {
         // 取消这个吐司的显示
         mToastHelper.cancel();
         // 不能放在 onStop 或者 onDestroyed 方法中，因为此时新的 Activity 已经创建完成，必须在这个新的 Activity 未创建之前关闭这个 WindowManager
-        // 调用取消显示会直接新的 Activity 的 onCreate 调用显示吐司可能显示不出来的问题（立马显示然后立马消失的效果）
+        // 调用取消显示会直接导致新的 Activity 的 onCreate 调用显示吐司可能显示不出来的问题（立马显示然后立马消失的效果）
     }
 
     @Override

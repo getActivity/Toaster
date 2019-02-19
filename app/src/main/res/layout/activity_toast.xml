@@ -28,56 +28,58 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
                 android:onClick="show1"
-                android:text="显示一个普通的吐司" />
+                android:text="连续显示三个不同吐司" />
 
             <Button
-                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
                 android:onClick="show2"
                 android:text="在子线程中显示吐司" />
 
             <Button
-                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
                 android:onClick="show3"
                 android:text="切换吐司的样式为白色" />
 
             <Button
-                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
                 android:onClick="show4"
                 android:text="切换吐司的样式为黑色" />
 
             <Button
-                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
                 android:onClick="show5"
                 android:text="切换吐司的样式为QQ" />
 
             <Button
-                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
                 android:onClick="show6"
                 android:text="切换吐司的样式为支付宝" />
 
             <Button
-                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
                 android:onClick="show7"
                 android:text="点我自定义Toast布局" />
+
         </LinearLayout>
 
     </FrameLayout>

@@ -29,7 +29,7 @@ final class SafeToast extends BaseToast {
             field_handler.setAccessible(true);
 
             Handler handler = (Handler) field_handler.get(mTN);
-            field_handler.set(mTN, new SafeHandler(handler));
+            field_handler.set(mTN, new SafeHandler(handler)); // 偷梁换柱
 
         } catch (Exception ignored) {}
     }
@@ -55,7 +55,8 @@ final class SafeToast extends BaseToast {
                  */
                 mHandler.handleMessage(msg);
             } catch (WindowManager.BadTokenException ignored) {
-                // android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@94ae84f is not valid; is your activity running?
+                // android.view.WindowManager$BadTokenException:
+                // Unable to add window -- token android.os.BinderProxy@94ae84f is not valid; is your activity running?
             }
         }
 

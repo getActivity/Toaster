@@ -16,6 +16,8 @@ import android.widget.Toast;
  */
 final class ToastHelper extends Handler {
 
+    private static final String TOAST = "Toast";
+
     // 当前的吐司对象
     private final Toast mToast;
 
@@ -25,6 +27,7 @@ final class ToastHelper extends Handler {
     // 当前应用的包名
     private final String mPackageName;
 
+    // 当前是否已经显示
     private boolean isShow;
 
     ToastHelper(Toast toast, Application application) {
@@ -75,7 +78,7 @@ final class ToastHelper extends Handler {
             params.width = WindowManager.LayoutParams.WRAP_CONTENT;
             params.format = PixelFormat.TRANSLUCENT;
             params.windowAnimations = android.R.style.Animation_Toast;
-            params.setTitle(Toast.class.getSimpleName());
+            params.setTitle(TOAST);
             params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                     | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
@@ -93,7 +96,7 @@ final class ToastHelper extends Handler {
                 isShow = true;
                 // 添加一个移除吐司的任务
                 sendEmptyMessageDelayed(0, mToast.getDuration() == Toast.LENGTH_LONG ? ToastHandler.LONG_DURATION_TIMEOUT : ToastHandler.SHORT_DURATION_TIMEOUT);
-            }catch (NullPointerException | IllegalStateException | WindowManager.BadTokenException ignored) {}
+            } catch (NullPointerException | IllegalStateException | WindowManager.BadTokenException ignored) {}
         }
     }
 

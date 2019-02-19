@@ -8,34 +8,43 @@
 
 ![](ToastUtils.gif)
 
+#### 本框架意在解决一些常见需求，如果是有一些极端的需求推荐使用 [XToast](https://github.com/getActivity/XToast)
+
 #### 集成步骤
 
     dependencies {
-        implementation 'com.hjq:toast:5.2'
+        implementation 'com.hjq:toast:5.5'
     }
 
 #### 初始化Toast
 
-    // 在Application中初始化
+    // 在 Application 中初始化
     ToastUtils.init(this);
 
-#### 显示Toast
+#### 显示 Toast
 
     ToastUtils.show("我是吐司");
 
-#### 获取Toast对象
+#### 其他 API
 
-    ToastUtils.getToast();
-
-#### 设置Toast布局
-
+    // 设置Toast布局
     ToastUtils.setView();
+
+    // 设置吐司重心
+    ToastUtils.setGravity();
+
+    // 获取Toast对象
+    ToastUtils.getToast();
 
 #### 自定义Toast样式
 
 > 如果对Toast的默认样式不满意，可以在Application初始化样式，具体可参考[ToastBlackStyle](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/toast/style/ToastBlackStyle.java)类的实现
 
     ToastUtils.initStyle(new IToastStyle());
+
+#### 混淆规则
+
+    -keep class com.hjq.toast.** {*;}
 
 #### 框架亮点
 
@@ -69,18 +78,30 @@
 
 ![](issue_utils.gif)
 
+#### ToastUtils 架构图
+
+![](ToastUtils.jpg)
+
+#### 作者的其他开源项目
+
+* 架构工程：[AndroidProject](https://github.com/getActivity/AndroidProject)
+
+* 权限框架：[XXPermissions](https://github.com/getActivity/XXPermissions)
+
+* 悬浮窗框架：[XToast](https://github.com/getActivity/XToast)
+
+* 标题栏框架：[TitleBar](https://github.com/getActivity/TitleBar)
+
 #### Android技术讨论Q群：78797078
 
 #### 如果您觉得我的开源库帮你节省了大量的开发时间，请扫描下方的二维码随意打赏，要是能打赏个 10.24 :monkey_face:就太:thumbsup:了。您的支持将鼓励我继续创作:octocat:
 
 ![](pay_ali.png) ![](pay_wechat.png)
 
-![](pay_bonus.png)
-
 ## License
 
 ```text
-Copyright 2018 Huang Jinqun
+Copyright 2018 Huang JinQun
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

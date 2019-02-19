@@ -38,6 +38,19 @@ public final class ToastUtils {
     private static Toast sToast;
 
     /**
+     * 私有化构造函数
+     */
+    private ToastUtils() {}
+
+    /**
+     * 初始化 ToastUtils 及样式
+     */
+    public static void init(Application application, IToastStyle style) {
+        initStyle(style);
+        init(application);
+    }
+
+    /**
      * 初始化ToastUtils，在Application中初始化
      *
      * @param application       应用的上下文
@@ -50,7 +63,7 @@ public final class ToastUtils {
 
         // 判断有没有通知栏权限
         if (isNotificationEnabled(application)) {
-            // Android 7.1 上发现主线程被阻塞后吐司会报错的问题
+            // 解决 Android 7.1 上发现主线程被阻塞后吐司会报错的问题
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
                 sToast = new SafeToast(application);
             }else {
@@ -60,27 +73,14 @@ public final class ToastUtils {
             sToast = new SupportToast(application);
         }
 
-        final int gravity;
-        // 适配 Android 4.2 新特性，布局反方向（开发者选项 - 强制使用从右到左的布局方向）
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            gravity = Gravity.getAbsoluteGravity(sDefaultStyle.getGravity(), application.getResources().getConfiguration().getLayoutDirection());
-        } else {
-            gravity = sDefaultStyle.getGravity();
-        }
-        setGravity(gravity, sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
-
-        setView(createTextView(application.getApplicationContext()));
-
         // 创建一个吐司处理类
         sToastHandler = new ToastHandler(sToast);
-    }
 
-    /**
-     * 初始化 ToastUtils 及样式
-     */
-    public static void init(Application application, IToastStyle style) {
-        initStyle(style);
-        init(application);
+        // 初始化布局
+        setView(createTextView(application.getApplicationContext()));
+
+        // 初始化位置
+        setGravity(sDefaultStyle.getGravity(), sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
     }
 
     /**
@@ -120,7 +120,7 @@ public final class ToastUtils {
 
         checkToastState();
 
-        if (text == null || text.equals("")) return;
+        if (text == null || "".equals(text.toString())) return;
 
         sToastHandler.add(text);
         sToastHandler.show();
@@ -143,6 +143,12 @@ public final class ToastUtils {
      */
     public static void setGravity(int gravity, int xOffset, int yOffset) {
         checkToastState();
+
+        // 适配 Android 4.2 新特性，布局反方向（开发者选项 - 强制使用从右到左的布局方向）
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            gravity = Gravity.getAbsoluteGravity(gravity, sToast.getView().getResources().getConfiguration().getLayoutDirection());
+        }
+
         sToast.setGravity(gravity, xOffset, yOffset);
     }
 
@@ -221,16 +227,20 @@ public final class ToastUtils {
         // 设置背景色
         drawable.setColor(sDefaultStyle.getBackgroundColor());
         // 设置圆角大小
-        drawable.setCornerRadius(dp2px(context, sDefaultStyle.getCornerRadius()));
+        drawable.setCornerRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getCornerRadius(), context.getResources().getDisplayMetrics()));
 
         TextView textView = new TextView(context);
         textView.setId(android.R.id.message);
         textView.setTextColor(sDefaultStyle.getTextColor());
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, sp2px(context, sDefaultStyle.getTextSize()));
-        textView.setPadding(dp2px(context, sDefaultStyle.getPaddingLeft()), dp2px(context, sDefaultStyle.getPaddingTop()),
-                dp2px(context, sDefaultStyle.getPaddingRight()), dp2px(context, sDefaultStyle.getPaddingBottom()));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sDefaultStyle.getTextSize(), context.getResources().getDisplayMetrics()));
+
+        textView.setPadding((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getPaddingLeft(), context.getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getPaddingTop(), context.getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getPaddingRight(), context.getResources().getDisplayMetrics()),
+                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getPaddingBottom(), context.getResources().getDisplayMetrics()));
+
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        // setBackground API版本兼容
+        // setBackground API 版本兼容
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             textView.setBackground(drawable);
         }else {
@@ -251,32 +261,8 @@ public final class ToastUtils {
     }
 
     /**
-     * dp转px
-     *
-     * @param context       上下文
-     * @param dpValue       dp值
-     * @return              px值
-     */
-    private static int dp2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
-    /**
-     * sp转px
-     *
-     * @param context       上下文
-     * @param spValue       sp值
-     * @return              px值
-     */
-    private static int sp2px(Context context, float spValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
-    }
-
-    /**
      * 检查通知栏权限有没有开启
-     * 参考SupportCompat包中的： NotificationManagerCompat.from(context).areNotificationsEnabled();
+     * 参考SupportCompat包中的方法： NotificationManagerCompat.from(context).areNotificationsEnabled();
      */
     private static boolean isNotificationEnabled(Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
