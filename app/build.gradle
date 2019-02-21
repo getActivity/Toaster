@@ -7,8 +7,8 @@ android {
         applicationId "com.hjq.toast.demo"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 55
-        versionName "5.5"
+        versionCode 56
+        versionName "5.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

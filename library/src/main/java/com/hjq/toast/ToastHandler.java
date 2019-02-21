@@ -75,8 +75,8 @@ final class ToastHandler extends Handler {
                 if (text != null) {
                     mToast.setText(text);
                     mToast.show();
-                    // 等这个 Toast 显示完后再继续显示
-                    sendEmptyMessageDelayed(TYPE_CONTINUE, getToastDuration(text));
+                    // 等这个 Toast 显示完后再继续显示，要加上一点延迟，不然在某些手机上 Toast 可能会来不及消失
+                    sendEmptyMessageDelayed(TYPE_CONTINUE, getToastDuration(text) + 100);
                 }else {
                     isShow = false;
                 }

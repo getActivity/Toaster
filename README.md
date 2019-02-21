@@ -13,7 +13,7 @@
 #### 集成步骤
 
     dependencies {
-        implementation 'com.hjq:toast:5.5'
+        implementation 'com.hjq:toast:5.6'
     }
 
 #### 初始化Toast
