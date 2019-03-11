@@ -14,7 +14,7 @@
         app:backButton="false"
         app:title="https://github.com/getActivity/ToastUtils" />
 
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -28,7 +28,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
                 android:onClick="show1"
                 android:text="连续显示三个不同吐司" />
 
@@ -80,8 +79,16 @@
                 android:onClick="show7"
                 android:text="点我自定义Toast布局" />
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:onClick="show8"
+                android:text="搭配XToast悬浮窗框架" />
+
         </LinearLayout>
 
-    </FrameLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.hjq.toast.demo;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -11,6 +12,7 @@ import com.hjq.toast.style.ToastAlipayStyle;
 import com.hjq.toast.style.ToastBlackStyle;
 import com.hjq.toast.style.ToastQQStyle;
 import com.hjq.toast.style.ToastWhiteStyle;
+import com.hjq.xtoast.XToast;
 
 /**
  *    author : Android 轮子哥
@@ -69,21 +71,36 @@ public class ToastActivity extends AppCompatActivity {
         ToastUtils.show("我是自定义Toast");
     }
 
+    public void show8(View v) {
+        new XToast(ToastActivity.this)
+                .setDuration(1000)
+                .setView(ToastUtils.getToast().getView())
+                .setAnimStyle(android.R.style.Animation_Translucent)
+                .setText(android.R.id.message, "就问你溜不溜")
+                .show();
+    }
+
     @Override
     protected void onRestart() {
         super.onRestart();
+        // 请注意这段代码强烈建议不要放到实际开发中，因为用户屏蔽通知栏和开启应用状态下的情况极少，可以忽略不计
+
         // 如果通知栏的权限被手动关闭了
         if (!NotificationManagerCompat.from(this).areNotificationsEnabled() &&
                 !"SupportToast".equals(ToastUtils.getToast().getClass().getSimpleName())) {
-            // 因为吐司只有初始化的时候才会判断通知权限有没有开启，根据这个通知开关来显示原生的吐司还是兼容的吐司
-            ToastUtils.init(getApplication());
-            recreate();
-            getWindow().getDecorView().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ToastUtils.show("检查到你手动关闭了通知权限，正在重新初始化ToastUtils框架");
-                }
-            }, 1000);
+            try {
+                // 因为吐司只有初始化的时候才会判断通知权限有没有开启，根据这个通知开关来显示原生的吐司还是兼容的吐司
+                ToastUtils.init(getApplication());
+                recreate();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ToastUtils.show("检查到你手动关闭了通知权限，正在重新初始化ToastUtils框架");
+                        } catch (Exception ignored) {}
+                    }
+                }, 2000);
+            }catch (Exception ignored) {}
         }
     }
 }

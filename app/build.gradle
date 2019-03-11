@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "27.0.3"
+
     defaultConfig {
         applicationId "com.hjq.toast.demo"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 56
-        versionName "5.6"
+        versionCode 58
+        versionName "5.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -23,5 +23,8 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':library')
     implementation 'com.android.support:appcompat-v7:26.1.0'
+    // 标题栏：https://github.com/getActivity/TitleBar
     implementation 'com.hjq:titlebar:5.0'
+    // 悬浮窗：https://github.com/getActivity/XToast
+    implementation 'com.hjq:xtoast:2.0'
 }
