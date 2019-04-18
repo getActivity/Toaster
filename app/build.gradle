@@ -7,8 +7,8 @@ android {
         applicationId "com.hjq.toast.demo"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 58
-        versionName "5.8"
+        versionCode 60
+        versionName "6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,5 +26,5 @@ dependencies {
     // 标题栏：https://github.com/getActivity/TitleBar
     implementation 'com.hjq:titlebar:5.0'
     // 悬浮窗：https://github.com/getActivity/XToast
-    implementation 'com.hjq:xtoast:2.0'
+    implementation 'com.hjq:xtoast:2.6'
 }

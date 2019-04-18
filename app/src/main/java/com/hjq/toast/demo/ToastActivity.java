@@ -1,14 +1,16 @@
 package com.hjq.toast.demo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.hjq.toast.ToastUtils;
-import com.hjq.toast.style.ToastAlipayStyle;
+import com.hjq.toast.style.ToastAliPayStyle;
 import com.hjq.toast.style.ToastBlackStyle;
 import com.hjq.toast.style.ToastQQStyle;
 import com.hjq.toast.style.ToastWhiteStyle;
@@ -60,7 +62,7 @@ public class ToastActivity extends AppCompatActivity {
     }
 
     public void show6(View v) {
-        ToastUtils.initStyle(new ToastAlipayStyle());
+        ToastUtils.initStyle(new ToastAliPayStyle());
         ToastUtils.show("支付宝那种还不简单，分分钟的事");
     }
 

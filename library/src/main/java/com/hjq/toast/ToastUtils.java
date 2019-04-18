@@ -38,7 +38,7 @@ public final class ToastUtils {
     private static Toast sToast;
 
     /**
-     * 私有化构造函数
+     * 不允许外部实例化
      */
     private ToastUtils() {}
 
@@ -51,30 +51,29 @@ public final class ToastUtils {
     }
 
     /**
-     * 初始化ToastUtils，在Application中初始化
+     * 初始化 ToastUtils，在Application中初始化
      *
      * @param application       应用的上下文
      */
     public static void init(Application application) {
-        // 检查默认样式是否为空，如果是就创建一个默认样式
+        // 初始化样式
         if (sDefaultStyle == null) {
-            sDefaultStyle = new ToastBlackStyle();
+            // 如果样式没有指定就初始化一个默认的样式
+            initStyle(new ToastBlackStyle());
         }
 
-        // 判断有没有通知栏权限
+        // 初始化吐司
         if (isNotificationEnabled(application)) {
-            // 解决 Android 7.1 上发现主线程被阻塞后吐司会报错的问题
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
-                sToast = new SafeToast(application);
-            }else {
-                sToast = new BaseToast(application);
+                // 解决 Android 7.1 上主线程被阻塞后吐司会报错的问题
+                setToast(new SafeToast(application));
+            } else {
+                setToast(new BaseToast(application));
             }
-        }else {
-            sToast = new SupportToast(application);
+        } else {
+            // 解决关闭通知栏权限后 Toast 不显示的问题
+            setToast(new SupportToast(application));
         }
-
-        // 创建一个吐司处理类
-        sToastHandler = new ToastHandler(sToast);
 
         // 初始化布局
         setView(createTextView(application.getApplicationContext()));
@@ -99,14 +98,13 @@ public final class ToastUtils {
      *                如果不是则显示一个整数的string
      */
     public static void show(int id) {
-
         checkToastState();
 
         try {
-            // 如果这是一个资源id
+            // 如果这是一个资源 id
             show(sToast.getView().getContext().getResources().getText(id));
         } catch (Resources.NotFoundException ignored) {
-            // 如果这是一个int类型
+            // 如果这是一个 int 数据
             show(String.valueOf(id));
         }
     }
@@ -116,8 +114,7 @@ public final class ToastUtils {
      *
      * @param text      需要显示的文本
      */
-    public static void show(CharSequence text) {
-
+    public static synchronized void show(CharSequence text) {
         checkToastState();
 
         if (text == null || "".equals(text.toString())) return;
@@ -129,8 +126,9 @@ public final class ToastUtils {
     /**
      * 取消吐司的显示
      */
-    public static void cancel() {
+    public static synchronized void cancel() {
         checkToastState();
+
         sToastHandler.cancel();
     }
 
@@ -161,7 +159,6 @@ public final class ToastUtils {
         setView(View.inflate(sToast.getView().getContext().getApplicationContext(), layoutId, null));
     }
     public static void setView(View view) {
-
         checkToastState();
 
          // 这个 View 不能为空
@@ -183,6 +180,15 @@ public final class ToastUtils {
     }
 
     /**
+     * 获取当前 Toast 的视图
+     */
+    public static <V extends View> V getView() {
+        checkToastState();
+
+        return (V) sToast.getView();
+    }
+
+    /**
      * 统一全局的Toast样式，建议在{@link android.app.Application#onCreate()}中初始化
      *
      * @param style         样式实现类，框架已经实现三种不同的样式
@@ -199,6 +205,14 @@ public final class ToastUtils {
             sToast.setView(createTextView(sToast.getView().getContext().getApplicationContext()));
             sToast.setGravity(sDefaultStyle.getGravity(), sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
         }
+    }
+
+    /**
+     * 设置当前Toast对象
+     */
+    public static void setToast(Toast toast) {
+        // 创建一个吐司处理类
+        sToastHandler = new ToastHandler(sToast = toast);
     }
 
     /**
@@ -240,20 +254,21 @@ public final class ToastUtils {
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getPaddingBottom(), context.getResources().getDisplayMetrics()));
 
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
         // setBackground API 版本兼容
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             textView.setBackground(drawable);
-        }else {
+        } else {
             textView.setBackgroundDrawable(drawable);
         }
 
+        // 设置 Z 轴阴影
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // 设置 Z 轴阴影
             textView.setZ(sDefaultStyle.getZ());
         }
 
+        // 设置最大显示行数
         if (sDefaultStyle.getMaxLines() > 0) {
-            // 设置最大显示行数
             textView.setMaxLines(sDefaultStyle.getMaxLines());
         }
 
@@ -262,7 +277,7 @@ public final class ToastUtils {
 
     /**
      * 检查通知栏权限有没有开启
-     * 参考SupportCompat包中的方法： NotificationManagerCompat.from(context).areNotificationsEnabled();
+     * 参考 SupportCompat 包中的方法： NotificationManagerCompat.from(context).areNotificationsEnabled();
      */
     private static boolean isNotificationEnabled(Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

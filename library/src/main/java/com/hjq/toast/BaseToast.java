@@ -12,7 +12,7 @@ import android.widget.Toast;
  *    time   : 2018/11/03
  *    desc   : Toast 基类
  */
-class BaseToast extends Toast {
+public class BaseToast extends Toast {
 
     // 吐司消息 View
     private TextView mMessageView;
@@ -36,15 +36,17 @@ class BaseToast extends Toast {
      * 智能获取用于显示消息的 TextView
      */
     private static TextView getMessageView(View view) {
-        TextView messageView;
         if (view instanceof TextView) {
-            messageView = (TextView) view; return messageView;
+            return (TextView) view;
         } else if (view.findViewById(android.R.id.message) instanceof TextView) {
-            messageView = ((TextView) view.findViewById(android.R.id.message)); return messageView;
+            return ((TextView) view.findViewById(android.R.id.message));
         } else if (view instanceof ViewGroup) {
-            if ((messageView = findTextView((ViewGroup) view)) != null) return messageView;
+            TextView textView = findTextView((ViewGroup) view);
+            if (textView != null) {
+                return textView;
+            }
         }
-        // 如果设置的布局没有包含一个 TextView 则抛出异常，必须要包含一个 TextView 作为 Message View
+        // 如果设置的布局没有包含一个 TextView 则抛出异常，必须要包含一个 TextView 作为 MessageView
         throw new IllegalArgumentException("The layout must contain a TextView");
     }
 

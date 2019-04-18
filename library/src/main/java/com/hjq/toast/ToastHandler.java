@@ -19,6 +19,8 @@ final class ToastHandler extends Handler {
     static final int SHORT_DURATION_TIMEOUT = 2000; // 短吐司显示的时长
     static final int LONG_DURATION_TIMEOUT = 3500; // 长吐司显示的时长
 
+    private static final int DELAY_TIMEOUT = 300; // 延迟时间
+
     private static final int TYPE_SHOW = 1; // 显示吐司
     private static final int TYPE_CONTINUE = 2; // 继续显示
     private static final int TYPE_CANCEL = 3; // 取消显示
@@ -55,7 +57,10 @@ final class ToastHandler extends Handler {
     void show() {
         if (!isShow) {
             isShow = true;
-            sendEmptyMessage(TYPE_SHOW);
+            // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示当前 Activity
+            // 如果当前 Activity 在 ToastUtils.show 之后进行 finish 了，那么这个时候 Toast 可能会显示不出来
+            // 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面
+            sendEmptyMessageDelayed(TYPE_SHOW, DELAY_TIMEOUT);
         }
     }
 
@@ -75,9 +80,10 @@ final class ToastHandler extends Handler {
                 if (text != null) {
                     mToast.setText(text);
                     mToast.show();
-                    // 等这个 Toast 显示完后再继续显示，要加上一些延迟，不然在某些手机上 Toast 可能会来不及消失
-                    sendEmptyMessageDelayed(TYPE_CONTINUE, getToastDuration(text) + 300);
-                }else {
+                    // 等这个 Toast 显示完后再继续显示，要加上一些延迟
+                    // 不然在某些手机上 Toast 可能会来不及消失就要进行显示，这样是显示不出来的
+                    sendEmptyMessageDelayed(TYPE_CONTINUE, getToastDuration(text) + DELAY_TIMEOUT);
+                } else {
                     isShow = false;
                 }
                 break;
@@ -86,7 +92,7 @@ final class ToastHandler extends Handler {
                 mQueue.poll();
                 if (!mQueue.isEmpty()) {
                     sendEmptyMessage(TYPE_SHOW);
-                }else {
+                } else {
                     isShow = false;
                 }
                 break;

@@ -10,7 +10,7 @@ import com.hjq.toast.IToastStyle;
  *    time   : 2018/12/06
  *    desc   : 支付宝样式实现
  */
-public class ToastAlipayStyle implements IToastStyle {
+public class ToastAliPayStyle implements IToastStyle {
 
     @Override
     public int getGravity() {
