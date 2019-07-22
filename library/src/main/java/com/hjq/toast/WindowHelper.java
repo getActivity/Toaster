@@ -18,13 +18,13 @@ import android.view.WindowManager;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 final class WindowHelper implements Application.ActivityLifecycleCallbacks {
 
-    // Activity 存放集合
+    /** Activity 存放集合 */
     private final ArrayMap<String, Activity> mActivitySet = new ArrayMap<>();
 
-    // 用于 Activity 暂停时移除 WindowManager
+    /** 用于 Activity 暂停时移除 WindowManager */
     private final ToastHelper mToastHelper;
 
-    // 当前 Activity 对象标记
+    /** 当前 Activity 对象标记 */
     private String mCurrentTag;
 
     private WindowHelper(ToastHelper toast) {

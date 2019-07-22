@@ -1,8 +1,7 @@
 package com.hjq.toast.style;
 
+import android.content.Context;
 import android.view.Gravity;
-
-import com.hjq.toast.IToastStyle;
 
 /**
  *    author : Android 轮子哥
@@ -10,7 +9,11 @@ import com.hjq.toast.IToastStyle;
  *    time   : 2018/12/06
  *    desc   : 支付宝样式实现
  */
-public class ToastAliPayStyle implements IToastStyle {
+public class ToastAliPayStyle extends BaseToastStyle {
+
+    public ToastAliPayStyle(Context context) {
+        super(context);
+    }
 
     @Override
     public int getGravity() {
@@ -18,23 +21,13 @@ public class ToastAliPayStyle implements IToastStyle {
     }
 
     @Override
-    public int getXOffset() {
-        return 0;
-    }
-
-    @Override
     public int getYOffset() {
-        return 240;
-    }
-
-    @Override
-    public int getZ() {
-        return 30;
+        return dp2px(100);
     }
 
     @Override
     public int getCornerRadius() {
-        return 5;
+        return dp2px(5);
     }
 
     @Override
@@ -49,31 +42,16 @@ public class ToastAliPayStyle implements IToastStyle {
 
     @Override
     public float getTextSize() {
-        return 16;
+        return sp2px(16);
     }
 
     @Override
-    public int getMaxLines() {
-        return 3;
-    }
-
-    @Override
-    public int getPaddingLeft() {
-        return 16;
+    public int getPaddingStart() {
+        return dp2px(16);
     }
 
     @Override
     public int getPaddingTop() {
-        return 10;
-    }
-
-    @Override
-    public int getPaddingRight() {
-        return getPaddingLeft();
-    }
-
-    @Override
-    public int getPaddingBottom() {
-        return getPaddingTop();
+        return dp2px(10);
     }
 }

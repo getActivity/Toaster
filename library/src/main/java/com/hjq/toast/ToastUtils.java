@@ -31,9 +31,11 @@ import java.lang.reflect.Method;
  */
 public final class ToastUtils {
 
-    private static ToastHandler sToastHandler;
+    private static IToastInterceptor sInterceptor;
 
-    private static IToastStyle sDefaultStyle;
+    private static IToastStrategy sStrategy;
+
+    private static IToastStyle sStyle;
 
     private static Toast sToast;
 
@@ -56,10 +58,20 @@ public final class ToastUtils {
      * @param application       应用的上下文
      */
     public static void init(Application application) {
-        // 初始化样式
-        if (sDefaultStyle == null) {
-            // 如果样式没有指定就初始化一个默认的样式
-            initStyle(new ToastBlackStyle());
+        checkNullPointer(application);
+        // 初始化 Toast 拦截器
+        if (sInterceptor == null) {
+            setToastInterceptor(new ToastInterceptor());
+        }
+
+        // 初始化 Toast 显示处理器
+        if (sStrategy == null) {
+            setToastHandler(new ToastStrategy());
+        }
+
+        // 初始化 Toast 样式
+        if (sStyle == null) {
+             initStyle(new ToastBlackStyle(application));
         }
 
         // 初始化吐司
@@ -79,7 +91,7 @@ public final class ToastUtils {
         setView(createTextView(application.getApplicationContext()));
 
         // 初始化位置
-        setGravity(sDefaultStyle.getGravity(), sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
+        setGravity(sStyle.getGravity(), sStyle.getXOffset(), sStyle.getYOffset());
     }
 
     /**
@@ -117,10 +129,11 @@ public final class ToastUtils {
     public static synchronized void show(CharSequence text) {
         checkToastState();
 
-        if (text == null || "".equals(text.toString())) return;
+        if (sInterceptor.intercept(sToast, text)) {
+            return;
+        }
 
-        sToastHandler.add(text);
-        sToastHandler.show();
+        sStrategy.show(text);
     }
 
     /**
@@ -129,7 +142,7 @@ public final class ToastUtils {
     public static synchronized void cancel() {
         checkToastState();
 
-        sToastHandler.cancel();
+        sStrategy.cancel();
     }
 
     /**
@@ -162,12 +175,11 @@ public final class ToastUtils {
         checkToastState();
 
          // 这个 View 不能为空
-        if (view == null) {
-            throw new IllegalArgumentException("Views cannot be empty");
-        }
+        checkNullPointer(view);
 
         // 当前必须用 Application 的上下文创建的 View，否则可能会导致内存泄露
-        if (view.getContext() != view.getContext().getApplicationContext()) {
+        Context context = view.getContext();
+        if (!(context instanceof Application)) {
             throw new IllegalArgumentException("The view must be initialized using the context of the application");
         }
 
@@ -182,6 +194,7 @@ public final class ToastUtils {
     /**
      * 获取当前 Toast 的视图
      */
+    @SuppressWarnings("unchecked")
     public static <V extends View> V getView() {
         checkToastState();
 
@@ -189,7 +202,7 @@ public final class ToastUtils {
     }
 
     /**
-     * 统一全局的Toast样式，建议在{@link android.app.Application#onCreate()}中初始化
+     * 初始化全局的Toast样式
      *
      * @param style         样式实现类，框架已经实现三种不同的样式
      *                      黑色样式：{@link ToastBlackStyle}
@@ -197,13 +210,14 @@ public final class ToastUtils {
      *                      仿QQ样式：{@link ToastQQStyle}
      */
     public static void initStyle(IToastStyle style) {
-        ToastUtils.sDefaultStyle = style;
+        checkNullPointer(style);
+        ToastUtils.sStyle = style;
         // 如果吐司已经创建，就重新初始化吐司
         if (sToast != null) {
             // 取消原有吐司的显示
             sToast.cancel();
             sToast.setView(createTextView(sToast.getView().getContext().getApplicationContext()));
-            sToast.setGravity(sDefaultStyle.getGravity(), sDefaultStyle.getXOffset(), sDefaultStyle.getYOffset());
+            sToast.setGravity(sStyle.getGravity(), sStyle.getXOffset(), sStyle.getYOffset());
         }
     }
 
@@ -211,8 +225,31 @@ public final class ToastUtils {
      * 设置当前Toast对象
      */
     public static void setToast(Toast toast) {
-        // 创建一个吐司处理类
-        sToastHandler = new ToastHandler(sToast = toast);
+        checkNullPointer(toast);
+        sToast = toast;
+        if (sStrategy != null) {
+            sStrategy.bind(sToast);
+        }
+    }
+
+    /**
+     * 设置 Toast 显示规则
+     */
+    public static void setToastHandler(IToastStrategy handler) {
+        checkNullPointer(handler);
+        sStrategy = handler;
+        if (sToast != null) {
+            sStrategy.bind(sToast);
+        }
+    }
+
+    /**
+     * 设置 Toast 拦截器（可以根据显示的内容决定是否拦截这个Toast）
+     * 场景：打印 Toast 内容日志、根据 Toast 内容是否包含敏感字来动态切换其他方式显示（这里可以使用我的另外一套框架 XToast）
+     */
+    public static void setToastInterceptor(IToastInterceptor interceptor) {
+        checkNullPointer(interceptor);
+        sInterceptor = interceptor;
     }
 
     /**
@@ -233,25 +270,36 @@ public final class ToastUtils {
     }
 
     /**
+     * 检查对象是否为空
+     */
+    private static void checkNullPointer(Object object) {
+        if (object == null) {
+            throw new NullPointerException("are you ok?");
+        }
+    }
+
+    /**
      * 生成默认的 TextView 对象
      */
     private static TextView createTextView(Context context) {
 
         GradientDrawable drawable = new GradientDrawable();
         // 设置背景色
-        drawable.setColor(sDefaultStyle.getBackgroundColor());
+        drawable.setColor(sStyle.getBackgroundColor());
         // 设置圆角大小
-        drawable.setCornerRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getCornerRadius(), context.getResources().getDisplayMetrics()));
+        drawable.setCornerRadius(sStyle.getCornerRadius());
 
         TextView textView = new TextView(context);
         textView.setId(android.R.id.message);
-        textView.setTextColor(sDefaultStyle.getTextColor());
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sDefaultStyle.getTextSize(), context.getResources().getDisplayMetrics()));
+        textView.setTextColor(sStyle.getTextColor());
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, sStyle.getTextSize());
 
-        textView.setPadding((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getPaddingLeft(), context.getResources().getDisplayMetrics()),
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getPaddingTop(), context.getResources().getDisplayMetrics()),
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getPaddingRight(), context.getResources().getDisplayMetrics()),
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, sDefaultStyle.getPaddingBottom(), context.getResources().getDisplayMetrics()));
+        // 适配布局反方向
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            textView.setPaddingRelative(sStyle.getPaddingStart(), sStyle.getPaddingTop(), sStyle.getPaddingEnd(), sStyle.getPaddingBottom());
+        } else {
+            textView.setPadding(sStyle.getPaddingStart(), sStyle.getPaddingTop(), sStyle.getPaddingEnd(), sStyle.getPaddingBottom());
+        }
 
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -264,12 +312,12 @@ public final class ToastUtils {
 
         // 设置 Z 轴阴影
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            textView.setZ(sDefaultStyle.getZ());
+            textView.setZ(sStyle.getZ());
         }
 
         // 设置最大显示行数
-        if (sDefaultStyle.getMaxLines() > 0) {
-            textView.setMaxLines(sDefaultStyle.getMaxLines());
+        if (sStyle.getMaxLines() > 0) {
+            textView.setMaxLines(sStyle.getMaxLines());
         }
 
         return textView;
@@ -279,7 +327,7 @@ public final class ToastUtils {
      * 检查通知栏权限有没有开启
      * 参考 SupportCompat 包中的方法： NotificationManagerCompat.from(context).areNotificationsEnabled();
      */
-    private static boolean isNotificationEnabled(Context context){
+    private static boolean isNotificationEnabled(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).areNotificationsEnabled();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -293,8 +341,9 @@ public final class ToastUtils {
                 Method checkOpNoThrowMethod = appOpsClass.getMethod("checkOpNoThrow", Integer.TYPE, Integer.TYPE, String.class);
                 Field opPostNotificationValue = appOpsClass.getDeclaredField("OP_POST_NOTIFICATION");
                 int value = (Integer) opPostNotificationValue.get(Integer.class);
-                return (Integer) checkOpNoThrowMethod.invoke(appOps, value, uid, pkg) == 0;
-            } catch (NoSuchMethodException | NoSuchFieldException | InvocationTargetException | IllegalAccessException | RuntimeException | ClassNotFoundException ignored) {
+                return ((int) checkOpNoThrowMethod.invoke(appOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED);
+            } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException
+                    | InvocationTargetException | IllegalAccessException | RuntimeException ignored) {
                 return true;
             }
         } else {

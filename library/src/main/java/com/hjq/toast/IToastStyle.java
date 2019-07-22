@@ -8,20 +8,68 @@ package com.hjq.toast;
  */
 public interface IToastStyle {
 
-    int getGravity(); // 吐司的重心
-    int getXOffset(); // X轴偏移
-    int getYOffset(); // Y轴偏移
-    int getZ(); // 吐司Z轴坐标
+    /**
+     * 吐司的重心
+     */
+    int getGravity();
 
-    int getCornerRadius(); // 圆角大小
-    int getBackgroundColor(); // 背景颜色
+    /**
+     * X轴偏移
+     */
+    int getXOffset();
 
-    int getTextColor(); // 文本颜色
-    float getTextSize(); // 文本大小
-    int getMaxLines(); // 最大行数
+    /**
+     * Y轴偏移
+     */
+    int getYOffset();
 
-    int getPaddingLeft(); // 左边内边距
-    int getPaddingTop(); // 顶部内边距
-    int getPaddingRight(); // 右边内边距
-    int getPaddingBottom(); // 底部内边距
+    /**
+     * 吐司 Z 轴坐标
+     */
+    int getZ();
+
+    /**
+     * 圆角大小
+     */
+    int getCornerRadius();
+
+    /**
+     * 背景颜色
+     */
+    int getBackgroundColor();
+
+    /**
+     * 文本颜色
+     */
+    int getTextColor();
+
+    /**
+     * 文本大小
+     */
+    float getTextSize();
+
+    /**
+     * 最大行数
+     */
+    int getMaxLines();
+
+    /**
+     * 开始内边距
+     */
+    int getPaddingStart();
+
+    /**
+     * 顶部内边距
+     */
+    int getPaddingTop();
+
+    /**
+     * 结束内边距
+     */
+    int getPaddingEnd();
+
+    /**
+     * 底部内边距
+     */
+    int getPaddingBottom();
 }

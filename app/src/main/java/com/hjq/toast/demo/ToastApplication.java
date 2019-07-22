@@ -1,7 +1,10 @@
 package com.hjq.toast.demo;
 
 import android.app.Application;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.hjq.toast.ToastInterceptor;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastBlackStyle;
 
@@ -16,7 +19,20 @@ public class ToastApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        // 设置 Toast 拦截器
+        ToastUtils.setToastInterceptor(new ToastInterceptor() {
+            @Override
+            public boolean intercept(Toast toast, CharSequence text) {
+                boolean intercept = super.intercept(toast, text);
+                if (intercept) {
+                    Log.e("Toast", "空 Toast");
+                } else {
+                    Log.i("Toast", text.toString());
+                }
+                return intercept;
+            }
+        });
         // 初始化吐司工具类
-        ToastUtils.init(this, new ToastBlackStyle());
+        ToastUtils.init(this, new ToastBlackStyle(this));
     }
 }

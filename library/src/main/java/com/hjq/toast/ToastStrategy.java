@@ -12,49 +12,53 @@ import java.util.concurrent.ArrayBlockingQueue;
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/11/12
- *    desc   : Toast 显示处理类
+ *    desc   : Toast 默认处理器
  */
-final class ToastHandler extends Handler {
+public class ToastStrategy extends Handler implements IToastStrategy {
 
-    static final int SHORT_DURATION_TIMEOUT = 2000; // 短吐司显示的时长
-    static final int LONG_DURATION_TIMEOUT = 3500; // 长吐司显示的时长
+    /** 延迟时间 */
+    private static final int DELAY_TIMEOUT = 300;
 
-    private static final int DELAY_TIMEOUT = 300; // 延迟时间
+    /** 显示吐司 */
+    private static final int TYPE_SHOW = 1;
+    /** 继续显示 */
+    private static final int TYPE_CONTINUE = 2;
+    /** 取消显示 */
+    private static final int TYPE_CANCEL = 3;
 
-    private static final int TYPE_SHOW = 1; // 显示吐司
-    private static final int TYPE_CONTINUE = 2; // 继续显示
-    private static final int TYPE_CANCEL = 3; // 取消显示
-
-    // 队列最大容量
+    /** 队列最大容量 */
     private static final int MAX_TOAST_CAPACITY = 3;
 
-    // 吐司队列
+    /** 吐司队列 */
     private volatile Queue<CharSequence> mQueue;
 
-    // 当前是否正在执行显示操作
+    /** 当前是否正在执行显示操作 */
     private volatile boolean isShow;
 
-    // 吐司对象
-    private final Toast mToast;
+    /** 吐司对象 */
+    private Toast mToast;
 
-    ToastHandler(Toast toast) {
+    public ToastStrategy() {
         super(Looper.getMainLooper());
-        mToast = toast;
-        mQueue = new ArrayBlockingQueue<>(MAX_TOAST_CAPACITY);
+        mQueue = getToastQueue();
     }
 
-    void add(CharSequence s) {
-        if (mQueue.isEmpty() || !mQueue.contains(s)) {
+    @Override
+    public void bind(Toast toast) {
+        mToast = toast;
+    }
+
+    @Override
+    public void show(CharSequence text) {
+        if (mQueue.isEmpty() || !mQueue.contains(text)) {
             // 添加一个元素并返回true，如果队列已满，则返回false
-            if (!mQueue.offer(s)) {
+            if (!mQueue.offer(text)) {
                 // 移除队列头部元素并添加一个新的元素
                 mQueue.poll();
-                mQueue.offer(s);
+                mQueue.offer(text);
             }
         }
-    }
 
-    void show() {
         if (!isShow) {
             isShow = true;
             // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示当前 Activity
@@ -64,7 +68,8 @@ final class ToastHandler extends Handler {
         }
     }
 
-    void cancel() {
+    @Override
+    public void cancel() {
         if (isShow) {
             isShow = false;
             sendEmptyMessage(TYPE_CANCEL);
@@ -107,9 +112,16 @@ final class ToastHandler extends Handler {
     }
 
     /**
-     * 根据文本来获取吐司的显示时间
+     * 获取吐司队列
      */
-    private static int getToastDuration (CharSequence text) {
+    public Queue<CharSequence> getToastQueue() {
+        return new ArrayBlockingQueue<>(MAX_TOAST_CAPACITY);
+    }
+
+    /**
+     * 根据文本来获取吐司的显示时长
+     */
+    public int getToastDuration (CharSequence text) {
         // 如果显示的文字超过了10个就显示长吐司，否则显示短吐司
         return text.length() > 20 ? LONG_DURATION_TIMEOUT : SHORT_DURATION_TIMEOUT;
     }

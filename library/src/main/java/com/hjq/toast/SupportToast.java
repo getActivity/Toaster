@@ -10,7 +10,7 @@ import android.app.Application;
  */
 final class SupportToast extends BaseToast {
 
-    // 吐司弹窗显示辅助类
+    /** 吐司弹窗显示辅助类 */
     private final ToastHelper mToastHelper;
 
     SupportToast(Application application) {

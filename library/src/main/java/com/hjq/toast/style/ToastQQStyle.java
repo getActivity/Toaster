@@ -1,30 +1,17 @@
 package com.hjq.toast.style;
 
-import android.view.Gravity;
-
-import com.hjq.toast.IToastStyle;
+import android.content.Context;
 
 /**
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/09/01
- *    desc   : QQ样式实现
+ *    desc   : QQ 样式实现
  */
-public class ToastQQStyle implements IToastStyle {
+public class ToastQQStyle extends BaseToastStyle {
 
-    @Override
-    public int getGravity() {
-        return Gravity.CENTER;
-    }
-
-    @Override
-    public int getXOffset() {
-        return 0;
-    }
-
-    @Override
-    public int getYOffset() {
-        return 0;
+    public ToastQQStyle(Context context) {
+        super(context);
     }
 
     @Override
@@ -34,7 +21,7 @@ public class ToastQQStyle implements IToastStyle {
 
     @Override
     public int getCornerRadius() {
-        return 4;
+        return dp2px(4);
     }
 
     @Override
@@ -49,31 +36,16 @@ public class ToastQQStyle implements IToastStyle {
 
     @Override
     public float getTextSize() {
-        return 12;
+        return sp2px(12);
     }
 
     @Override
-    public int getMaxLines() {
-        return 3;
-    }
-
-    @Override
-    public int getPaddingLeft() {
-        return 16;
+    public int getPaddingStart() {
+        return dp2px(16);
     }
 
     @Override
     public int getPaddingTop() {
-        return 14;
-    }
-
-    @Override
-    public int getPaddingRight() {
-        return getPaddingLeft();
-    }
-
-    @Override
-    public int getPaddingBottom() {
-        return getPaddingTop();
+        return dp2px(14);
     }
 }

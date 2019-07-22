@@ -14,10 +14,10 @@ import android.widget.Toast;
  */
 public class BaseToast extends Toast {
 
-    // 吐司消息 View
+    /** 吐司消息 View */
     private TextView mMessageView;
 
-    BaseToast(Application application) {
+    public BaseToast(Application application) {
         super(application);
     }
 
@@ -60,7 +60,9 @@ public class BaseToast extends Toast {
                 return (TextView) view;
             } else if (view instanceof ViewGroup) {
                 TextView textView = findTextView((ViewGroup) view);
-                if (textView != null) return textView;
+                if (textView != null) {
+                    return textView;
+                }
             }
         }
         return null;

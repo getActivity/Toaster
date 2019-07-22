@@ -13,10 +13,10 @@
 #### 集成步骤
 
     dependencies {
-        implementation 'com.hjq:toast:6.0'
+        implementation 'com.hjq:toast:8.0'
     }
 
-#### 初始化Toast
+#### 初始化 Toast
 
     // 在 Application 中初始化
     ToastUtils.init(this);
@@ -81,6 +81,24 @@
 #### ToastUtils 架构图
 
 ![](ToastUtils.jpg)
+
+#### 如何替换项目中已有的 Toast ？
+
+> 右击项目，Replace in path，勾选 Regex 选项
+
+	Toast\.makeText\([^,]+,\s(.+{1}),\s[^,]+\)\.show\(\);
+
+> 替换使用
+
+	ToastUtils.show($1);
+
+> 包名替换
+
+	import android.widget.Toast;
+
+---
+
+	import com.hjq.toast.ToastUtils;
 
 #### 作者的其他开源项目
 

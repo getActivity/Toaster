@@ -16,18 +16,16 @@ import android.widget.Toast;
  */
 final class ToastHelper extends Handler {
 
-    private static final String TOAST = "Toast";
-
-    // 当前的吐司对象
+    /** 当前的吐司对象 */
     private final Toast mToast;
 
-    // WindowManager 辅助类
+    /** WindowManager 辅助类 */
     private final WindowHelper mWindowHelper;
 
-    // 当前应用的包名
+    /** 当前应用的包名 */
     private final String mPackageName;
 
-    // 当前是否已经显示
+    /** 当前是否已经显示 */
     private boolean isShow;
 
     ToastHelper(Toast toast, Application application) {
@@ -79,7 +77,6 @@ final class ToastHelper extends Handler {
             params.width = WindowManager.LayoutParams.WRAP_CONTENT;
             params.format = PixelFormat.TRANSLUCENT;
             params.windowAnimations = android.R.style.Animation_Toast;
-            params.setTitle(TOAST);
             params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                     | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
@@ -98,7 +95,7 @@ final class ToastHelper extends Handler {
                 isShow = true;
                 // 添加一个移除吐司的任务
                 sendEmptyMessageDelayed(0, mToast.getDuration() == Toast.LENGTH_LONG ?
-                        ToastHandler.LONG_DURATION_TIMEOUT : ToastHandler.SHORT_DURATION_TIMEOUT);
+                        IToastStrategy.LONG_DURATION_TIMEOUT : IToastStrategy.SHORT_DURATION_TIMEOUT);
             } catch (NullPointerException | IllegalStateException | WindowManager.BadTokenException ignored) {}
         }
     }
@@ -114,7 +111,7 @@ final class ToastHelper extends Handler {
                 // 如果当前 WindowManager 没有附加这个 View 则会抛出异常
                 // java.lang.IllegalArgumentException:
                 // View=android.widget.TextView not attached to window manager
-                mWindowHelper.getWindowManager().removeView(mToast.getView());
+                mWindowHelper.getWindowManager().removeViewImmediate(mToast.getView());
             } catch (NullPointerException | IllegalArgumentException ignored) {}
             // 当前没有显示
             isShow = false;
