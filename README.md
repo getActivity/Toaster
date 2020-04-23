@@ -13,7 +13,7 @@
 #### 集成步骤
 
     dependencies {
-        implementation 'com.hjq:toast:8.0'
+        implementation 'com.hjq:toast:8.2'
     }
 
 #### 初始化 Toast
@@ -66,11 +66,13 @@
 
 * 支持全局配置样式：可以在Application中初始化Toast样式，达到一劳永逸的效果
 
-* 框架兼容性良好：本框架不依赖任何第三方库，支持Eclipse和Studio的集成使用
+* 框架兼容性良好：本框架不依赖任何第三方库，支持 Eclipse 和 Studio 的集成使用
 
 #### 关于通知栏权限
 
 > 本框架已经完美解决这个问题（禁用通知栏权限后需要重启应用、重启应用、重启应用才能后生效，请以[Demo](https://raw.githubusercontent.com/getActivity/ToastUtils/master/ToastUtils.apk)测试为主）
+
+> 在开启 APP 的同时关闭通知栏权限的情况极少（测试人员才会这么做），所以仅在 Application 初始化的时候才对没有通知栏权限的情况进行判断和兼容
 
 > 具体解决方案可见：[Toast通知栏权限填坑指南](https://www.jianshu.com/p/1d64a5ccbc7c)
 
@@ -104,17 +106,25 @@
 
 * 架构工程：[AndroidProject](https://github.com/getActivity/AndroidProject)
 
+* 网络框架：[EasyHttp](https://github.com/getActivity/EasyHttp)
+
+* 日志框架：[Logcat](https://github.com/getActivity/Logcat)
+
 * 权限框架：[XXPermissions](https://github.com/getActivity/XXPermissions)
 
-* 悬浮窗框架：[XToast](https://github.com/getActivity/XToast)
-
 * 标题栏框架：[TitleBar](https://github.com/getActivity/TitleBar)
+
+* 国际化框架：[MultiLanguages](https://github.com/getActivity/MultiLanguages)
+
+* 悬浮窗框架：[XToast](https://github.com/getActivity/XToast)
 
 #### Android技术讨论Q群：78797078
 
 #### 如果您觉得我的开源库帮你节省了大量的开发时间，请扫描下方的二维码随意打赏，要是能打赏个 10.24 :monkey_face:就太:thumbsup:了。您的支持将鼓励我继续创作:octocat:
 
-![](pay_ali.png) ![](pay_wechat.png)
+![](https://raw.githubusercontent.com/getActivity/Donate/master/picture/pay_ali.png) ![](https://raw.githubusercontent.com/getActivity/Donate/master/picture/pay_wechat.png)
+
+#### [点击查看捐赠列表](https://github.com/getActivity/Donate)
 
 ## License
 

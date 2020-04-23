@@ -6,7 +6,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.ArrayMap;
 import android.view.WindowManager;
 
 /**
@@ -18,14 +17,11 @@ import android.view.WindowManager;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 final class WindowHelper implements Application.ActivityLifecycleCallbacks {
 
-    /** Activity 存放集合 */
-    private final ArrayMap<String, Activity> mActivitySet = new ArrayMap<>();
+    /** 栈顶 Activity */
+    private Activity mTopActivity;
 
     /** 用于 Activity 暂停时移除 WindowManager */
     private final ToastHelper mToastHelper;
-
-    /** 当前 Activity 对象标记 */
-    private String mCurrentTag;
 
     private WindowHelper(ToastHelper toast) {
         mToastHelper = toast;
@@ -43,13 +39,12 @@ final class WindowHelper implements Application.ActivityLifecycleCallbacks {
      * @return          如果获取不到则抛出空指针异常
      */
     WindowManager getWindowManager() throws NullPointerException {
-        if (mCurrentTag != null) {
-            // 如果使用的 WindowManager 对象不是当前 Activity 创建的，则会抛出异常
-            // android.view.WindowManager$BadTokenException: Unable to add window -- token null is not for an application
-            Activity activity = mActivitySet.get(mCurrentTag);
-            if (activity != null) {
-                return getWindowManagerObject(activity);
-            }
+        // 如果使用的 WindowManager 对象不是当前 Activity 创建的，则会抛出异常
+        // android.view.WindowManager$BadTokenException: Unable to add window -- token null is not for an application
+        // 如果使用的 WindowManager 对象的 Activity 已经销毁，则会抛出异常
+        // WindowManager: android.view.WindowLeaked: Activity has leaked window TextView that was originally added here
+        if (mTopActivity != null && !mTopActivity.isFinishing()) {
+            return ((WindowManager) mTopActivity.getSystemService(Context.WINDOW_SERVICE));
         }
         throw new NullPointerException();
     }
@@ -60,18 +55,17 @@ final class WindowHelper implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        mCurrentTag = getObjectTag(activity);
-        mActivitySet.put(mCurrentTag, activity);
+        mTopActivity = activity;
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
-        mCurrentTag = getObjectTag(activity);
+        mTopActivity = activity;
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        mCurrentTag = getObjectTag(activity);
+        mTopActivity = activity;
     }
 
     // A 跳转 B 页面的生命周期方法执行顺序：
@@ -80,9 +74,11 @@ final class WindowHelper implements Application.ActivityLifecycleCallbacks {
     @Override
     public void onActivityPaused(Activity activity) {
         // 取消这个吐司的显示
-        mToastHelper.cancel();
-        // 不能放在 onStop 或者 onDestroyed 方法中，因为此时新的 Activity 已经创建完成，必须在这个新的 Activity 未创建之前关闭这个 WindowManager
-        // 调用取消显示会直接导致新的 Activity 的 onCreate 调用显示吐司可能显示不出来的问题（又或者有时候会立马显示然后立马消失的那种效果）
+        if (mToastHelper.isShow()) {
+            // 不能放在 onStop 或者 onDestroyed 方法中，因为此时新的 Activity 已经创建完成，必须在这个新的 Activity 未创建之前关闭这个 WindowManager
+            // 调用取消显示会直接导致新的 Activity 的 onCreate 调用显示吐司可能显示不出来的问题，又或者有时候会立马显示然后立马消失的那种效果
+            mToastHelper.cancel();
+        }
     }
 
     @Override
@@ -93,27 +89,9 @@ final class WindowHelper implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        // 移除对这个 Activity 的引用
-        mActivitySet.remove(getObjectTag(activity));
-        // 如果当前的 Activity 是最后一个的话
-        if (getObjectTag(activity).equals(mCurrentTag)) {
-            // 清除当前标记
-            mCurrentTag = null;
+        if (mTopActivity == activity) {
+            // 移除对这个 Activity 的引用
+            mTopActivity = null;
         }
-    }
-
-    /**
-     * 获取一个对象的独一无二的标记
-     */
-    private static String getObjectTag(Object object) {
-        // 对象所在的包名 + 对象的内存地址
-        return object.getClass().getName() + Integer.toHexString(object.hashCode());
-    }
-
-    /**
-     * 获取一个 WindowManager 对象
-     */
-    private static WindowManager getWindowManagerObject(Activity activity) {
-        return ((WindowManager) activity.getSystemService(Context.WINDOW_SERVICE));
     }
 }

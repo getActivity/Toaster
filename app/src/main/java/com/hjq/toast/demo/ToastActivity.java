@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 
+import com.hjq.toast.SupportToast;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastAliPayStyle;
 import com.hjq.toast.style.ToastBlackStyle;
@@ -83,24 +84,19 @@ public class ToastActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        // 请注意这段代码强烈建议不要放到实际开发中，因为用户屏蔽通知栏和开启应用状态下的情况极少，可以忽略不计
+        // 请注意这段代码强烈建议不要放到实际开发中，因为用户屏蔽通知栏和开启应用状态下的概率极低，可以忽略不计
 
         // 如果通知栏的权限被手动关闭了
-        if (!NotificationManagerCompat.from(this).areNotificationsEnabled() &&
-                !"SupportToast".equals(ToastUtils.getToast().getClass().getSimpleName())) {
-            try {
-                // 因为吐司只有初始化的时候才会判断通知权限有没有开启，根据这个通知开关来显示原生的吐司还是兼容的吐司
-                ToastUtils.init(getApplication());
-                recreate();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ToastUtils.show("检查到你手动关闭了通知权限，正在重新初始化ToastUtils框架");
-                        } catch (Exception ignored) {}
-                    }
-                }, 2000);
-            }catch (Exception ignored) {}
+        if (!SupportToast.class.equals(ToastUtils.getToast().getClass()) &&
+                        !NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            // 因为吐司只有初始化的时候才会判断通知权限有没有开启，根据这个通知开关来显示原生的吐司还是兼容的吐司
+            ToastUtils.setToast(new SupportToast(getApplication()));
+            getWindow().getDecorView().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ToastUtils.show("检查到你手动关闭了通知权限，正在重新初始化 Toast");
+                }
+            }, 1000);
         }
     }
 }

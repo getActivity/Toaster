@@ -26,7 +26,7 @@ final class ToastHelper extends Handler {
     private final String mPackageName;
 
     /** 当前是否已经显示 */
-    private boolean isShow;
+    private boolean mShow;
 
     ToastHelper(Toast toast, Application application) {
         super(Looper.getMainLooper());
@@ -41,11 +41,19 @@ final class ToastHelper extends Handler {
         cancel();
     }
 
+    boolean isShow() {
+        return mShow;
+    }
+
+    void setShow(boolean show) {
+        mShow = show;
+    }
+
     /***
      * 显示吐司弹窗
      */
     void show() {
-        if (!isShow) {
+        if (!isShow()) {
             /*
              这里解释一下，为什么不复用 WindowManager.LayoutParams 这个对象
              因为如果复用了，不同 Activity 之间不能共用一个，第一个 Activity 调用显示方法可以显示出来，但是会导致后面的 Activity 都显示不出来
@@ -91,11 +99,11 @@ final class ToastHelper extends Handler {
                 // java.lang.IllegalStateException:
                 // View android.widget.TextView has already been added to the window manager.
                 mWindowHelper.getWindowManager().addView(mToast.getView(), params);
-                // 当前已经显示
-                isShow = true;
                 // 添加一个移除吐司的任务
-                sendEmptyMessageDelayed(0, mToast.getDuration() == Toast.LENGTH_LONG ?
+                sendEmptyMessageDelayed(hashCode(), mToast.getDuration() == Toast.LENGTH_LONG ?
                         IToastStrategy.LONG_DURATION_TIMEOUT : IToastStrategy.SHORT_DURATION_TIMEOUT);
+                // 当前已经显示
+                setShow(true);
             } catch (NullPointerException | IllegalStateException | WindowManager.BadTokenException ignored) {}
         }
     }
@@ -105,8 +113,8 @@ final class ToastHelper extends Handler {
      */
     void cancel() {
         // 移除之前移除吐司的任务
-        removeMessages(0);
-        if (isShow) {
+        removeMessages(hashCode());
+        if (isShow()) {
             try {
                 // 如果当前 WindowManager 没有附加这个 View 则会抛出异常
                 // java.lang.IllegalArgumentException:
@@ -114,7 +122,7 @@ final class ToastHelper extends Handler {
                 mWindowHelper.getWindowManager().removeViewImmediate(mToast.getView());
             } catch (NullPointerException | IllegalArgumentException ignored) {}
             // 当前没有显示
-            isShow = false;
+            setShow(false);
         }
     }
 }

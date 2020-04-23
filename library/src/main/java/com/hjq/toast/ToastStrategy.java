@@ -17,7 +17,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class ToastStrategy extends Handler implements IToastStrategy {
 
     /** 延迟时间 */
-    private static final int DELAY_TIMEOUT = 300;
+    private static final int DELAY_TIMEOUT = 200;
 
     /** 显示吐司 */
     private static final int TYPE_SHOW = 1;
@@ -33,7 +33,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
     private volatile Queue<CharSequence> mQueue;
 
     /** 当前是否正在执行显示操作 */
-    private volatile boolean isShow;
+    private volatile boolean mShow;
 
     /** 吐司对象 */
     private Toast mToast;
@@ -59,8 +59,8 @@ public class ToastStrategy extends Handler implements IToastStrategy {
             }
         }
 
-        if (!isShow) {
-            isShow = true;
+        if (!mShow) {
+            mShow = true;
             // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示当前 Activity
             // 如果当前 Activity 在 ToastUtils.show 之后进行 finish 了，那么这个时候 Toast 可能会显示不出来
             // 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面
@@ -70,8 +70,8 @@ public class ToastStrategy extends Handler implements IToastStrategy {
 
     @Override
     public void cancel() {
-        if (isShow) {
-            isShow = false;
+        if (mShow) {
+            mShow = false;
             sendEmptyMessage(TYPE_CANCEL);
         }
     }
@@ -89,7 +89,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
                     // 不然在某些手机上 Toast 可能会来不及消失就要进行显示，这样是显示不出来的
                     sendEmptyMessageDelayed(TYPE_CONTINUE, getToastDuration(text) + DELAY_TIMEOUT);
                 } else {
-                    isShow = false;
+                    mShow = false;
                 }
                 break;
             case TYPE_CONTINUE:
@@ -98,11 +98,11 @@ public class ToastStrategy extends Handler implements IToastStrategy {
                 if (!mQueue.isEmpty()) {
                     sendEmptyMessage(TYPE_SHOW);
                 } else {
-                    isShow = false;
+                    mShow = false;
                 }
                 break;
             case TYPE_CANCEL:
-                isShow = false;
+                mShow = false;
                 mQueue.clear();
                 mToast.cancel();
                 break;
