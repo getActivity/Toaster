@@ -3,10 +3,8 @@ package com.hjq.toast;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.WindowManager;
 
 /**
  *    author : Android 轮子哥
@@ -34,19 +32,10 @@ final class WindowHelper implements Application.ActivityLifecycleCallbacks {
     }
 
     /**
-     * 获取一个WindowManager对象
-     *
-     * @return          如果获取不到则抛出空指针异常
+     * 获取栈顶的 Activity
      */
-    WindowManager getWindowManager() throws NullPointerException {
-        // 如果使用的 WindowManager 对象不是当前 Activity 创建的，则会抛出异常
-        // android.view.WindowManager$BadTokenException: Unable to add window -- token null is not for an application
-        // 如果使用的 WindowManager 对象的 Activity 已经销毁，则会抛出异常
-        // WindowManager: android.view.WindowLeaked: Activity has leaked window TextView that was originally added here
-        if (mTopActivity != null && !mTopActivity.isFinishing()) {
-            return ((WindowManager) mTopActivity.getSystemService(Context.WINDOW_SERVICE));
-        }
-        throw new NullPointerException();
+    Activity getTopActivity() {
+        return mTopActivity;
     }
 
     /**

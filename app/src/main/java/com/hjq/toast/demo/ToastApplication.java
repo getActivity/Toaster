@@ -27,7 +27,7 @@ public class ToastApplication extends Application {
                 if (intercept) {
                     Log.e("Toast", "空 Toast");
                 } else {
-                    Log.i("Toast", text.toString());
+                    Log.d("Toast", text.toString());
                 }
                 return intercept;
             }
