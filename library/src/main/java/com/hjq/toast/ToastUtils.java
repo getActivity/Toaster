@@ -68,7 +68,11 @@ public final class ToastUtils {
 
         // 初始化吐司
         if (areNotificationsEnabled(application)) {
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O + 4) {
+                // 适配 Android 11 无法使用自定义 Toast 的问题
+                // 官方文档：https://developer.android.google.cn/preview/features/toasts
+                setToast(new SupportToast(application));
+            } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
                 // 解决 Android 7.1 上主线程被阻塞后吐司会报错的问题
                 setToast(new SafeToast(application));
             } else {
