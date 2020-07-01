@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 3
         targetSdkVersion 26
-        versionCode 85
-        versionName "8.5"
+        versionCode 86
+        versionName "8.6"
     }
 }
 
@@ -16,7 +16,7 @@ publish {
     userOrg = 'getactivity'
     groupId = 'com.hjq'
     artifactId = 'toast'
-    version = '8.5'
+    version = '8.6'
     description = 'This is a very functional Toast'
     website = "https://github.com/getActivity/ToastUtils"
 }

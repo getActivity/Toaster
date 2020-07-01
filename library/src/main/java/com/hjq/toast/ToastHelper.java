@@ -95,6 +95,8 @@ final class ToastHelper extends Handler {
             params.gravity = mToast.getGravity();
             params.x = mToast.getXOffset();
             params.y = mToast.getYOffset();
+            params.verticalMargin = mToast.getVerticalMargin();
+            params.horizontalMargin = mToast.getHorizontalMargin();
 
             try {
                 Activity topActivity = mWindowHelper.getTopActivity();

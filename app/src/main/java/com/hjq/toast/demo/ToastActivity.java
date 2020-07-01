@@ -1,11 +1,11 @@
 package com.hjq.toast.demo;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.hjq.toast.SupportToast;
 import com.hjq.toast.ToastUtils;

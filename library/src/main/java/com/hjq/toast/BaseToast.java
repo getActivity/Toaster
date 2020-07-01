@@ -24,7 +24,7 @@ public class BaseToast extends Toast {
     @Override
     public void setView(View view) {
         super.setView(view);
-        mMessageView = getMessageView(view);
+        setMessageView(findMessageView(view));
     }
 
     @Override
@@ -32,10 +32,14 @@ public class BaseToast extends Toast {
         mMessageView.setText(s);
     }
 
+    void setMessageView(TextView textView) {
+        mMessageView = textView;
+    }
+
     /**
      * 智能获取用于显示消息的 TextView
      */
-    private static TextView getMessageView(View view) {
+    static TextView findMessageView(View view) {
         if (view instanceof TextView) {
             return (TextView) view;
         } else if (view.findViewById(android.R.id.message) instanceof TextView) {
