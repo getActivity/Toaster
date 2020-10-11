@@ -7,9 +7,9 @@ import android.view.View;
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/11/02
- *    desc   : Toast 无通知栏权限兼容
+ *    desc   : 自定义 Toast（用于解决关闭通知栏权限之后不能弹吐司的问题和 Android 11 不能自定义吐司样式的问题）
  */
-public final class SupportToast extends BaseToast {
+public final class CustomToast extends NormalToast {
 
     /** 吐司弹窗显示辅助类 */
     private final ToastHelper mToastHelper;
@@ -27,20 +27,20 @@ public final class SupportToast extends BaseToast {
     /** 垂直间距百分比 */
     private float mVerticalMargin;
 
-    public SupportToast(Application application) {
+    public CustomToast(Application application) {
         super(application);
         mToastHelper = new ToastHelper(this, application);
     }
 
     @Override
     public void show() {
-        // 显示吐司
+        // 替换成 WindowManager 来显示
         mToastHelper.show();
     }
 
     @Override
     public void cancel() {
-        // 取消显示
+        // 取消 WindowManager 的显示
         mToastHelper.cancel();
     }
 

@@ -1,5 +1,6 @@
 package com.hjq.toast;
 
+import android.app.Application;
 import android.widget.Toast;
 
 /**
@@ -16,7 +17,12 @@ public interface IToastStrategy {
     int LONG_DURATION_TIMEOUT = 3500;
 
     /**
-     * 绑定 Toast 对象
+     * 创建 Toast
+     */
+    Toast create(Application application);
+
+    /**
+     * 绑定 Toast
      */
     void bind(Toast toast);
 

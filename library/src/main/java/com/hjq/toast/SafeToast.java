@@ -12,10 +12,10 @@ import java.lang.reflect.Field;
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/12/06
- *    desc   : Toast 显示安全处理
+ *    desc   : Toast 崩溃处理
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public final class SafeToast extends BaseToast {
+public final class SafeToast extends NormalToast {
 
     public SafeToast(Application application) {
         super(application);

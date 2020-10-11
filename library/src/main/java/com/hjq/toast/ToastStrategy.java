@@ -1,10 +1,18 @@
 package com.hjq.toast;
 
+import android.app.AppOpsManager;
+import android.app.Application;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -41,6 +49,36 @@ public class ToastStrategy extends Handler implements IToastStrategy {
     public ToastStrategy() {
         super(Looper.getMainLooper());
         mQueue = getToastQueue();
+    }
+
+    @Override
+    public Toast create(Application application) {
+        Toast toast;
+        // 初始化吐司
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // 适配 Android 11 无法使用自定义 Toast 的问题
+            // 官方文档：https://developer.android.google.cn/preview/features/toasts
+            toast = new CustomToast(application);
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
+            // 处理 Android 7.1 上 Toast 在主线程被阻塞后会导致报错的问题
+            toast = new SafeToast(application);
+        } else {
+            boolean check =
+                    // 对比不同版本的 NMS 的源码发现这个问题在 Android 9.0 已经被谷歌修复了
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ||
+                            // 判断当前应用是否有通知栏权限，如果关闭会导致弹 Toast 无法显示
+                            areNotificationsEnabled(application) ||
+                            // 判断当前是否是小米手机，因为只有小米手机做了特殊处理，就算没有通知栏权限也能弹吐司
+                            "xiaomi".equals(Build.MANUFACTURER.toLowerCase());
+            if (check) {
+                // 检查通过，返回正常类型的 Toast 即可
+                toast = new NormalToast(application);
+            } else {
+                // 修复关闭通知栏权限后 Toast 不显示的问题
+                toast = new CustomToast(application);
+            }
+        }
+        return toast;
     }
 
     @Override
@@ -122,7 +160,30 @@ public class ToastStrategy extends Handler implements IToastStrategy {
      * 根据文本来获取吐司的显示时长
      */
     public int getToastDuration (CharSequence text) {
-        // 如果显示的文字超过了10个就显示长吐司，否则显示短吐司
+        // 如果显示的文字超过了 20 个字符就显示长吐司，否则显示短吐司
         return text.length() > 20 ? LONG_DURATION_TIMEOUT : SHORT_DURATION_TIMEOUT;
+    }
+
+    /**
+     * 检查通知栏权限有没有开启
+     *
+     * 参考 SupportCompat 包中的方法： NotificationManagerCompat.from(context).areNotificationsEnabled();
+     */
+    private static boolean areNotificationsEnabled(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return context.getSystemService(NotificationManager.class).areNotificationsEnabled();
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            AppOpsManager appOps = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+            try {
+                Method method = appOps.getClass().getMethod("checkOpNoThrow", Integer.TYPE, Integer.TYPE, String.class);
+                Field field = appOps.getClass().getDeclaredField("OP_POST_NOTIFICATION");
+                int value = (Integer) field.get(Integer.class);
+                return ((int) method.invoke(appOps, value, context.getApplicationInfo().uid, context.getPackageName())) == AppOpsManager.MODE_ALLOWED;
+            } catch (NoSuchMethodException | NoSuchFieldException | InvocationTargetException | IllegalAccessException | RuntimeException ignored) {
+                return true;
+            }
+        } else {
+            return true;
+        }
     }
 }

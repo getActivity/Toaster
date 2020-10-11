@@ -6,7 +6,7 @@
 
 > 已投入公司项目多时，没有任何毛病，可胜任任何需求，[点击此处下载Demo](ToastUtils.apk)
 
-> 想了解实现原理的可以点击此链接查看：[ToastUtils](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/toast/ToastUtils.java) 源码
+> 想了解实现原理的可以点击此链接查看：[ToastUtils](library/src/main/java/com/hjq/toast/ToastUtils.java) 源码
 
 ![](ToastUtils.gif)
 
@@ -14,61 +14,69 @@
 
 #### 集成步骤
 
-    dependencies {
-        implementation 'com.hjq:toast:8.6'
-    }
+```groovy
+dependencies {
+    implementation 'com.hjq:toast:8.8'
+}
+```
 
 #### 初始化 Toast
 
-    // 在 Application 中初始化
-    ToastUtils.init(this);
+```java
+// 在 Application 中初始化
+ToastUtils.init(this);
+```
 
 #### 显示 Toast
 
-    ToastUtils.show("我是吐司");
+```java
+ToastUtils.show("我是吐司");
+```
 
 #### 其他 API
 
-    // 设置Toast布局
-    ToastUtils.setView();
+```java
+// 设置Toast布局
+ToastUtils.setView();
 
-    // 设置吐司重心
-    ToastUtils.setGravity();
+// 设置吐司重心
+ToastUtils.setGravity();
 
-    // 获取Toast对象
-    ToastUtils.getToast();
+// 获取Toast对象
+ToastUtils.getToast();
+```
 
 #### 自定义Toast样式
 
-> 如果对Toast的默认样式不满意，可以在Application初始化样式，具体可参考[ToastBlackStyle](https://github.com/getActivity/ToastUtils/blob/master/library/src/main/java/com/hjq/toast/style/ToastBlackStyle.java)类的实现
+> 如果对Toast的默认样式不满意，可以在Application初始化样式，具体可参考[ToastBlackStyle](library/src/main/java/com/hjq/toast/style/ToastBlackStyle.java)类的实现
 
-    ToastUtils.initStyle(new IToastStyle());
-
-#### 混淆规则
-
-    -keep class com.hjq.toast.** {*;}
+```java
+ToastUtils.initStyle(new IToastStyle());
+```
 
 #### 框架亮点
 
 * 无需权限：不管有没有授予通知栏权限都不影响吐司的弹出
 
-* 功能强大：不分主次线程都可以弹出Toast，自动区分资源id和int类型
+* 兼容性强：处理原生 Toast 在 Android 7.1 产生崩溃的历史遗留问题
+
+* 功能强大：不分主次线程都可以弹出Toast，自动区分资源 id 和 int 类型
 
 * 使用简单：只需传入文本，会自动根据文本长度决定吐司显示的时长
 
-* 性能最佳：单例吐司，整个Toast只有一个TextView，并且通过代码创建
+* 性能最佳：单例吐司，整个 Toast 只有一个 TextView，并且通过代码创建
 
-* 体验最优：限制Toast短时间内弹出的次数，避免频繁弹出造成不良的用户体验
+* 体验最优：限制 Toast 短时间内弹出的次数，避免频繁弹出造成不良的用户体验
 
-* 支持多种样式：默认为黑色样式，夜间模式可使用白色样式，还有仿QQ吐司样式
+* 支持多种样式：默认为黑色样式，夜间模式可使用白色样式，还有仿 QQ 吐司样式
 
 * 支持自定义样式：吐司（背景、圆角、重心、偏移），文字（大小、颜色、边距）
 
-* 支持自定义扩展：支持获取ToastUtils中的Toast对象，支持重新自定义Toast布局
+* 支持自定义扩展：支持获取 ToastUtils 中的 Toast 对象，支持重新自定义 Toast 布局
 
-* 支持全局配置样式：可以在Application中初始化Toast样式，达到一劳永逸的效果
+* 支持全局配置样式：可以在 Application 中初始化 Toast 样式，达到一劳永逸的效果
 
-* 框架兼容性良好：本框架不依赖任何第三方库，支持 Eclipse 和 Studio 的集成使用
+* 已适配 Android R：Android 11 之后不能弹出自定义样式的 Toast，框架针对这种情况进行了适配
 
 #### 关于通知栏权限
 
@@ -90,23 +98,37 @@
 
 > 右击项目，Replace in path，勾选 Regex 选项
 
-	Toast\.makeText\([^,]+,\s(.+{1}),\s[^,]+\)\.show\(\);
+```java
+Toast\.makeText\([^,]+,\s*(.+{1}),\s*[^,]+\)\.show\(\)
+```
 
 > 替换使用
 
-	ToastUtils.show($1);
+```java
+ToastUtils.show($1)
+```
 
 > 包名替换
 
-	import android.widget.Toast;
+```java
+import android.widget.Toast
+```
 
 ---
 
-	import com.hjq.toast.ToastUtils;
+```java
+import com.hjq.toast.ToastUtils
+```
+
+>  再全局搜索，手动更换一些没有替换成功的
+
+```java
+Toast.makeText
+```
 
 #### 作者的其他开源项目
 
-* 架构工程：[AndroidProject](https://github.com/getActivity/AndroidProject)
+* 安卓架构：[AndroidProject](https://github.com/getActivity/AndroidProject)
 
 * 网络框架：[EasyHttp](https://github.com/getActivity/EasyHttp)
 

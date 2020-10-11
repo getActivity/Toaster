@@ -10,14 +10,14 @@ import android.widget.Toast;
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/11/03
- *    desc   : Toast 基类
+ *    desc   : 普通的 Toast
  */
-public class BaseToast extends Toast {
+public class NormalToast extends Toast {
 
     /** 吐司消息 View */
     private TextView mMessageView;
 
-    public BaseToast(Application application) {
+    public NormalToast(Application application) {
         super(application);
     }
 

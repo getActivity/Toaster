@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.hjq.toast.SupportToast;
+import com.hjq.toast.CustomToast;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.ToastAliPayStyle;
 import com.hjq.toast.style.ToastBlackStyle;
@@ -87,10 +87,10 @@ public class ToastActivity extends AppCompatActivity {
         // 请注意这段代码强烈建议不要放到实际开发中，因为用户屏蔽通知栏和开启应用状态下的概率极低，可以忽略不计
 
         // 如果通知栏的权限被手动关闭了
-        if (!SupportToast.class.equals(ToastUtils.getToast().getClass()) &&
+        if (!CustomToast.class.equals(ToastUtils.getToast().getClass()) &&
                         !NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             // 因为吐司只有初始化的时候才会判断通知权限有没有开启，根据这个通知开关来显示原生的吐司还是兼容的吐司
-            ToastUtils.setToast(new SupportToast(getApplication()));
+            ToastUtils.setToast(new CustomToast(getApplication()));
             getWindow().getDecorView().postDelayed(new Runnable() {
                 @Override
                 public void run() {
