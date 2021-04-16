@@ -1,7 +1,10 @@
 package com.hjq.toast;
 
-import android.app.Application;
+import android.app.Activity;
 import android.view.View;
+import android.widget.TextView;
+
+import com.hjq.toast.config.IToast;
 
 /**
  *    author : Android 轮子哥
@@ -9,50 +12,83 @@ import android.view.View;
  *    time   : 2018/11/02
  *    desc   : 自定义 Toast（用于解决关闭通知栏权限之后不能弹吐司的问题和 Android 11 不能自定义吐司样式的问题）
  */
-public final class CustomToast extends NormalToast {
+public final class ActivityToast implements IToast {
 
-    /** 吐司弹窗显示辅助类 */
-    private final ToastHelper mToastHelper;
+    /** Toast 实现类 */
+    private final ToastImpl mToastImpl;
 
-    /** Toast 的视图 */
+    /** Toast 布局 */
     private View mView;
-    /** Toast 的重心 */
+    /** Toast 消息 View */
+    private TextView mMessageView;
+    /** Toast 显示重心 */
     private int mGravity;
+    /** Toast 显示时长 */
+    private int mDuration;
     /** 水平偏移 */
     private int mXOffset;
     /** 垂直偏移 */
     private int mYOffset;
-    /** 水平间距百分比 */
+    /** 水平间距 */
     private float mHorizontalMargin;
-    /** 垂直间距百分比 */
+    /** 垂直间距 */
     private float mVerticalMargin;
 
-    public CustomToast(Application application) {
-        super(application);
-        mToastHelper = new ToastHelper(this, application);
+    public ActivityToast(Activity activity) {
+        mToastImpl = new ToastImpl(activity, this);
     }
 
     @Override
     public void show() {
         // 替换成 WindowManager 来显示
-        mToastHelper.show();
+        mToastImpl.show();
     }
 
     @Override
     public void cancel() {
         // 取消 WindowManager 的显示
-        mToastHelper.cancel();
+        mToastImpl.cancel();
+    }
+
+    @Override
+    public void setText(int id) {
+        if (mView == null) {
+            return;
+        }
+        setText(mView.getResources().getString(id));
+    }
+
+    @Override
+    public void setText(CharSequence text) {
+        if (mMessageView == null) {
+            return;
+        }
+        mMessageView.setText(text);
     }
 
     @Override
     public void setView(View view) {
         mView = view;
-        setMessageView(findMessageView(view));
+        if (mView == null) {
+            mMessageView = null;
+            return;
+        }
+        mMessageView = findMessageView(view);
     }
 
     @Override
     public View getView() {
         return mView;
+    }
+
+    @Override
+    public void setDuration(int duration) {
+        mDuration = duration;
+    }
+
+    @Override
+    public int getDuration() {
+        return mDuration;
     }
 
     @Override

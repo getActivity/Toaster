@@ -1,18 +1,20 @@
 package com.hjq.toast.demo;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.hjq.toast.CustomToast;
+import com.hjq.permissions.Permission;
+import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
-import com.hjq.toast.style.ToastAliPayStyle;
-import com.hjq.toast.style.ToastBlackStyle;
-import com.hjq.toast.style.ToastQQStyle;
-import com.hjq.toast.style.ToastWhiteStyle;
+import com.hjq.toast.style.BlackToastStyle;
+import com.hjq.toast.style.WhiteToastStyle;
 import com.hjq.xtoast.XToast;
 
 /**
@@ -21,7 +23,7 @@ import com.hjq.xtoast.XToast;
  *    time   : 2018/09/01
  *    desc   : ToastUtils 使用案例
  */
-public class ToastActivity extends AppCompatActivity {
+public final class ToastActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +32,10 @@ public class ToastActivity extends AppCompatActivity {
     }
 
     public void show1(View v) {
-        for (int i = 0; i < 3; i++) {
-            ToastUtils.show("我是第" + (i + 1) + "个吐司");
-        }
+        ToastUtils.show("我是普通的 Toast");
     }
 
+    @SuppressWarnings("AlibabaAvoidManuallyCreateThread")
     public void show2(View v) {
         new Thread(new Runnable() {
 
@@ -46,57 +47,59 @@ public class ToastActivity extends AppCompatActivity {
     }
 
     public void show3(View v) {
-        ToastUtils.initStyle(new ToastWhiteStyle(getApplication()));
+        ToastUtils.setStyle(new WhiteToastStyle());
         ToastUtils.show("动态切换白色吐司样式成功");
     }
 
     public void show4(View v) {
-        ToastUtils.initStyle(new ToastBlackStyle(getApplication()));
+        ToastUtils.setStyle(new BlackToastStyle());
         ToastUtils.show("动态切换黑色吐司样式成功");
     }
 
     public void show5(View v) {
-        ToastUtils.initStyle(new ToastQQStyle(getApplication()));
-        ToastUtils.show("QQ那种还不简单，分分钟的事");
+        ToastUtils.setView(R.layout.toast_custom_view);
+        ToastUtils.setGravity(Gravity.CENTER);
+        ToastUtils.show("自定义 Toast 布局");
     }
 
     public void show6(View v) {
-        ToastUtils.initStyle(new ToastAliPayStyle(getApplication()));
-        ToastUtils.show("支付宝那种还不简单，分分钟的事");
+        // 推荐使用 XXPermissions 来申请通知栏权限：https://github.com/getActivity/XXPermissions
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
+            v.postDelayed(new BackgroundRunnable(), 500);
+        } else {
+            ToastUtils.show("在后台显示 Toast 需要先获取通知栏权限");
+            v.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    XXPermissions.startPermissionActivity(ToastActivity.this, Permission.NOTIFICATION_SERVICE);
+                }
+            }, 2000);
+        }
     }
 
     public void show7(View v) {
-        // ToastUtils.setView(View.inflate(getApplication(), R.layout.toast_custom_view, null));
-        ToastUtils.setView(R.layout.toast_custom_view);
-        ToastUtils.setGravity(Gravity.CENTER, 0, 0);
-        ToastUtils.show("我是自定义Toast");
-    }
-
-    public void show8(View v) {
-        new XToast(ToastActivity.this)
+        new XToast<>(ToastActivity.this)
                 .setDuration(1000)
-                .setView(ToastUtils.getToast().getView())
+                .setView(ToastUtils.getStyle().createView(getApplication()))
                 .setAnimStyle(android.R.style.Animation_Translucent)
                 .setText(android.R.id.message, "就问你溜不溜")
+                .setGravity(Gravity.BOTTOM)
+                .setYOffset((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()))
                 .show();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        // 请注意这段代码强烈建议不要放到实际开发中，因为用户屏蔽通知栏和开启应用状态下的概率极低，可以忽略不计
+    private static class BackgroundRunnable implements Runnable {
 
-        // 如果通知栏的权限被手动关闭了
-        if (!CustomToast.class.equals(ToastUtils.getToast().getClass()) &&
-                        !NotificationManagerCompat.from(this).areNotificationsEnabled()) {
-            // 因为吐司只有初始化的时候才会判断通知权限有没有开启，根据这个通知开关来显示原生的吐司还是兼容的吐司
-            ToastUtils.setToast(new CustomToast(getApplication()));
-            getWindow().getDecorView().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ToastUtils.show("检查到你手动关闭了通知权限，正在重新初始化 Toast");
-                }
-            }, 1000);
+        @Override
+        public void run() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                ToastUtils.show("我是在后台显示的 Toast（在 Android 11 上只能跟随系统 Toast 样式）");
+            } else {
+                ToastUtils.show("我是在后台显示的 Toast");
+            }
         }
-    }
+    };
 }

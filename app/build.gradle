@@ -5,10 +5,10 @@ android {
 
     defaultConfig {
         applicationId "com.hjq.toast.demo"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 30
-        versionCode 88
-        versionName "8.8"
+        versionCode 90
+        versionName "9.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -17,17 +17,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    // 使用 JDK 1.8
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':library')
-    implementation 'androidx.appcompat:appcompat:1.3.0-alpha02'
-    implementation 'com.google.android.material:material:1.3.0-alpha02'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     // 标题栏：https://github.com/getActivity/TitleBar
-    implementation 'com.hjq:titlebar:8.0'
+    implementation 'com.hjq:titlebar:8.5'
     // 悬浮窗：https://github.com/getActivity/XToast
-    implementation 'com.hjq:xtoast:5.5'
+    implementation 'com.hjq:xtoast:6.9'
     // 内存泄漏捕捉：https://github.com/square/leakcanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    // 权限请求框架：https://github.com/getActivity/XXPermissions
+    implementation 'com.hjq:xxpermissions:10.6'
 }

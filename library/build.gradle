@@ -5,9 +5,15 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        minSdkVersion 4
-        versionCode 88
-        versionName "8.8"
+        minSdkVersion 14
+        versionCode 90
+        versionName "9.0"
+    }
+
+    // 使用 JDK 1.8
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -15,8 +21,8 @@ publish {
     userOrg = 'getactivity'
     groupId = 'com.hjq'
     artifactId = 'toast'
-    version = '8.8'
-    description = 'This is a very functional Toast'
+    publishVersion = '9.0'
+    desc = 'This is a very functional Toast'
     website = "https://github.com/getActivity/ToastUtils"
 }
 

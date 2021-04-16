@@ -1,45 +1,93 @@
-package com.hjq.toast;
+package com.hjq.toast.config;
 
-import android.app.Application;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
- *    time   : 2018/11/03
- *    desc   : 普通的 Toast
+ *    time   : 2021/04/06
+ *    desc   : Toast 接口
  */
-public class NormalToast extends Toast {
+public interface IToast {
 
-    /** 吐司消息 View */
-    private TextView mMessageView;
+    /**
+     * 显示
+     */
+    void show();
 
-    public NormalToast(Application application) {
-        super(application);
-    }
+    /**
+     * 取消
+     */
+    void cancel();
 
-    @Override
-    public void setView(View view) {
-        super.setView(view);
-        setMessageView(findMessageView(view));
-    }
+    /**
+     * 设置文本
+     */
+    void setText(int id);
 
-    @Override
-    public void setText(CharSequence s) {
-        mMessageView.setText(s);
-    }
+    void setText(CharSequence text);
 
-    void setMessageView(TextView textView) {
-        mMessageView = textView;
-    }
+    /**
+     * 设置布局
+     */
+    void setView(View view);
+
+    /**
+     * 获取布局
+     */
+    View getView();
+
+    /**
+     * 设置显示时长
+     */
+    void setDuration(int duration);
+
+    /**
+     * 获取显示时长
+     */
+    int getDuration();
+
+    /**
+     * 设置重心偏移
+     */
+    void setGravity(int gravity, int xOffset, int yOffset);
+
+    /**
+     * 获取显示重心
+     */
+    int getGravity();
+
+    /**
+     * 获取水平偏移
+     */
+    int getXOffset();
+
+    /**
+     * 获取垂直偏移
+     */
+    int getYOffset();
+
+    /**
+     * 设置屏幕间距
+     */
+    void setMargin(float horizontalMargin, float verticalMargin);
+
+    /**
+     * 设置水平间距
+     */
+    float getHorizontalMargin();
+
+    /**
+     * 设置垂直间距
+     */
+    float getVerticalMargin();
 
     /**
      * 智能获取用于显示消息的 TextView
      */
-    static TextView findMessageView(View view) {
+    default TextView findMessageView(View view) {
         if (view instanceof TextView) {
             return (TextView) view;
         } else if (view.findViewById(android.R.id.message) instanceof TextView) {
@@ -57,7 +105,7 @@ public class NormalToast extends Toast {
     /**
      * 递归获取 ViewGroup 中的 TextView 对象
      */
-    private static TextView findTextView(ViewGroup group) {
+    default TextView findTextView(ViewGroup group) {
         for (int i = 0; i < group.getChildCount(); i++) {
             View view = group.getChildAt(i);
             if ((view instanceof TextView)) {
