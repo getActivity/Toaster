@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 30
@@ -15,15 +14,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
-}
-
-publish {
-    userOrg = 'getactivity'
-    groupId = 'com.hjq'
-    artifactId = 'toast'
-    publishVersion = '9.0'
-    desc = 'This is a very functional Toast'
-    website = "https://github.com/getActivity/ToastUtils"
 }
 
 tasks.withType(Javadoc) {

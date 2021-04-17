@@ -6,11 +6,25 @@
 
 * 已投入公司项目多时，没有任何毛病，可胜任任何需求，[点击此处下载Demo](ToastUtils.apk)
 
-![](ToastUtils.gif)
-
-#### 本框架意在解决一些常见需求，如果是有一些特殊的需求推荐配搭 [XToast](https://github.com/getActivity/XToast) 悬浮窗使用
+![](ToastUtils.jpg)
 
 #### 集成步骤
+
+* 在项目根目录下的 `build.gradle` 文件中加入
+
+```groovy
+buildscript {
+    ......
+}
+allprojects {
+    repositories {
+        // JitPack 远程仓库：https://jitpack.io
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+* 在项目 app 模块下的 `build.gradle` 文件中加入
 
 ```groovy
 android {
@@ -23,11 +37,11 @@ android {
 
 dependencies {
     // 吐司框架：https://github.com/getActivity/ToastUtils
-    implementation 'com.hjq:toast:9.0'
+    implementation 'com.github.getActivity:ToastUtils:9.0'
 }
 ```
 
-#### 初始化
+#### 初始化框架
 
 ```java
 ToastUtils.init(this);
@@ -42,7 +56,6 @@ ToastUtils.show("我是吐司");
 #### 取消 Toast
 
 ```java
-// 取消 Toast 显示
 ToastUtils.cancel();
 ```
 
@@ -130,6 +143,8 @@ Toast.makeText
 ```java
 new Toast
 ```
+
+#### 温馨提示：框架意在解决一些常规的 Toast 需求，如果是有一些特殊的定制化需求请配搭 [XToast](https://github.com/getActivity/XToast) 悬浮窗框架使用
 
 #### 作者的其他开源项目
 
