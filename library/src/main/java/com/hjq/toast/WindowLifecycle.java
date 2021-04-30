@@ -52,8 +52,7 @@ final class WindowLifecycle implements Application.ActivityLifecycleCallbacks {
             return;
         }
 
-        // 取消这个吐司的显示
-        if (mToastImpl == null || !mToastImpl.isShow()) {
+        if (mToastImpl == null) {
             return;
         }
 
@@ -73,12 +72,23 @@ final class WindowLifecycle implements Application.ActivityLifecycleCallbacks {
         if (mActivity != activity) {
             return;
         }
+
+        if (mToastImpl != null) {
+            mToastImpl.cancel();
+        }
+
         unregister();
         mActivity = null;
     }
 
+    /**
+     * 注册
+     */
     void register(ToastImpl impl) {
         mToastImpl = impl;
+        if (mActivity == null) {
+            return;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             mActivity.registerActivityLifecycleCallbacks(this);
         } else {
@@ -86,8 +96,14 @@ final class WindowLifecycle implements Application.ActivityLifecycleCallbacks {
         }
     }
 
+    /**
+     * 反注册
+     */
     void unregister() {
         mToastImpl = null;
+        if (mActivity == null) {
+            return;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             mActivity.unregisterActivityLifecycleCallbacks(this);
         } else {

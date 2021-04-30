@@ -37,7 +37,7 @@ android {
 
 dependencies {
     // 吐司框架：https://github.com/getActivity/ToastUtils
-    implementation 'com.github.getActivity:ToastUtils:9.0'
+    implementation 'com.github.getActivity:ToastUtils:9.1'
 }
 ```
 
