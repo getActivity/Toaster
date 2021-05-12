@@ -8,8 +8,8 @@ import android.view.Gravity;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
@@ -63,13 +63,32 @@ public final class ToastActivity extends AppCompatActivity {
     }
 
     public void show6(View v) {
-        // 推荐使用 XXPermissions 来申请通知栏权限：https://github.com/getActivity/XXPermissions
-        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            startActivity(intent);
-            v.postDelayed(new BackgroundRunnable(), 500);
+        if (XXPermissions.isGranted(this, Permission.NOTIFICATION_SERVICE)) {
+
+            Snackbar.make(getWindow().getDecorView(), "正在准备跳转到手机桌面，请注意有极少数机型无法在后台显示 Toast", Snackbar.LENGTH_SHORT).show();
+
+            v.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_HOME);
+                    startActivity(intent);
+                }
+            }, 2000);
+
+            v.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        ToastUtils.show("我是在后台显示的 Toast（在 Android 11 上只能跟随系统 Toast 样式）");
+                    } else {
+                        ToastUtils.show("我是在后台显示的 Toast");
+                    }
+                }
+            }, 3000);
+
         } else {
+
             ToastUtils.show("在后台显示 Toast 需要先获取通知栏权限");
             v.postDelayed(new Runnable() {
                 @Override
@@ -90,16 +109,4 @@ public final class ToastActivity extends AppCompatActivity {
                 .setYOffset((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()))
                 .show();
     }
-
-    private static class BackgroundRunnable implements Runnable {
-
-        @Override
-        public void run() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                ToastUtils.show("我是在后台显示的 Toast（在 Android 11 上只能跟随系统 Toast 样式）");
-            } else {
-                ToastUtils.show("我是在后台显示的 Toast");
-            }
-        }
-    };
 }

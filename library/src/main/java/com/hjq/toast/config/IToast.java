@@ -89,34 +89,20 @@ public interface IToast {
      */
     default TextView findMessageView(View view) {
         if (view instanceof TextView) {
+            if (view.getId() == View.NO_ID) {
+                view.setId(android.R.id.message);
+            } else if (view.getId() != android.R.id.message) {
+                // 必须将 TextView 的 id 值设置成 android.R.id.message
+                throw new IllegalArgumentException("You must set the ID value of TextView to android.R.id.message");
+            }
             return (TextView) view;
-        } else if (view.findViewById(android.R.id.message) instanceof TextView) {
-            return ((TextView) view.findViewById(android.R.id.message));
-        } else if (view instanceof ViewGroup) {
-            TextView textView = findTextView((ViewGroup) view);
-            if (textView != null) {
-                return textView;
-            }
         }
-        // 如果设置的布局没有包含一个 TextView 则抛出异常，必须要包含一个 TextView 作为 MessageView
-        throw new IllegalArgumentException("The layout must contain a TextView");
-    }
 
-    /**
-     * 递归获取 ViewGroup 中的 TextView 对象
-     */
-    default TextView findTextView(ViewGroup group) {
-        for (int i = 0; i < group.getChildCount(); i++) {
-            View view = group.getChildAt(i);
-            if ((view instanceof TextView)) {
-                return (TextView) view;
-            } else if (view instanceof ViewGroup) {
-                TextView textView = findTextView((ViewGroup) view);
-                if (textView != null) {
-                    return textView;
-                }
-            }
+        if (view.findViewById(android.R.id.message) instanceof TextView) {
+            return ((TextView) view.findViewById(android.R.id.message));
         }
-        return null;
+
+        // 如果设置的布局没有包含一个 TextView 则抛出异常，必须要包含一个 id 值成 android.R.id.message 的 TextView
+        throw new IllegalArgumentException("You must include a TextView with an ID value of android.R.id.message");
     }
 }

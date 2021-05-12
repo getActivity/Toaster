@@ -14,11 +14,12 @@
 
 ```groovy
 buildscript {
-    ......
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
 }
 allprojects {
     repositories {
-        // JitPack 远程仓库：https://jitpack.io
         maven { url 'https://jitpack.io' }
     }
 }
@@ -37,7 +38,7 @@ android {
 
 dependencies {
     // 吐司框架：https://github.com/getActivity/ToastUtils
-    implementation 'com.github.getActivity:ToastUtils:9.1'
+    implementation 'com.github.getActivity:ToastUtils:9.2'
 }
 ```
 
