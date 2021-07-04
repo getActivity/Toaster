@@ -5,14 +5,21 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        versionCode 92
-        versionName "9.2"
+        versionCode 95
+        versionName "9.5"
     }
 
     // 使用 JDK 1.8
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
+    android.libraryVariants.all { variant ->
+        // aar 输出文件名配置
+        variant.outputs.all { output ->
+            outputFileName = "toast-${android.defaultConfig.versionName}.aar"
+        }
     }
 }
 

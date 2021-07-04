@@ -10,6 +10,7 @@ import android.view.WindowManager;
  *    time   : 2018/12/06
  *    desc   : Toast 显示安全处理
  */
+@SuppressWarnings("deprecation")
 final class SafeHandler extends Handler {
 
     private final Handler mHandler;

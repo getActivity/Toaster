@@ -1,7 +1,6 @@
 package com.hjq.toast.config;
 
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
@@ -10,6 +9,7 @@ import android.widget.TextView;
  *    time   : 2021/04/06
  *    desc   : Toast 接口
  */
+@SuppressWarnings("unused")
 public interface IToast {
 
     /**

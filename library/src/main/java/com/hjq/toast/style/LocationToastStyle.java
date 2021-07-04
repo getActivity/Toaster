@@ -11,6 +11,7 @@ import com.hjq.toast.config.IToastStyle;
  *    time   : 2021/03/09
  *    desc   : Toast 位置包装样式实现
  */
+@SuppressWarnings("unused")
 public class LocationToastStyle implements IToastStyle<View> {
 
     private final IToastStyle<?> mStyle;

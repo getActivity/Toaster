@@ -17,6 +17,7 @@ import com.hjq.toast.config.IToastStyle;
  *    time   : 2018/09/01
  *    desc   : 默认黑色样式实现
  */
+@SuppressWarnings({"unused", "deprecation"})
 public class BlackToastStyle implements IToastStyle<TextView> {
 
     @Override

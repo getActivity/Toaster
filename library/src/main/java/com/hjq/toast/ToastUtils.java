@@ -1,6 +1,7 @@
 package com.hjq.toast;
 
 import android.app.Application;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 
 import com.hjq.toast.config.IToastInterceptor;
@@ -17,6 +18,7 @@ import com.hjq.toast.style.WhiteToastStyle;
  *    time   : 2018/09/01
  *    desc   : Toast 框架（专治 Toast 疑难杂症）
  */
+@SuppressWarnings("unused")
 public final class ToastUtils {
 
     /** Application 对象 */
@@ -30,6 +32,9 @@ public final class ToastUtils {
 
     /** Toast 拦截器（可空） */
     private static IToastInterceptor sToastInterceptor;
+
+    /** 调试模式 */
+    private static Boolean sDebugMode;
 
     /**
      * 不允许被外部实例化
@@ -65,12 +70,26 @@ public final class ToastUtils {
     }
 
     /**
+     * 判断当前框架是否已经初始化
+     */
+    public static boolean isInit() {
+        return sApplication != null && sToastStrategy != null && sToastStyle != null;
+    }
+
+    /**
      * 显示一个对象的吐司
      *
      * @param object      对象
      */
     public static void show(Object object) {
         show(object != null ? object.toString() : "null");
+    }
+
+    public static void debugShow(Object object) {
+        if (!isDebugMode()) {
+            return;
+        }
+        show(object);
     }
 
     /**
@@ -89,12 +108,19 @@ public final class ToastUtils {
         }
     }
 
+    public static void debugShow(int id) {
+        if (!isDebugMode()) {
+            return;
+        }
+        show(id);
+    }
+
     /**
      * 显示一个吐司
      *
      * @param text      需要显示的文本
      */
-    public static void show(final CharSequence text) {
+    public static void show(CharSequence text) {
         // 如果是空对象或者空文本就不显示
         if (text == null || text.length() == 0) {
             return;
@@ -105,6 +131,13 @@ public final class ToastUtils {
         }
 
         sToastStrategy.showToast(text);
+    }
+
+    public static void debugShow(CharSequence text) {
+        if (!isDebugMode()) {
+            return;
+        }
+        show(text);
     }
 
     /**
@@ -179,5 +212,19 @@ public final class ToastUtils {
 
     public static IToastInterceptor getInterceptor() {
         return sToastInterceptor;
+    }
+
+    /**
+     * 是否为调试模式
+     */
+    public static void setDebugMode(boolean debug) {
+        sDebugMode = debug;
+    }
+
+    private static boolean isDebugMode() {
+        if (sDebugMode == null) {
+            sDebugMode = (sApplication.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+        }
+        return sDebugMode;
     }
 }

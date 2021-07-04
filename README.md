@@ -38,14 +38,23 @@ android {
 
 dependencies {
     // 吐司框架：https://github.com/getActivity/ToastUtils
-    implementation 'com.github.getActivity:ToastUtils:9.2'
+    implementation 'com.github.getActivity:ToastUtils:9.5'
 }
 ```
 
 #### 初始化框架
 
 ```java
-ToastUtils.init(this);
+public class XxxApplication extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        // 初始化 Toast 框架
+        ToastUtils.init(this);
+    }
+}
 ```
 
 #### 显示 Toast

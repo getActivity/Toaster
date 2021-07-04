@@ -85,6 +85,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
 
     @Override
     public void showToast(CharSequence text) {
+        removeMessages(TYPE_SHOW);
         // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示当前 Activity
         // 如果当前 Activity 在 ToastUtils.show 之后进行 finish 了，那么这个时候 Toast 可能会显示不出来
         // 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面
@@ -96,6 +97,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
 
     @Override
     public void cancelToast() {
+        removeMessages(TYPE_CANCEL);
         sendEmptyMessage(TYPE_CANCEL);
     }
 
@@ -122,7 +124,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
 
                 toast = createToast(mApplication);
                 mToastReference = new WeakReference<>(toast);
-                toast.setDuration(getDuration(text));
+                toast.setDuration(getToastDuration(text));
                 toast.setText(text);
                 toast.show();
                 break;
@@ -140,7 +142,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
     /**
      * 获取 Toast 显示时长
      */
-    protected int getDuration(CharSequence text) {
+    protected int getToastDuration(CharSequence text) {
         return text.length() > 20 ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
     }
 }

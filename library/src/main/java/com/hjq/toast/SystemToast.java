@@ -13,6 +13,7 @@ import com.hjq.toast.config.IToast;
  *    time   : 2018/11/03
  *    desc   : 系统 Toast
  */
+@SuppressWarnings("deprecation")
 public class SystemToast extends Toast implements IToast {
 
     /** 吐司消息 View */
