@@ -7,15 +7,9 @@ android {
         applicationId "com.hjq.toast.demo"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 95
-        versionName "9.5"
+        versionCode 96
+        versionName "9.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
 
     // 使用 JDK 1.8
@@ -23,25 +17,56 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
     }
+
+    // Apk 签名的那些事：https://www.jianshu.com/p/a1f8e5896aa2
+    signingConfigs {
+        config {
+            storeFile file(StoreFile)
+            storePassword StorePassword
+            keyAlias KeyAlias
+            keyPassword KeyPassword
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+    }
+
+    applicationVariants.all { variant ->
+        // apk 输出文件名配置
+        variant.outputs.all { output ->
+            outputFileName = rootProject.getName() + '.apk'
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':library')
 
-    // AppCompat 库：https://developer.android.google.cn/jetpack/androidx/releases/appcompat?hl=zh-cn
-    implementation 'androidx.appcompat:appcompat:1.3.0'
+    // AndroidX 库：https://github.com/androidx/androidx
+    implementation 'androidx.appcompat:appcompat:1.3.1'
     // Material 库：https://github.com/material-components/material-components-android
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
-    implementation 'com.github.getActivity:XXPermissions:11.5'
+    implementation 'com.github.getActivity:XXPermissions:12.3'
 
     // 标题栏框架：https://github.com/getActivity/TitleBar
-    implementation 'com.github.getActivity:TitleBar:8.6'
+    implementation 'com.github.getActivity:TitleBar:9.2'
 
     // 悬浮窗框架：https://github.com/getActivity/XToast
-    implementation 'com.github.getActivity:XToast:6.9'
+    implementation 'com.github.getActivity:XToast:8.3'
 
     // 内存泄漏捕捉：https://github.com/square/leakcanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

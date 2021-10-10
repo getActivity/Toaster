@@ -12,13 +12,14 @@ import com.hjq.toast.config.IToast;
 import com.hjq.toast.config.IToastStrategy;
 import com.hjq.toast.config.IToastStyle;
 
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 
 /**
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2018/11/12
  *    desc   : Toast 默认处理器
+ *    doc    : https://developer.android.google.cn/reference/android/widget/Toast
  */
 public class ToastStrategy extends Handler implements IToastStrategy {
 
@@ -37,7 +38,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
     private ActivityStack mActivityStack;
 
     /** Toast 对象 */
-    private WeakReference<IToast> mToastReference;
+    private SoftReference<IToast> mToastReference;
 
     /** Toast 样式 */
     private IToastStyle<?> mToastStyle;
@@ -72,7 +73,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
 
         // targetSdkVersion >= 30 的情况下在后台显示自定义样式的 Toast 会被系统屏蔽，并且日志会输出以下警告：
         // Blocking custom toast from package com.xxx.xxx due to package not in the foreground
-        // targetSdkVersion < 30 的情况下 new Toast，并且不设置样式显示，系统会抛出以下异常：
+        // targetSdkVersion < 30 的情况下 new Toast，并且不设置视图显示，系统会抛出以下异常：
         // java.lang.RuntimeException: This Toast was not created with Toast.makeText()
         if (toast instanceof ActivityToast || Build.VERSION.SDK_INT < Build.VERSION_CODES.R ||
                 application.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.R) {
@@ -123,7 +124,7 @@ public class ToastStrategy extends Handler implements IToastStrategy {
                 }
 
                 toast = createToast(mApplication);
-                mToastReference = new WeakReference<>(toast);
+                mToastReference = new SoftReference<>(toast);
                 toast.setDuration(getToastDuration(text));
                 toast.setText(text);
                 toast.show();

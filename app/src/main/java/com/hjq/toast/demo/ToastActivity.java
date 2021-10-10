@@ -80,7 +80,7 @@ public final class ToastActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        ToastUtils.show("我是在后台显示的 Toast（在 Android 11 上只能跟随系统 Toast 样式）");
+                        ToastUtils.show("我是在后台显示的 Toast（Android 11 及以上在后台显示 Toast 只能使用系统样式）");
                     } else {
                         ToastUtils.show("我是在后台显示的 Toast");
                     }
@@ -102,7 +102,7 @@ public final class ToastActivity extends AppCompatActivity {
     public void show7(View v) {
         new XToast<>(ToastActivity.this)
                 .setDuration(1000)
-                .setView(ToastUtils.getStyle().createView(getApplication()))
+                .setContentView(ToastUtils.getStyle().createView(getApplication()))
                 .setAnimStyle(android.R.style.Animation_Translucent)
                 .setText(android.R.id.message, "就问你溜不溜")
                 .setGravity(Gravity.BOTTOM)

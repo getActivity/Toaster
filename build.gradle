@@ -11,6 +11,7 @@ buildscript {
         maven { url 'https://jitpack.io' }
         mavenCentral()
         google()
+        // noinspection JcenterRepositoryObsolete
         jcenter()
     }
     dependencies {
@@ -26,8 +27,12 @@ allprojects {
         maven { url 'https://jitpack.io' }
         mavenCentral()
         google()
+        // noinspection JcenterRepositoryObsolete
         jcenter()
     }
+
+    // 将构建文件统一输出到项目根目录下的 build 文件夹
+    setBuildDir(new File(rootDir, "build/${path.replaceAll(':', '/')}"))
 }
 
 task clean(type: Delete) {

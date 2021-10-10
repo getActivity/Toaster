@@ -16,8 +16,6 @@ public final class ToastApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // 设置 Toast 拦截器
-        ToastUtils.setInterceptor(new ToastInterceptor());
         // 初始化 Toast 框架
         ToastUtils.init(this);
     }

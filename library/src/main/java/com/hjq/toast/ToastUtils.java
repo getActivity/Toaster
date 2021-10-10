@@ -126,7 +126,11 @@ public final class ToastUtils {
             return;
         }
 
-        if (sToastInterceptor != null && sToastInterceptor.intercept(text)) {
+        if (sToastInterceptor == null) {
+            sToastInterceptor = new ToastLogInterceptor();
+        }
+
+        if (sToastInterceptor.intercept(text)) {
             return;
         }
 
@@ -221,7 +225,7 @@ public final class ToastUtils {
         sDebugMode = debug;
     }
 
-    private static boolean isDebugMode() {
+    static boolean isDebugMode() {
         if (sDebugMode == null) {
             sDebugMode = (sApplication.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         }

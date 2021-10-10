@@ -1,6 +1,6 @@
 # 吐司框架
 
-* 码云地址：[Gitee](https://gitee.com/getActivity/ToastUtils)
+* 项目地址：[Github](https://github.com/getActivity/ToastUtils)、[码云](https://gitee.com/getActivity/ToastUtils)
 
 * 博客地址：[只需体验三分钟，你就会跟我一样，爱上这款 Toast](https://www.jianshu.com/p/9b174ee2c571)
 
@@ -38,7 +38,7 @@ android {
 
 dependencies {
     // 吐司框架：https://github.com/getActivity/ToastUtils
-    implementation 'com.github.getActivity:ToastUtils:9.5'
+    implementation 'com.github.getActivity:ToastUtils:9.6'
 }
 ```
 
@@ -57,36 +57,87 @@ public class XxxApplication extends Application {
 }
 ```
 
-#### 显示 Toast
+#### 框架 API 介绍
 
 ```java
-ToastUtils.show("我是吐司");
-```
+// 显示 Toast
+ToastUtils.show(CharSequence text);
+ToastUtils.show(int id);
 
-#### 取消 Toast
+// debug 模式下显示 Toast
+ToastUtils.debugShow(CharSequence text);
+ToastUtils.debugShow(int id);
 
-```java
+// 取消 Toast
 ToastUtils.cancel();
-```
 
-#### 其他 API
+// 设置 Toast 布局
+ToastUtils.setView(int id);
 
-```java
-// 设置 Toast 布局及样式
+// 设置 Toast 布局样式
 ToastUtils.setStyle(IToastStyle<?> style);
+// 获取 Toast 布局样式
+ToastUtils.getStyle()
+
+// 判断当前框架是否已经初始化
+ToastUtils.isInit();
+
+// 设置 Toast 策略
+ToastUtils.setStrategy(IToastStrategy strategy);
+// 获取 Toast 策略
+ToastUtils.getStrategy();
 
 // 设置 Toast 重心和偏移
+ToastUtils.setGravity(int gravity);
 ToastUtils.setGravity(int gravity, int xOffset, int yOffset);
 
 // 设置 Toast 拦截器
 ToastUtils.setInterceptor(IToastInterceptor interceptor);
-
-// 设置 Toast 策略
-ToastUtils.setStrategy(IToastStrategy strategy);
-
-// 设置 Toast 布局
-ToastUtils.setView(int id);
+// 获取 Toast 拦截器
+ToastUtils.getInterceptor();
 ```
+
+### 温馨提示：框架意在解决一些常规的 Toast 需求，如果是有一些特殊的定制化需求请配搭 [XToast](https://github.com/getActivity/XToast) 悬浮窗框架使用
+
+### 不同 Toast 框架之间的对比
+
+|  功能或细节  | [ToastUtils](https://github.com/getActivity/ToastUtils) | [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)  | [Toasty](https://github.com/GrenderG/Toasty) |
+| :----: | :------: |  :-----: |  :-----: |
+|    对应版本  |  9.6 |  1.30.6  |  1.5.0  |
+|    issues 数   |  [![](https://img.shields.io/github/issues/getActivity/ToastUtils.svg)](https://github.com/getActivity/ToastUtils/issues)  |  [![](https://img.shields.io/github/issues/Blankj/AndroidUtilCode.svg)](https://github.com/Blankj/AndroidUtilCode/issues)  |  [![](https://img.shields.io/github/issues/GrenderG/Toasty.svg)](https://github.com/GrenderG/Toasty/issues)  |
+|                  **aar 包大小**                 | 22 KB | 500 KB | 50 KB |
+|                  **调用代码定位**                |  ✅  |  ❌  |  ❌  |
+|                支持在子线程中调用显示              |  ✅  |  ✅  |  ❌  |
+|           支持全局设置统一 Toast 样式              |  ✅  |  ❌  |  ❌  |
+|        处理 Toast 在 Android 7.1 崩溃的问题       |  ✅  |  ✅  |  ❌  |
+|      兼容通知栏权限关闭后 Toast 显示不出来的问题      |  ✅  |  ✅  |  ❌  |
+| 适配 Android 11 不能在后台显示自定义样式 Toast 的问题 |  ✅  |  ❌  |  ❌  |
+
+#### 调用代码定位功能介绍
+
+* 框架会在日志打印中输出在 Toast 调用的代码位置，这样开发者可以直接通过点击 Log 来定位是在哪个类哪行代码调用的，这样可以极大提升我们排查问题的效率，特别是 Toast 的内容是由后台返回的情况下，我相信没有一个人会拒绝这样的功能。
+
+![](RequestCode.jpg)
+
+#### Toast 在 Android 7.1 崩溃的问题介绍
+
+* 这个问题是由于 Android 7.1 加入 WindowToken 校验机制导致的，而这个 WindowToken 是 NotificationManagerService 生成的，这个 WindowToken 是存在一定时效性的，而当应用的主线程被阻塞时，WindowManager 在 addView 时会对 WindowToken 进行校验，但是 WindowToken 已经过期了，这个时候 addView 的时候就会抛出异常。
+
+* 谷歌在 Android 8.0 就修复了这个问题，修复方式十分简单粗暴，就是直接捕获这个异常，而框架的修复思路跟谷歌类似，只不过修复方式不太一样，因为框架无法直接修改系统源码，所以是直接通过 Hook 的方式对异常进行捕获，大家如果对修复过程感兴趣可以看一下我写的这篇文章[Toast 在 Android 7.1 崩溃排查及修复](https://www.jianshu.com/p/437f473017d6)。
+
+#### 通知栏权限关闭后 Toast 显示不出来的问题介绍
+
+* 这个问题的出现是因为原生 Toast 的显示要通过 NMS（NotificationManagerService） 才会 addView 到 Window 上面，而在 NMS 中有一个 `static final boolean ENABLE_BLOCKED_TOASTS = true` 的字段，当这个常量值为 true 时，会触发 NMS 对应用通知栏权限的检查，如果没有通知栏权限，那么这个 Toast 将会被 NMS 所拦截，并输出 `Suppressing toast from package` 日志信息，而小米手机没有这个问题是因为它是将 `ENABLE_BLOCKED_TOASTS` 字段值修改成 `false`，所以就不会触发对通知栏权限的检查，另外我为什么会知道有这个事情？因为我曾经和一名 MIUI 工程师一起确认过这个事情，不过值得一提的是，这个问题在 Android 9.0 的版本已经修复了。
+
+* 框架处理这个问题的方式很简单，是在显示 Toast 的时候判断是否有通知栏权限，如果有则显示系统的 Toast，如果没有则使用 WindowManager 来代替显示，大家如果对修复过程感兴趣可以看一下我写的这篇文章[Toast通知栏权限填坑指南](https://www.jianshu.com/p/1d64a5ccbc7c)。
+
+#### Android 11 不能在后台显示自定义样式 Toast 的问题介绍
+
+* 当我们将 targetSdkVersion 改成 30 及以上的版本时，会发现一个问题，如果应用处于后台进程的情况下，而恰好我们的应用 Toast 样式是经过定制的，那么在这些情况下调用 Toast 的 show 方法会惊奇的发现，Toast 没有显示出来，请注意这个问题不是 Bug，而是 Android 11 禁止了这种行为，在 [Toast 官方文档](https://developer.android.google.cn/reference/android/widget/Toast#setView(android.view.View)) 中也有注明，不建议对 Toast 的样式做定制化，并且还对 `Toast.setView` 方法进行了标记过时处理。
+
+* 那么我们如何解决这一问题呢？难道真的不能用自定义样式的 Toast 了？我的答案是：不，凡事不能一刀切，谷歌只说不能在后台显示自定义的 Toast，并不能代表不能在前台那么做，框架的适配思路是，在 Android 11 的情况下，会先判断当前应用是处于前台还是后台，如果是在前台的情况下就显示自定义样式的 Toast，如果是在后台的情况下就显示系统样式的 Toast（通过舍弃自定义样式来保证 Toast 能够正常显示出来），这样既能符合 Android 11 要求，同时又能将定制化 Toast 的权益最大化。
+
+* 值得注意的是：ToastUtils 是目前同类框架第一款也是唯一一款适配 Android 11 这一特性的框架。
 
 #### 框架亮点
 
@@ -106,55 +157,38 @@ ToastUtils.setView(int id);
 
 * 全局统一：可以在 Application 中初始化 Toast 样式，达到一劳永逸的效果
 
-#### 关于通知栏权限
-
-* 本框架已经完美解决这个问题，即使没有通知栏权限的情况下也能在前台显示 Toast
-
-* 具体解决方案参见：[Toast通知栏权限填坑指南](https://www.jianshu.com/p/1d64a5ccbc7c)
-
-![](issue_taobao.gif)
-
-![](issue_utils.gif)
-
 #### 如何替换项目中已有的原生 Toast
 
 * 在项目中右击弹出菜单，Replace in path，勾选 Regex 选项，点击替换
 
-```java
+```text
 Toast\.makeText\([^,]+,\s*(.+{1}),\s*[^,]+\)\.show\(\)
 ```
 
 ---
 
-```java
+```text
 ToastUtils.show($1)
 ```
 
 * 对导包进行替换
 
-```java
+```text
 import android.widget.Toast
 ```
 
 ---
 
-```java
+```text
 import com.hjq.toast.ToastUtils
 ```
 
 *  再全局搜索，手动更换一些没有替换成功的
 
-```java
+```text
 Toast.makeText
-```
-
----
-
-```java
 new Toast
 ```
-
-#### 温馨提示：框架意在解决一些常规的 Toast 需求，如果是有一些特殊的定制化需求请配搭 [XToast](https://github.com/getActivity/XToast) 悬浮窗框架使用
 
 #### 作者的其他开源项目
 
@@ -169,6 +203,8 @@ new Toast
 * 国际化框架：[MultiLanguages](https://github.com/getActivity/MultiLanguages)
 
 * 悬浮窗框架：[XToast](https://github.com/getActivity/XToast)
+
+* Shape 框架：[ShapeView](https://github.com/getActivity/ShapeView)
 
 * Gson 解析容错：[GsonFactory](https://github.com/getActivity/GsonFactory)
 

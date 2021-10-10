@@ -89,6 +89,11 @@ final class ToastImpl {
                 return;
             }
 
+            WindowManager windowManager = activity.getWindowManager();
+            if (windowManager == null) {
+                return;
+            }
+
             final WindowManager.LayoutParams params = new WindowManager.LayoutParams();
             params.height = WindowManager.LayoutParams.WRAP_CONTENT;
             params.width = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -103,11 +108,6 @@ final class ToastImpl {
             params.y = mToast.getYOffset();
             params.verticalMargin = mToast.getVerticalMargin();
             params.horizontalMargin = mToast.getHorizontalMargin();
-
-            WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
-            if (windowManager == null) {
-                return;
-            }
 
             try {
 
@@ -142,7 +142,7 @@ final class ToastImpl {
                     return;
                 }
 
-                WindowManager windowManager = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+                WindowManager windowManager = activity.getWindowManager();
                 if (windowManager == null) {
                     return;
                 }

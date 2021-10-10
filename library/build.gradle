@@ -5,8 +5,8 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        versionCode 95
-        versionName "9.5"
+        versionCode 96
+        versionName "9.6"
     }
 
     // 使用 JDK 1.8
@@ -15,12 +15,25 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
     }
 
+    packagingOptions {
+        // 剔除这个包下的所有文件（不会移除签名信息）
+        exclude 'META-INF/*******'
+    }
+
     android.libraryVariants.all { variant ->
         // aar 输出文件名配置
         variant.outputs.all { output ->
-            outputFileName = "toast-${android.defaultConfig.versionName}.aar"
+            outputFileName = "${rootProject.name}-${android.defaultConfig.versionName}.aar"
         }
     }
+}
+
+afterEvaluate {
+    // 排除 BuildConfig.class 和 R.class
+    generateReleaseBuildConfig.enabled = false
+    generateDebugBuildConfig.enabled = false
+    generateReleaseResValues.enabled = false
+    generateDebugResValues.enabled = false
 }
 
 tasks.withType(Javadoc) {
