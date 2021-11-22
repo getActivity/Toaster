@@ -127,7 +127,7 @@ ToastUtils.getInterceptor();
 
 #### 通知栏权限关闭后 Toast 显示不出来的问题介绍
 
-* 这个问题的出现是因为原生 Toast 的显示要通过 NMS（NotificationManagerService） 才会 addView 到 Window 上面，而在 NMS 中有一个 `static final boolean ENABLE_BLOCKED_TOASTS = true` 的字段，当这个常量值为 true 时，会触发 NMS 对应用通知栏权限的检查，如果没有通知栏权限，那么这个 Toast 将会被 NMS 所拦截，并输出 `Suppressing toast from package` 日志信息，而小米手机没有这个问题是因为它是将 `ENABLE_BLOCKED_TOASTS` 字段值修改成 `false`，所以就不会触发对通知栏权限的检查，另外我为什么会知道有这个事情？因为我曾经和一名 MIUI 工程师一起确认过这个事情，不过值得一提的是，这个问题在 Android 9.0 的版本已经修复了。
+* 这个问题的出现是因为原生 Toast 的显示要通过 NMS（NotificationManagerService） 才会 addView 到 Window 上面，而在 NMS 中有一个 `static final boolean ENABLE_BLOCKED_TOASTS = true` 的字段，当这个常量值为 true 时，会触发 NMS 对应用通知栏权限的检查，如果没有通知栏权限，那么这个 Toast 将会被 NMS 所拦截，并输出 `Suppressing toast from package` 日志信息，而小米手机没有这个问题是因为它是将 `ENABLE_BLOCKED_TOASTS` 字段值修改成 `false`，所以就不会触发对通知栏权限的检查，另外我为什么会知道有这个事情？因为我曾经和一名 MIUI 工程师一起确认过这个事情，不过值得一提的是，这个问题在 Android 10 的版本已经修复了。
 
 * 框架处理这个问题的方式很简单，是在显示 Toast 的时候判断是否有通知栏权限，如果有则显示系统的 Toast，如果没有则使用 WindowManager 来代替显示，大家如果对修复过程感兴趣可以看一下我写的这篇文章[Toast通知栏权限填坑指南](https://www.jianshu.com/p/1d64a5ccbc7c)。
 
