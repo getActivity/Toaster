@@ -12,7 +12,7 @@ import com.hjq.toast.config.IToast;
  *    time   : 2018/11/02
  *    desc   : 自定义 Toast（用于解决关闭通知栏权限之后不能弹吐司的问题和 Android 11 不能自定义吐司样式的问题）
  */
-public final class ActivityToast implements IToast {
+public class ActivityToast implements IToast {
 
     /** Toast 实现类 */
     private final ToastImpl mToastImpl;
@@ -33,6 +33,12 @@ public final class ActivityToast implements IToast {
     private float mHorizontalMargin;
     /** 垂直间距 */
     private float mVerticalMargin;
+    /** Toast 动画 */
+    private int mAnimations = android.R.style.Animation_Toast;
+    /** 短吐司显示的时长 */
+    private int mShortDuration = 2000;
+    /** 长吐司显示的时长 */
+    private int mLongDuration = 3500;
 
     public ActivityToast(Activity activity) {
         mToastImpl = new ToastImpl(activity, this);
@@ -127,5 +133,29 @@ public final class ActivityToast implements IToast {
     @Override
     public float getVerticalMargin() {
         return mVerticalMargin;
+    }
+
+    public void setAnimationsId(int animationsId) {
+        mAnimations = animationsId;
+    }
+
+    public int getAnimationsId() {
+        return mAnimations;
+    }
+
+    public void setShortDuration(int duration) {
+        mShortDuration = duration;
+    }
+
+    public int getShortDuration() {
+        return mShortDuration;
+    }
+
+    public void setLongDuration(int duration) {
+        mLongDuration = duration;
+    }
+
+    public int getLongDuration() {
+        return mLongDuration;
     }
 }

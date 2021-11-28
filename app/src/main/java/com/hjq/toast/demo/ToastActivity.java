@@ -10,8 +10,6 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.hjq.permissions.Permission;
-import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.BlackToastStyle;
 import com.hjq.toast.style.WhiteToastStyle;
@@ -63,45 +61,33 @@ public final class ToastActivity extends AppCompatActivity {
     }
 
     public void show6(View v) {
-        if (XXPermissions.isGranted(this, Permission.NOTIFICATION_SERVICE)) {
+        Snackbar.make(getWindow().getDecorView(), "正在准备跳转到手机桌面，请系好安全带", Snackbar.LENGTH_SHORT).show();
 
-            Snackbar.make(getWindow().getDecorView(), "正在准备跳转到手机桌面，请注意有极少数机型无法在后台显示 Toast", Snackbar.LENGTH_SHORT).show();
+        v.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+            }
+        }, 2000);
 
-            v.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(Intent.ACTION_MAIN);
-                    intent.addCategory(Intent.CATEGORY_HOME);
-                    startActivity(intent);
+        v.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    ToastUtils.show("我是在后台显示的 Toast（Android 11 及以上在后台显示 Toast 只能使用系统样式）");
+                } else {
+                    ToastUtils.show("我是在后台显示的 Toast");
                 }
-            }, 2000);
-
-            v.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        ToastUtils.show("我是在后台显示的 Toast（Android 11 及以上在后台显示 Toast 只能使用系统样式）");
-                    } else {
-                        ToastUtils.show("我是在后台显示的 Toast");
-                    }
-                }
-            }, 3000);
-
-        } else {
-
-            ToastUtils.show("在后台显示 Toast 需要先获取通知栏权限");
-            v.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    XXPermissions.startPermissionActivity(ToastActivity.this, Permission.NOTIFICATION_SERVICE);
-                }
-            }, 2000);
-        }
+            }
+        }, 3000);
     }
 
     public void show7(View v) {
-        new XToast<>(ToastActivity.this)
+        new XToast<>(this)
                 .setDuration(1000)
+                // 将 ToastUtils 中的 View 转移给 XToast 来显示
                 .setContentView(ToastUtils.getStyle().createView(getApplication()))
                 .setAnimStyle(android.R.style.Animation_Translucent)
                 .setText(android.R.id.message, "就问你溜不溜")

@@ -98,8 +98,9 @@ public interface IToast {
             return (TextView) view;
         }
 
-        if (view.findViewById(android.R.id.message) instanceof TextView) {
-            return ((TextView) view.findViewById(android.R.id.message));
+        View messageView = view.findViewById(android.R.id.message);
+        if (messageView instanceof TextView) {
+            return ((TextView) messageView);
         }
 
         // 如果设置的布局没有包含一个 TextView 则抛出异常，必须要包含一个 id 值成 android.R.id.message 的 TextView

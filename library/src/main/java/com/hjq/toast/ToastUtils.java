@@ -50,22 +50,34 @@ public final class ToastUtils {
         init(application, sToastStyle);
     }
 
-    /**
-     * 初始化 Toast 及样式
-     */
+    public static void init(Application application, IToastStrategy strategy) {
+        init(application, strategy, null);
+    }
+
     public static void init(Application application, IToastStyle<?> style) {
+        init(application, null, style);
+    }
+
+    /**
+     * 初始化 Toast
+     *
+     * @param application       应用的上下文
+     * @param strategy          Toast 策略
+     * @param style             Toast 样式
+     */
+    public static void init(Application application, IToastStrategy strategy, IToastStyle<?> style) {
         sApplication = application;
 
-        // 初始化 Toast 显示处理器
-        if (sToastStrategy == null) {
-            setStrategy(new ToastStrategy());
+        // 初始化 Toast 策略
+        if (strategy == null) {
+            strategy = new ToastStrategy();
         }
+        setStrategy(strategy);
 
+        // 设置 Toast 样式
         if (style == null) {
             style = new BlackToastStyle();
         }
-
-        // 设置 Toast 样式
         setStyle(style);
     }
 

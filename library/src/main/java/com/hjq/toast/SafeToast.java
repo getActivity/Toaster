@@ -16,14 +16,29 @@ import java.lang.reflect.Field;
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 @SuppressWarnings("all")
-public final class SafeToast extends SystemToast {
+public class SafeToast extends NotificationToast {
+
+    /** 是否已经 Hook 了一次 TN 内部类 */
+    private boolean mHookTN;
 
     public SafeToast(Application application) {
         super(application);
+    }
 
-        // 反射 Toast 中的字段
+    @Override
+    public void show() {
+        hookToastTN();
+        super.show();
+    }
+
+    private void hookToastTN() {
+        if (mHookTN) {
+            return;
+        }
+        mHookTN = true;
+
         try {
-            // 获取 mTN 字段对象
+            // 获取 Toast.mTN 字段对象
             Field mTNField = Toast.class.getDeclaredField("mTN");
             mTNField.setAccessible(true);
             Object mTN = mTNField.get(this);
@@ -32,6 +47,11 @@ public final class SafeToast extends SystemToast {
             Field mHandlerField = mTNField.getType().getDeclaredField("mHandler");
             mHandlerField.setAccessible(true);
             Handler mHandler = (Handler) mHandlerField.get(mTN);
+
+            // 如果这个对象已经被反射替换过了
+            if (mHandler instanceof SafeHandler) {
+                return;
+            }
 
             // 偷梁换柱
             mHandlerField.set(mTN, new SafeHandler(mHandler));

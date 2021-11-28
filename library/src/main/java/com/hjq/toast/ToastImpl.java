@@ -1,15 +1,12 @@
 package com.hjq.toast;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.WindowManager;
 import android.widget.Toast;
-
-import com.hjq.toast.config.IToast;
 
 /**
  *    author : Android 轮子哥
@@ -21,13 +18,8 @@ final class ToastImpl {
 
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
-    /** 短吐司显示的时长 */
-    private static final int SHORT_DURATION_TIMEOUT = 2000;
-    /** 长吐司显示的时长 */
-    private static final int LONG_DURATION_TIMEOUT = 3500;
-
     /** 当前的吐司对象 */
-    private final IToast mToast;
+    private final ActivityToast mToast;
 
     /** WindowManager 辅助类 */
     private final WindowLifecycle mWindowLifecycle;
@@ -38,7 +30,7 @@ final class ToastImpl {
     /** 当前是否已经显示 */
     private boolean mShow;
 
-    ToastImpl(Activity activity, IToast toast) {
+    ToastImpl(Activity activity, ActivityToast toast) {
         mToast = toast;
         mPackageName = activity.getPackageName();
         mWindowLifecycle = new WindowLifecycle(activity);
@@ -98,7 +90,6 @@ final class ToastImpl {
             params.height = WindowManager.LayoutParams.WRAP_CONTENT;
             params.width = WindowManager.LayoutParams.WRAP_CONTENT;
             params.format = PixelFormat.TRANSLUCENT;
-            params.windowAnimations = android.R.style.Animation_Toast;
             params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                     | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
@@ -108,13 +99,14 @@ final class ToastImpl {
             params.y = mToast.getYOffset();
             params.verticalMargin = mToast.getVerticalMargin();
             params.horizontalMargin = mToast.getHorizontalMargin();
+            params.windowAnimations = mToast.getAnimationsId();
 
             try {
 
                 windowManager.addView(mToast.getView(), params);
                 // 添加一个移除吐司的任务
                 HANDLER.postDelayed(() -> cancel(), mToast.getDuration() == Toast.LENGTH_LONG ?
-                        LONG_DURATION_TIMEOUT : SHORT_DURATION_TIMEOUT);
+                        mToast.getLongDuration() : mToast.getShortDuration());
                 // 注册生命周期管控
                 mWindowLifecycle.register(ToastImpl.this);
                 // 当前已经显示
