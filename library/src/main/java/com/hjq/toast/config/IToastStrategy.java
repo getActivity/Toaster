@@ -28,7 +28,7 @@ public interface IToastStrategy {
     /**
      * 显示 Toast
      */
-    void showToast(CharSequence text);
+    void showToast(CharSequence text, long delayMillis);
 
     /**
      * 取消 Toast

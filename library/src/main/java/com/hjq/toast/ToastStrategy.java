@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import com.hjq.toast.config.IToast;
@@ -66,6 +67,10 @@ public class ToastStrategy implements IToastStrategy {
         IToast toast;
         if (foregroundActivity != null) {
             toast = new ActivityToast(foregroundActivity);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                Settings.canDrawOverlays(application)) {
+            // 如果有悬浮窗权限，就开启全局的 Toast
+            toast = new WindowToast(application);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
             // 处理 Android 7.1 上 Toast 在主线程被阻塞后会导致报错的问题
             toast = new SafeToast(application);
@@ -74,6 +79,7 @@ public class ToastStrategy implements IToastStrategy {
             // 处理 Toast 关闭通知栏权限之后无法弹出的问题
             // 通过查看和对比 NotificationManagerService 的源码
             // 发现这个问题已经在 Android 10 版本上面修复了
+            // 但是 Toast 只能在前台显示，没有通知栏权限后台 Toast 仍然无法显示
             // 并且 Android 10 刚好禁止了 Hook 通知服务
             // 已经有通知栏权限，不需要 Hook 系统通知服务也能正常显示系统 Toast
             toast = new NotificationToast(application);
@@ -85,7 +91,7 @@ public class ToastStrategy implements IToastStrategy {
         // Blocking custom toast from package com.xxx.xxx due to package not in the foreground
         // targetSdkVersion < 30 的情况下 new Toast，并且不设置视图显示，系统会抛出以下异常：
         // java.lang.RuntimeException: This Toast was not created with Toast.makeText()
-        if (toast instanceof ActivityToast || Build.VERSION.SDK_INT < Build.VERSION_CODES.R ||
+        if (toast instanceof CustomToast || Build.VERSION.SDK_INT < Build.VERSION_CODES.R ||
                 application.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.R) {
             toast.setView(mToastStyle.createView(application));
             toast.setGravity(mToastStyle.getGravity(), mToastStyle.getXOffset(), mToastStyle.getYOffset());
@@ -95,13 +101,13 @@ public class ToastStrategy implements IToastStrategy {
     }
 
     @Override
-    public void showToast(CharSequence text) {
+    public void showToast(CharSequence text, long delayMillis) {
         mLatestText = text;
         HANDLER.removeCallbacks(mShowRunnable);
         // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示当前 Activity
         // 如果当前 Activity 在 ToastUtils.show 之后进行 finish 了，那么这个时候 Toast 可能会显示不出来
         // 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面
-        HANDLER.postDelayed(mShowRunnable, DELAY_TIMEOUT);
+        HANDLER.postDelayed(mShowRunnable, delayMillis + DELAY_TIMEOUT);
     }
 
     @Override

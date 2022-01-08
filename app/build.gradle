@@ -7,8 +7,8 @@ android {
         applicationId "com.hjq.toast.demo"
         minSdkVersion 16
         targetSdkVersion 31
-        versionCode 1000
-        versionName "10.0"
+        versionCode 1020
+        versionName "10.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -55,16 +55,19 @@ dependencies {
     implementation project(':library')
 
     // AndroidX 库：https://github.com/androidx/androidx
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
     // Material 库：https://github.com/material-components/material-components-android
     implementation 'com.google.android.material:material:1.4.0'
 
     // 标题栏框架：https://github.com/getActivity/TitleBar
-    implementation 'com.github.getActivity:TitleBar:9.2'
+    implementation 'com.github.getActivity:TitleBar:9.3'
+
+    // 权限请求框架：https://github.com/getActivity/XXPermissions
+    implementation 'com.github.getActivity:XXPermissions:13.2'
 
     // 悬浮窗框架：https://github.com/getActivity/XToast
-    implementation 'com.github.getActivity:XToast:8.3'
+    implementation 'com.github.getActivity:XToast:8.5'
 
     // 内存泄漏捕捉：https://github.com/square/leakcanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
 }

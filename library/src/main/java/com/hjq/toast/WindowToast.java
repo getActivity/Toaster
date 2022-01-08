@@ -1,20 +1,20 @@
 package com.hjq.toast;
 
-import android.app.Activity;
+import android.app.Application;
 
 /**
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
  *    time   : 2021/11/30
- *    desc   : 利用 Activity 弹出 Toast
+ *    desc   : 利用悬浮窗权限弹出全局 Toast
  */
-public class ActivityToast extends CustomToast {
+public class WindowToast extends CustomToast {
 
     /** Toast 实现类 */
     private final ToastImpl mToastImpl;
 
-    public ActivityToast(Activity activity) {
-        mToastImpl = new ToastImpl(activity, this);
+    public WindowToast(Application application) {
+        mToastImpl = new ToastImpl(application, this);
     }
 
     @Override

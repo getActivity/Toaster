@@ -4,7 +4,7 @@
 
 * 博客地址：[只需体验三分钟，你就会跟我一样，爱上这款 Toast](https://www.jianshu.com/p/9b174ee2c571)
 
-* 可以扫码下载 Demo 进行演示或者测试，如果扫码下载不了的，[点击此处可直接下载](https://github.com/getActivity/ToastUtils/releases/download/10.0/ToastUtils.apk)
+* 可以扫码下载 Demo 进行演示或者测试，如果扫码下载不了的，[点击此处可直接下载](https://github.com/getActivity/ToastUtils/releases/download/10.2/ToastUtils.apk)
 
 ![](picture/demo_code.png)
 
@@ -12,22 +12,29 @@
 
 #### 集成步骤
 
-* 在项目根目录下的 `build.gradle` 文件中加入
+* 如果你的项目 Gradle 配置是在 `7.0 以下`，需要在 `build.gradle` 文件中加入
 
 ```groovy
-buildscript {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
-}
 allprojects {
     repositories {
+        // JitPack 远程仓库：https://jitpack.io
         maven { url 'https://jitpack.io' }
     }
 }
 ```
 
-* 在项目 app 模块下的 `build.gradle` 文件中加入
+* 如果你的 Gradle 配置是 `7.0 及以上`，则需要在 `settings.gradle` 文件中加入
+
+```groovy
+dependencyResolutionManagement {
+    repositories {
+        // JitPack 远程仓库：https://jitpack.io
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+* 配置完远程仓库后，在项目 app 模块下的 `build.gradle` 文件中加入远程依赖
 
 ```groovy
 android {
@@ -40,7 +47,7 @@ android {
 
 dependencies {
     // 吐司框架：https://github.com/getActivity/ToastUtils
-    implementation 'com.github.getActivity:ToastUtils:10.0'
+    implementation 'com.github.getActivity:ToastUtils:10.2'
 }
 ```
 
@@ -67,8 +74,12 @@ ToastUtils.show(CharSequence text);
 ToastUtils.show(int id);
 
 // debug 模式下显示 Toast
-ToastUtils.debugShow(CharSequence text);
 ToastUtils.debugShow(int id);
+ToastUtils.debugShow(CharSequence text);
+
+// 延迟显示 Toast
+ToastUtils.delayedShow(int id, long delayMillis);
+ToastUtils.delayedShow(CharSequence text, long delayMillis);
 
 // 取消 Toast
 ToastUtils.cancel();
@@ -99,7 +110,7 @@ ToastUtils.setInterceptor(IToastInterceptor interceptor);
 ToastUtils.getInterceptor();
 ```
 
-* 如果你需要对 Toast 的进行定制化，可以使用以下方式
+* 如果你需要对 Toast 的进行深度定制化，可以使用以下方式
 
 ```java
 ToastUtils.init(this, new ToastStrategy() {
@@ -107,14 +118,14 @@ ToastUtils.init(this, new ToastStrategy() {
     @Override
     public IToast createToast(Application application) {
         IToast toast = super.createToast(application);
-        if (toast instanceof ActivityToast) {
-            ActivityToast activityToast = ((ActivityToast) toast);
+        if (toast instanceof CustomToast) {
+            CustomToast customToast = ((CustomToast) toast);
             // 设置 Toast 动画效果
-            activityToast.setAnimationsId(R.anim.xxx);
+            customToast.setAnimationsId(R.anim.xxx);
             // 设置短 Toast 的显示时长（默认是 2000 毫秒）
-            activityToast.setShortDuration(1000);
+            customToast.setShortDuration(1000);
             // 设置长 Toast 的显示时长（默认是 3500 毫秒）
-            activityToast.setLongDuration(5000);
+            customToast.setLongDuration(5000);
         }
         return toast;
     }
@@ -129,15 +140,15 @@ ToastUtils.init(this, new ToastStrategy() {
 
 |  功能或细节  | [ToastUtils](https://github.com/getActivity/ToastUtils) | [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)  | [Toasty](https://github.com/GrenderG/Toasty) |
 | :----: | :------: |  :-----: |  :-----: |
-|    对应版本  |  10.0 |  1.30.6  |  1.5.0  |
+|    对应版本  |  10.2 |  1.30.6  |  1.5.0  |
 |    issues 数   |  [![](https://img.shields.io/github/issues/getActivity/ToastUtils.svg)](https://github.com/getActivity/ToastUtils/issues)  |  [![](https://img.shields.io/github/issues/Blankj/AndroidUtilCode.svg)](https://github.com/Blankj/AndroidUtilCode/issues)  |  [![](https://img.shields.io/github/issues/GrenderG/Toasty.svg)](https://github.com/GrenderG/Toasty/issues)  |
-|                  **aar 包大小**                 | 26 KB | 500 KB | 50 KB |
+|                  **aar 包大小**                 | 28 KB | 500 KB | 50 KB |
 |                  **调用代码定位**                |  ✅  |  ❌  |  ❌  |
 |                支持在子线程中调用显示              |  ✅  |  ✅  |  ❌  |
 |           支持全局设置统一 Toast 样式              |  ✅  |  ❌  |  ❌  |
 |        处理 Toast 在 Android 7.1 崩溃的问题       |  ✅  |  ✅  |  ❌  |
-|      兼容通知栏权限关闭后 Toast 显示不出来的问题      |  ✅  |  ❌  |  ❌  |
-|     适配 Android 11 不能在后台显示 Toast 的问题        |  ✅  |  ❌  |  ❌  |
+|      兼容通知栏权限关闭后 Toast 显示不出来的问题      |  ✅  |  ✅  |  ❌  |
+|     适配 Android 11 不能在后台显示 Toast 的问题     |  ✅  |  ❌  |  ❌  |
 
 #### 调用代码定位功能介绍
 
@@ -157,7 +168,7 @@ ToastUtils.init(this, new ToastStrategy() {
 
 * 这个问题的出现是因为原生 Toast 的显示要通过 NMS（NotificationManagerService） 才会 addView 到 Window 上面，而在 NMS 中有一个 `static final boolean ENABLE_BLOCKED_TOASTS = true` 的字段，当这个常量值为 true 时，会触发 NMS 对应用通知栏权限的检查，如果没有通知栏权限，那么这个 Toast 将会被 NMS 所拦截，并输出 `Suppressing toast from package` 日志信息，而小米手机没有这个问题是因为它是将 `ENABLE_BLOCKED_TOASTS` 字段值修改成 `false`，所以就不会触发对通知栏权限的检查，另外我为什么会知道有这个事情？因为我曾经和一名 MIUI 工程师一起确认过这个事情。
 
-* 框架处理这个问题的方式有两种，先判断当前应用是否处于前台状态，如果是则使用自定义的 WindowManager 代替 Toast 来显示，如果当前应用处于后台状态，则会通过 Hook Toast 中的 INotificationManager 接口，将 enqueueToast 方法传递的包名参数修改成 `android` 来欺骗 NotificationManagerService，因为 NotificationManagerService 已经将 `android` 包名的应用纳入白名单，会自动放行，需要注意的是，这种方式在 Android 10 上面已经失效了，已经被系统纳入反射黑名单，但是好消息是，通过查看和对比 NotificationManagerService 源码发现，这个问题已经在 Android 10.0 的版本上面被修复了，所以框架只在 Android 9.0 及以下版本并且在关闭了通知栏权限的情况下才去 Hook INotificationManager，这样就能比较完美地解决这一问题，另外我还找到了官方关于这块的代码提交记录：[Always allow toasts from foreground apps](https://cs.android.com/android/_/android/platform/frameworks/base/+/58b2453ed69197d765c7254241d9966ee49a3efb)，大家可以感兴趣可以看看。
+* 框架处理这个问题的方式有两种，先判断当前应用是否处于前台状态，如果是则使用自定义的 WindowManager 代替 Toast 来显示，如果当前应用处于后台状态，则会通过 Hook Toast 中的 INotificationManager 接口，将 enqueueToast 方法传递的包名参数修改成 `android` 来欺骗 NotificationManagerService，因为 NotificationManagerService 已经将 `android` 包名的应用纳入白名单，会自动放行，需要注意的是，这种方式在 Android 10 上面已经失效了，已经被系统纳入反射黑名单，但是好消息是，通过查看和对比 NotificationManagerService 源码发现，这个问题（关闭通知栏权限后无法在前台弹 Toast 的问题）已经在 Android 10.0 的版本上面被修复了，所以框架只在 Android 9.0 及以下版本并且在关闭了通知栏权限的情况下才去 Hook INotificationManager，另外我还找到了官方关于这块的代码提交记录：[Always allow toasts from foreground apps](https://cs.android.com/android/_/android/platform/frameworks/base/+/58b2453ed69197d765c7254241d9966ee49a3efb)，大家可以感兴趣可以看看，还有一个问题，如果你想在 Android 10 之后仍然能在后台显示 Toast，请保证应用的通知栏权限处于开启的状态。
 
 #### Android 11 不能在后台显示 Toast 的问题介绍
 
@@ -216,23 +227,35 @@ new Toast
 
 #### 作者的其他开源项目
 
-* 安卓技术中台：[AndroidProject](https://github.com/getActivity/AndroidProject)
+* 安卓技术中台：[AndroidProject](https://github.com/getActivity/AndroidProject) ![](https://img.shields.io/github/stars/getActivity/AndroidProject.svg) ![](https://img.shields.io/github/forks/getActivity/AndroidProject.svg)
 
-* 网络框架：[EasyHttp](https://github.com/getActivity/EasyHttp)
+* 安卓技术中台 Kt 版：[AndroidProject-Kotlin](https://github.com/getActivity/AndroidProject-Kotlin) ![](https://img.shields.io/github/stars/getActivity/AndroidProject-Kotlin.svg) ![](https://img.shields.io/github/forks/getActivity/AndroidProject-Kotlin.svg)
 
-* 权限框架：[XXPermissions](https://github.com/getActivity/XXPermissions)
+* 权限框架：[XXPermissions](https://github.com/getActivity/XXPermissions) ![](https://img.shields.io/github/stars/getActivity/XXPermissions.svg) ![](https://img.shields.io/github/forks/getActivity/XXPermissions.svg)
 
-* 标题栏框架：[TitleBar](https://github.com/getActivity/TitleBar)
+* 网络框架：[EasyHttp](https://github.com/getActivity/EasyHttp) ![](https://img.shields.io/github/stars/getActivity/EasyHttp.svg) ![](https://img.shields.io/github/forks/getActivity/EasyHttp.svg)
 
-* 国际化框架：[MultiLanguages](https://github.com/getActivity/MultiLanguages)
+* 标题栏框架：[TitleBar](https://github.com/getActivity/TitleBar) ![](https://img.shields.io/github/stars/getActivity/TitleBar.svg) ![](https://img.shields.io/github/forks/getActivity/TitleBar.svg)
 
-* 悬浮窗框架：[XToast](https://github.com/getActivity/XToast)
+* 悬浮窗框架：[XToast](https://github.com/getActivity/XToast) ![](https://img.shields.io/github/stars/getActivity/XToast.svg) ![](https://img.shields.io/github/forks/getActivity/XToast.svg)
 
-* Shape 框架：[ShapeView](https://github.com/getActivity/ShapeView)
+* Shape 框架：[ShapeView](https://github.com/getActivity/ShapeView) ![](https://img.shields.io/github/stars/getActivity/ShapeView.svg) ![](https://img.shields.io/github/forks/getActivity/ShapeView.svg)
 
-* Gson 解析容错：[GsonFactory](https://github.com/getActivity/GsonFactory)
+* 语种切换框架：[MultiLanguages](https://github.com/getActivity/MultiLanguages) ![](https://img.shields.io/github/stars/getActivity/MultiLanguages.svg) ![](https://img.shields.io/github/forks/getActivity/MultiLanguages.svg)
 
-* 日志查看框架：[Logcat](https://github.com/getActivity/Logcat)
+* Gson 解析容错：[GsonFactory](https://github.com/getActivity/GsonFactory) ![](https://img.shields.io/github/stars/getActivity/GsonFactory.svg) ![](https://img.shields.io/github/forks/getActivity/GsonFactory.svg)
+
+* 日志查看框架：[Logcat](https://github.com/getActivity/Logcat) ![](https://img.shields.io/github/stars/getActivity/Logcat.svg) ![](https://img.shields.io/github/forks/getActivity/Logcat.svg)
+
+* Android 版本适配：[AndroidVersionAdapter](https://github.com/getActivity/AndroidVersionAdapter) ![](https://img.shields.io/github/stars/getActivity/AndroidVersionAdapter.svg) ![](https://img.shields.io/github/forks/getActivity/AndroidVersionAdapter.svg)
+
+* Android 代码规范：[AndroidCodeStandard](https://github.com/getActivity/AndroidCodeStandard) ![](https://img.shields.io/github/stars/getActivity/AndroidCodeStandard.svg) ![](https://img.shields.io/github/forks/getActivity/AndroidCodeStandard.svg)
+
+* Studio 精品插件：[StudioPlugins](https://github.com/getActivity/StudioPlugins) ![](https://img.shields.io/github/stars/getActivity/StudioPlugins.svg) ![](https://img.shields.io/github/forks/getActivity/StudioPlugins.svg)
+
+* 表情包大集合：[EmojiPackage](https://github.com/getActivity/EmojiPackage) ![](https://img.shields.io/github/stars/getActivity/EmojiPackage.svg) ![](https://img.shields.io/github/forks/getActivity/EmojiPackage.svg)
+
+* 省市区 Json 数据：[ProvinceJson](https://github.com/getActivity/ProvinceJson) ![](https://img.shields.io/github/stars/getActivity/ProvinceJson.svg) ![](https://img.shields.io/github/forks/getActivity/ProvinceJson.svg)
 
 #### 微信公众号：Android轮子哥
 

@@ -1,6 +1,8 @@
 package com.hjq.toast;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
@@ -19,10 +21,10 @@ final class ToastImpl {
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
     /** 当前的吐司对象 */
-    private final ActivityToast mToast;
+    private final CustomToast mToast;
 
     /** WindowManager 辅助类 */
-    private final WindowLifecycle mWindowLifecycle;
+    private WindowLifecycle mWindowLifecycle;
 
     /** 当前应用的包名 */
     private final String mPackageName;
@@ -30,10 +32,24 @@ final class ToastImpl {
     /** 当前是否已经显示 */
     private boolean mShow;
 
-    ToastImpl(Activity activity, ActivityToast toast) {
+    /** 当前是否全局显示 */
+    private boolean mGlobalShow;
+
+    ToastImpl(Activity activity, CustomToast toast) {
+        this((Context) activity, toast);
+        mGlobalShow = false;
+        mWindowLifecycle = new WindowLifecycle((activity));
+    }
+
+    ToastImpl(Application application, CustomToast toast) {
+        this((Context) application, toast);
+        mGlobalShow = true;
+        mWindowLifecycle = new WindowLifecycle(application);
+    }
+
+    private ToastImpl(Context context, CustomToast toast) {
         mToast = toast;
-        mPackageName = activity.getPackageName();
-        mWindowLifecycle = new WindowLifecycle(activity);
+        mPackageName = context.getPackageName();
     }
 
     boolean isShow() {
@@ -51,8 +67,12 @@ final class ToastImpl {
         if (isShow()) {
             return;
         }
-        HANDLER.removeCallbacks(mShowRunnable);
-        HANDLER.post(mShowRunnable);
+        if (isMainThread()) {
+            mShowRunnable.run();
+        } else {
+            HANDLER.removeCallbacks(mShowRunnable);
+            HANDLER.post(mShowRunnable);
+        }
     }
 
     /**
@@ -62,26 +82,28 @@ final class ToastImpl {
         if (!isShow()) {
             return;
         }
-        // 移除之前移除吐司的任务
-        HANDLER.removeCallbacks(mCancelRunnable);
-        HANDLER.post(mCancelRunnable);
+        HANDLER.removeCallbacks(mShowRunnable);
+        if (isMainThread()) {
+            mCancelRunnable.run();
+        } else {
+            HANDLER.removeCallbacks(mCancelRunnable);
+            HANDLER.post(mCancelRunnable);
+        }
+    }
+
+    /**
+     * 判断当前是否在主线程
+     */
+    private boolean isMainThread() {
+        return Looper.myLooper() == Looper.getMainLooper();
     }
 
     private final Runnable mShowRunnable = new Runnable() {
 
         @Override
         public void run() {
-
-            Activity activity = mWindowLifecycle.getActivity();
-            if (activity == null || activity.isFinishing()) {
-                return;
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && activity.isDestroyed()) {
-                return;
-            }
-
-            WindowManager windowManager = activity.getWindowManager();
+            
+            WindowManager windowManager = mWindowLifecycle.getWindowManager();
             if (windowManager == null) {
                 return;
             }
@@ -100,6 +122,15 @@ final class ToastImpl {
             params.verticalMargin = mToast.getVerticalMargin();
             params.horizontalMargin = mToast.getHorizontalMargin();
             params.windowAnimations = mToast.getAnimationsId();
+
+            // 如果是全局显示
+            if (mGlobalShow) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                } else {
+                    params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+                }
+            }
 
             try {
 
@@ -128,13 +159,7 @@ final class ToastImpl {
         public void run() {
 
             try {
-
-                Activity activity = mWindowLifecycle.getActivity();
-                if (activity == null) {
-                    return;
-                }
-
-                WindowManager windowManager = activity.getWindowManager();
+                WindowManager windowManager = mWindowLifecycle.getWindowManager();
                 if (windowManager == null) {
                     return;
                 }

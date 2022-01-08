@@ -89,28 +89,63 @@ public final class ToastUtils {
     }
 
     /**
-     * 显示一个对象的吐司
-     *
-     * @param object      对象
+     * 延迟显示 Toast
      */
-    public static void show(Object object) {
-        show(object != null ? object.toString() : "null");
+
+    public static void delayedShow(int id, long delayMillis) {
+        show(id, delayMillis);
+    }
+
+    public static void delayedShow(CharSequence text, long delayMillis) {
+        show(text, delayMillis);
+    }
+
+    public static void delayedShow(Object object, long delayMillis) {
+        show(object, delayMillis);
+    }
+
+    /**
+     * debug 模式下显示 Toast
+     */
+
+    public static void debugShow(int id) {
+        if (!isDebugMode()) {
+            return;
+        }
+        show(id, 0);
+    }
+
+    public static void debugShow(CharSequence text) {
+        if (!isDebugMode()) {
+            return;
+        }
+        show(text, 0);
     }
 
     public static void debugShow(Object object) {
         if (!isDebugMode()) {
             return;
         }
-        show(object);
+        show(object, 0);
     }
 
     /**
-     * 显示一个吐司
-     *
-     * @param id      如果传入的是正确的 string id 就显示对应字符串
-     *                如果不是则显示一个整数的string
+     * 显示 Toast
      */
+
     public static void show(int id) {
+        show(id, 0);
+    }
+
+    public static void show(Object object) {
+        show(object, 0);
+    }
+
+    public static void show(CharSequence text) {
+        show(text, 0);
+    }
+
+    private static void show(int id, long delayMillis) {
         try {
             // 如果这是一个资源 id
             show(sApplication.getResources().getText(id));
@@ -120,19 +155,11 @@ public final class ToastUtils {
         }
     }
 
-    public static void debugShow(int id) {
-        if (!isDebugMode()) {
-            return;
-        }
-        show(id);
+    private static void show(Object object, long delayMillis) {
+        show(object != null ? object.toString() : "null", delayMillis);
     }
 
-    /**
-     * 显示一个吐司
-     *
-     * @param text      需要显示的文本
-     */
-    public static void show(CharSequence text) {
+    private static void show(CharSequence text, long delayMillis) {
         // 如果是空对象或者空文本就不显示
         if (text == null || text.length() == 0) {
             return;
@@ -146,14 +173,7 @@ public final class ToastUtils {
             return;
         }
 
-        sToastStrategy.showToast(text);
-    }
-
-    public static void debugShow(CharSequence text) {
-        if (!isDebugMode()) {
-            return;
-        }
-        show(text);
+        sToastStrategy.showToast(text, delayMillis);
     }
 
     /**

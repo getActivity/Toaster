@@ -2,8 +2,10 @@ package com.hjq.toast;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 /**
  *    author : Android 轮子哥
@@ -16,6 +18,9 @@ final class WindowLifecycle implements Application.ActivityLifecycleCallbacks {
     /** 当前 Activity 对象 */
     private Activity mActivity;
 
+    /** 当前 Application 对象 */
+    private Application mApplication;
+
     /** 自定义 Toast 实现类 */
     private ToastImpl mToastImpl;
 
@@ -23,11 +28,31 @@ final class WindowLifecycle implements Application.ActivityLifecycleCallbacks {
         mActivity = activity;
     }
 
+    WindowLifecycle(Application application) {
+        mApplication = application;
+    }
+
     /**
-     * 获取 Activity
+     * 获取 WindowManager 对象
      */
-    Activity getActivity() {
-        return mActivity;
+    public WindowManager getWindowManager() {
+        if (mActivity != null) {
+
+            if (mActivity.isFinishing()) {
+                return null;
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mActivity.isDestroyed()) {
+                return null;
+            }
+
+            return mActivity.getWindowManager();
+
+        } else if (mApplication != null) {
+            return (WindowManager) mApplication.getSystemService(Context.WINDOW_SERVICE);
+        } else {
+            return null;
+        }
     }
 
     /**

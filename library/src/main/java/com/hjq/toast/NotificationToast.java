@@ -25,13 +25,13 @@ public class NotificationToast extends SystemToast {
 
     @Override
     public void show() {
-        hookNotificationManager();
+        hookNotificationService();
         super.show();
     }
 
     @SuppressLint({"DiscouragedPrivateApi", "PrivateApi"})
     @SuppressWarnings({"JavaReflectionMemberAccess", "SoonBlockedPrivateApi"})
-    private static void hookNotificationManager() {
+    private static void hookNotificationService() {
         if (sHookService) {
             return;
         }
