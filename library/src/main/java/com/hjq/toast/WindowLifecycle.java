@@ -38,21 +38,17 @@ final class WindowLifecycle implements Application.ActivityLifecycleCallbacks {
     public WindowManager getWindowManager() {
         if (mActivity != null) {
 
-            if (mActivity.isFinishing()) {
-                return null;
-            }
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mActivity.isDestroyed()) {
                 return null;
             }
-
             return mActivity.getWindowManager();
 
         } else if (mApplication != null) {
+
             return (WindowManager) mApplication.getSystemService(Context.WINDOW_SERVICE);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
