@@ -4,7 +4,7 @@
 
 * 博客地址：[只需体验三分钟，你就会跟我一样，爱上这款 Toast](https://www.jianshu.com/p/9b174ee2c571)
 
-* 可以扫码下载 Demo 进行演示或者测试，如果扫码下载不了的，[点击此处可直接下载](https://github.com/getActivity/ToastUtils/releases/download/10.3/ToastUtils.apk)
+* 可以扫码下载 Demo 进行演示或者测试，如果扫码下载不了的，[点击此处可直接下载](https://github.com/getActivity/ToastUtils/releases/download/10.5/ToastUtils.apk)
 
 ![](picture/demo_code.png)
 
@@ -47,7 +47,7 @@ android {
 
 dependencies {
     // 吐司框架：https://github.com/getActivity/ToastUtils
-    implementation 'com.github.getActivity:ToastUtils:10.3'
+    implementation 'com.github.getActivity:ToastUtils:10.5'
 }
 ```
 
@@ -140,9 +140,9 @@ ToastUtils.init(this, new ToastStrategy() {
 
 |  功能或细节  | [ToastUtils](https://github.com/getActivity/ToastUtils) | [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)  | [Toasty](https://github.com/GrenderG/Toasty) |
 | :----: | :------: |  :-----: |  :-----: |
-|    对应版本  |  10.3 |  1.30.6  |  1.5.0  |
+|    对应版本  |  10.5 |  1.30.6  |  1.5.0  |
 |    issues 数   |  [![](https://img.shields.io/github/issues/getActivity/ToastUtils.svg)](https://github.com/getActivity/ToastUtils/issues)  |  [![](https://img.shields.io/github/issues/Blankj/AndroidUtilCode.svg)](https://github.com/Blankj/AndroidUtilCode/issues)  |  [![](https://img.shields.io/github/issues/GrenderG/Toasty.svg)](https://github.com/GrenderG/Toasty/issues)  |
-|                  **aar 包大小**                 | 28 KB | 500 KB | 50 KB |
+|                  **aar 包大小**                 | 29 KB | 500 KB | 50 KB |
 |                  **调用代码定位**                |  ✅  |  ❌  |  ❌  |
 |                支持在子线程中调用显示              |  ✅  |  ✅  |  ❌  |
 |           支持全局设置统一 Toast 样式              |  ✅  |  ❌  |  ❌  |
@@ -158,13 +158,15 @@ ToastUtils.init(this, new ToastStrategy() {
 
 #### Toast 在 Android 7.1 崩溃的问题介绍
 
+> [Toast 在 Android 7.1 崩溃排查及修复](https://www.jianshu.com/p/437f473017d6)
+
 * 这个问题是由于 Android 7.1 加入 WindowToken 校验机制导致的，而这个 WindowToken 是 NotificationManagerService 生成的，这个 WindowToken 是存在一定时效性的，而当应用的主线程被阻塞时，WindowManager 在 addView 时会对 WindowToken 进行校验，但是 WindowToken 已经过期了，这个时候 addView 就会抛出异常。
 
-* 谷歌在 Android 8.0 就修复了这个问题，修复方式十分简单粗暴，就是直接捕获这个异常，而框架的修复思路跟谷歌类似，只不过修复方式不太一样，因为框架无法直接修改系统源码，所以是直接通过 Hook 的方式对异常进行捕获，大家如果对修复过程感兴趣可以看一下我写的这篇文章[Toast 在 Android 7.1 崩溃排查及修复](https://www.jianshu.com/p/437f473017d6)。
+* 谷歌在 Android 8.0 就修复了这个问题，修复方式十分简单粗暴，就是直接捕获这个异常，而框架的修复思路跟谷歌类似，只不过修复方式不太一样，因为框架无法直接修改系统源码，所以是直接通过 Hook 的方式对异常进行捕获。
 
 #### 通知栏权限关闭后 Toast 显示不出来的问题介绍
 
-* [Toast通知栏权限填坑指南](https://www.jianshu.com/p/1d64a5ccbc7c)
+> [Toast通知栏权限填坑指南](https://www.jianshu.com/p/1d64a5ccbc7c)
 
 * 这个问题的出现是因为原生 Toast 的显示要通过 NMS（NotificationManagerService） 才会 addView 到 Window 上面，而在 NMS 中有一个 `static final boolean ENABLE_BLOCKED_TOASTS = true` 的字段，当这个常量值为 true 时，会触发 NMS 对应用通知栏权限的检查，如果没有通知栏权限，那么这个 Toast 将会被 NMS 所拦截，并输出 `Suppressing toast from package` 日志信息，而小米手机没有这个问题是因为它是将 `ENABLE_BLOCKED_TOASTS` 字段值修改成 `false`，所以就不会触发对通知栏权限的检查，另外我为什么会知道有这个事情？因为我曾经和一名 MIUI 工程师一起确认过这个事情。
 
@@ -186,7 +188,7 @@ ToastUtils.init(this, new ToastStrategy() {
 
 * 兼容性强：[处理原生 Toast 在 Android 7.1 产生崩溃的历史遗留问题](https://www.jianshu.com/p/437f473017d6)
 
-* 功能强大：不分主次线程都可以弹出Toast，自动区分资源 id 和 int 类型
+* 功能强大：不分主次线程都可以弹出Toast，自动识别资源 id 和 int 类型
 
 * 使用简单：只需传入文本，会自动根据文本长度决定吐司显示的时长
 
@@ -201,7 +203,7 @@ ToastUtils.init(this, new ToastStrategy() {
 * 在项目中右击弹出菜单，Replace in path，勾选 Regex 选项，点击替换
 
 ```text
-Toast\.makeText\([^,]+,\s*(.+{1}),\s*[^,]+\)\.show\(\)
+Toast\.makeText\([^,]+,\s*(.+),\s*[^,]+\)\.show\(\)
 ```
 
 ```text
@@ -251,6 +253,8 @@ new Toast
 
 * Android 代码规范：[AndroidCodeStandard](https://github.com/getActivity/AndroidCodeStandard) ![](https://img.shields.io/github/stars/getActivity/AndroidCodeStandard.svg) ![](https://img.shields.io/github/forks/getActivity/AndroidCodeStandard.svg)
 
+* Android 开源排行榜：[AndroidGithubBoss](https://github.com/getActivity/AndroidGithubBoss) ![](https://img.shields.io/github/stars/getActivity/AndroidGithubBoss.svg) ![](https://img.shields.io/github/forks/getActivity/AndroidGithubBoss.svg)
+
 * Studio 精品插件：[StudioPlugins](https://github.com/getActivity/StudioPlugins) ![](https://img.shields.io/github/stars/getActivity/StudioPlugins.svg) ![](https://img.shields.io/github/forks/getActivity/StudioPlugins.svg)
 
 * 表情包大集合：[EmojiPackage](https://github.com/getActivity/EmojiPackage) ![](https://img.shields.io/github/stars/getActivity/EmojiPackage.svg) ![](https://img.shields.io/github/forks/getActivity/EmojiPackage.svg)
@@ -261,7 +265,7 @@ new Toast
 
 ![](https://raw.githubusercontent.com/getActivity/Donate/master/picture/official_ccount.png)
 
-#### Android 技术分享 QQ 群：78797078
+#### Android 技术 Q 群：10047167
 
 #### 如果您觉得我的开源库帮你节省了大量的开发时间，请扫描下方的二维码随意打赏，要是能打赏个 10.24 :monkey_face:就太:thumbsup:了。您的支持将鼓励我继续创作:octocat:
 

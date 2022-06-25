@@ -1,5 +1,6 @@
 package com.hjq.toast;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -7,7 +8,10 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
 /**
@@ -98,8 +102,28 @@ final class ToastImpl {
         return Looper.myLooper() == Looper.getMainLooper();
     }
 
+    /**
+     * 发送无障碍事件
+     */
+    private void trySendAccessibilityEvent(View view) {
+        final Context context = view.getContext();
+        AccessibilityManager accessibilityManager =
+                (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        if (!accessibilityManager.isEnabled()) {
+            return;
+        }
+        // 将 Toast 视为通知，因为它们用于向用户宣布短暂的信息
+        AccessibilityEvent event = AccessibilityEvent.obtain(
+                AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED);
+        event.setClassName(Toast.class.getName());
+        event.setPackageName(context.getPackageName());
+        view.dispatchPopulateAccessibilityEvent(event);
+        accessibilityManager.sendAccessibilityEvent(event);
+    }
+
     private final Runnable mShowRunnable = new Runnable() {
 
+        @SuppressLint("WrongConstant")
         @Override
         public void run() {
             
@@ -142,7 +166,8 @@ final class ToastImpl {
                 mWindowLifecycle.register(ToastImpl.this);
                 // 当前已经显示
                 setShow(true);
-
+                // 发送无障碍事件
+                trySendAccessibilityEvent(mToast.getView());
             } catch (IllegalStateException | WindowManager.BadTokenException e) {
                 // 如果这个 View 对象被重复添加到 WindowManager 则会抛出异常
                 // java.lang.IllegalStateException: View android.widget.TextView has already been added to the window manager.

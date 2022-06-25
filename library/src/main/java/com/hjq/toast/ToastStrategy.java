@@ -1,5 +1,6 @@
 package com.hjq.toast;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AppOpsManager;
 import android.app.Application;
@@ -65,12 +66,13 @@ public class ToastStrategy implements IToastStrategy {
     public IToast createToast(Application application) {
         Activity foregroundActivity = mActivityStack.getForegroundActivity();
         IToast toast;
-        if (foregroundActivity != null) {
-            toast = new ActivityToast(foregroundActivity);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 Settings.canDrawOverlays(application)) {
             // 如果有悬浮窗权限，就开启全局的 Toast
             toast = new WindowToast(application);
+        } else if (foregroundActivity != null) {
+            // 如果没有悬浮窗权限，就开启一个依附于 Activity 的 Toast
+            toast = new ActivityToast(foregroundActivity);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
             // 处理 Android 7.1 上 Toast 在主线程被阻塞后会导致报错的问题
             toast = new SafeToast(application);
@@ -105,7 +107,7 @@ public class ToastStrategy implements IToastStrategy {
         mLatestText = text;
         HANDLER.removeCallbacks(mShowRunnable);
         // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示当前 Activity
-        // 如果当前 Activity 在 ToastUtils.show 之后进行 finish 了，那么这个时候 Toast 可能会显示不出来
+        // 如果当前 Activity 在 showToast 之后立马进行 finish 了，那么这个时候 Toast 可能会显示不出来
         // 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面
         HANDLER.postDelayed(mShowRunnable, delayMillis + DELAY_TIMEOUT);
     }
@@ -173,6 +175,7 @@ public class ToastStrategy implements IToastStrategy {
      * 是否有通知栏权限
      */
     @SuppressWarnings("ConstantConditions")
+    @SuppressLint("PrivateApi")
     protected boolean areNotificationsEnabled(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return context.getSystemService(NotificationManager.class).areNotificationsEnabled();

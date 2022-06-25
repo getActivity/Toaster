@@ -40,12 +40,12 @@ public class BlackToastStyle implements IToastStyle<TextView> {
 
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        Drawable background = getBackgroundDrawable(context);
+        Drawable backgroundDrawable = getBackgroundDrawable(context);
         // 设置背景
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            textView.setBackground(background);
+            textView.setBackground(backgroundDrawable);
         } else {
-            textView.setBackgroundDrawable(background);
+            textView.setBackgroundDrawable(backgroundDrawable);
         }
 
         // 设置 Z 轴阴影
@@ -53,8 +53,6 @@ public class BlackToastStyle implements IToastStyle<TextView> {
             textView.setZ(getTranslationZ(context));
         }
 
-        // 设置最大显示行数
-        textView.setMaxLines(getMaxLines(context));
         return textView;
     }
 
@@ -89,9 +87,5 @@ public class BlackToastStyle implements IToastStyle<TextView> {
 
     protected float getTranslationZ(Context context) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, context.getResources().getDisplayMetrics());
-    }
-
-    protected int getMaxLines(Context context) {
-        return 5;
     }
 }

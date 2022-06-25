@@ -80,7 +80,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     public void show7(View v) {
-        Snackbar.make(getWindow().getDecorView(), "正在准备跳转到手机桌面，请系好安全带", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getWindow().getDecorView(), "温馨提示：安卓 10 在后台显示 Toast 需要有通知栏权限或者悬浮窗权限的情况下才可以显示", Snackbar.LENGTH_SHORT).show();
 
         v.postDelayed(new Runnable() {
             @Override
@@ -98,7 +98,7 @@ public final class MainActivity extends AppCompatActivity {
                     if (XXPermissions.isGranted(MainActivity.this, Permission.SYSTEM_ALERT_WINDOW)) {
                         ToastUtils.show("我是在后台显示的 Toast（有悬浮窗权限真的可以为所欲为）");
                     } else {
-                        ToastUtils.show("我是在后台显示的 Toast（Android 11 及以上在后台显示 Toast 只能使用系统样式）");
+                        ToastUtils.show("我是在后台显示的 Toast（安卓 11 及以上在后台显示只能使用系统样式）");
                     }
                 } else {
                     ToastUtils.show("我是在后台显示的 Toast");
