@@ -15,8 +15,11 @@ import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.hjq.toast.ToastParams;
+import com.hjq.toast.ToastStrategy;
 import com.hjq.toast.ToastUtils;
 import com.hjq.toast.style.BlackToastStyle;
+import com.hjq.toast.style.CustomViewToastStyle;
 import com.hjq.toast.style.WhiteToastStyle;
 import com.hjq.xtoast.XToast;
 
@@ -44,16 +47,22 @@ public final class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void show1(View v) {
+    public void showToast(View v) {
         ToastUtils.show("我是普通的 Toast");
     }
 
-    public void show2(View v) {
+    public void showThriceToast(View v) {
+        for (int i = 0; i < 3; i++) {
+            ToastUtils.show("我是第 " + (i + 1) + " 个 Toast");
+        }
+    }
+
+    public void delayShowToast(View v) {
         ToastUtils.delayedShow("我是延迟 2 秒显示的 Toast", 2000);
     }
 
     @SuppressWarnings("AlibabaAvoidManuallyCreateThread")
-    public void show3(View v) {
+    public void threadShowToast(View v) {
         new Thread(new Runnable() {
 
             @Override
@@ -63,23 +72,36 @@ public final class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    public void show4(View v) {
+    public void switchToastStyleToWhite(View v) {
         ToastUtils.setStyle(new WhiteToastStyle());
         ToastUtils.show("动态切换白色吐司样式成功");
     }
 
-    public void show5(View v) {
+    public void switchToastStyleToBlack(View v) {
         ToastUtils.setStyle(new BlackToastStyle());
         ToastUtils.show("动态切换黑色吐司样式成功");
     }
 
-    public void show6(View v) {
-        ToastUtils.setView(R.layout.toast_custom_view);
-        ToastUtils.setGravity(Gravity.CENTER);
-        ToastUtils.show("自定义 Toast 布局");
+    public void customLocalToastStyle(View v) {
+        ToastParams params = new ToastParams();
+        params.text = "我是自定义布局的 Toast（局部生效）";
+        params.style = new CustomViewToastStyle(R.layout.toast_custom_view);
+        ToastUtils.show(params);
     }
 
-    public void show7(View v) {
+    public void customGlobalToastStyle(View v) {
+        ToastUtils.setView(R.layout.toast_custom_view);
+        ToastUtils.setGravity(Gravity.CENTER);
+        ToastUtils.show("我是自定义布局的 Toast（全局生效）");
+    }
+
+    public void switchToastStrategy(View v) {
+        ToastUtils.setStrategy(new ToastStrategy(ToastStrategy.SHOW_STRATEGY_TYPE_QUEUE));
+        ToastUtils.show("切换到排队显示策略成功，请点击下方文本来体验效果");
+        findViewById(R.id.tv_main_thrice_show).setVisibility(View.VISIBLE);
+    }
+
+    public void toBackgroundShowToast(View v) {
         Snackbar.make(getWindow().getDecorView(), "温馨提示：安卓 10 在后台显示 Toast 需要有通知栏权限或者悬浮窗权限的情况下才可以显示", Snackbar.LENGTH_SHORT).show();
 
         v.postDelayed(new Runnable() {
@@ -107,7 +129,7 @@ public final class MainActivity extends AppCompatActivity {
         }, 3000);
     }
 
-    public void show8(View v) {
+    public void combinationXToastShow(View v) {
         new XToast<>(this)
                 .setDuration(1000)
                 // 将 ToastUtils 中的 View 转移给 XToast 来显示

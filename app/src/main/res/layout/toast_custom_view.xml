@@ -8,8 +8,8 @@
     android:padding="10dp">
 
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:src="@mipmap/ic_launcher" />
 
     <TextView
@@ -18,5 +18,5 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:textColor="#FFFFFFFF"
-        android:textSize="16sp" />
+        android:textSize="14sp" />
 </LinearLayout>

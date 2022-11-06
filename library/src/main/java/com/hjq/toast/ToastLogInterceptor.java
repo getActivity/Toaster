@@ -15,8 +15,8 @@ import java.lang.reflect.Modifier;
 public class ToastLogInterceptor implements IToastInterceptor {
 
     @Override
-    public boolean intercept(CharSequence text) {
-        printToast(text);
+    public boolean intercept(ToastParams params) {
+        printToast(params.text);
         return false;
     }
 

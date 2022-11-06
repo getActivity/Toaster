@@ -1,5 +1,6 @@
 package com.hjq.toast;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
@@ -12,13 +13,31 @@ import android.os.Bundle;
  */
 final class ActivityStack implements Application.ActivityLifecycleCallbacks {
 
+    @SuppressLint("StaticFieldLeak")
+    private static volatile ActivityStack sInstance;
+
+    public static ActivityStack getInstance() {
+        if(sInstance == null) {
+            synchronized (ActivityStack.class) {
+                if(sInstance == null) {
+                    sInstance = new ActivityStack();
+                }
+            }
+        }
+        return sInstance;
+    }
+
+    /** 私有化构造函数 */
+    private ActivityStack() {}
+
     /**
-     * 注册
+     * 注册 Activity 生命周期监听
      */
-    static ActivityStack register(Application application) {
-        ActivityStack lifecycle = new ActivityStack();
-        application.registerActivityLifecycleCallbacks(lifecycle);
-        return lifecycle;
+    public void register(Application application) {
+        if (application == null) {
+            return;
+        }
+        application.registerActivityLifecycleCallbacks(this);
     }
 
     /** 前台 Activity 对象 */

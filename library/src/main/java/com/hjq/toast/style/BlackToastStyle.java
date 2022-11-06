@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -18,10 +19,10 @@ import com.hjq.toast.config.IToastStyle;
  *    desc   : 默认黑色样式实现
  */
 @SuppressWarnings({"unused", "deprecation"})
-public class BlackToastStyle implements IToastStyle<TextView> {
+public class BlackToastStyle implements IToastStyle<View> {
 
     @Override
-    public TextView createView(Context context) {
+    public View createView(Context context) {
         TextView textView = new TextView(context);
         textView.setId(android.R.id.message);
         textView.setGravity(getTextGravity(context));

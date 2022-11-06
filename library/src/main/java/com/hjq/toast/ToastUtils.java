@@ -3,13 +3,14 @@ package com.hjq.toast;
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
+import android.widget.Toast;
 
 import com.hjq.toast.config.IToastInterceptor;
 import com.hjq.toast.config.IToastStrategy;
 import com.hjq.toast.config.IToastStyle;
 import com.hjq.toast.style.BlackToastStyle;
+import com.hjq.toast.style.CustomViewToastStyle;
 import com.hjq.toast.style.LocationToastStyle;
-import com.hjq.toast.style.ViewToastStyle;
 import com.hjq.toast.style.WhiteToastStyle;
 
 /**
@@ -160,20 +161,42 @@ public final class ToastUtils {
     }
 
     private static void show(CharSequence text, long delayMillis) {
+        ToastParams params = new ToastParams();
+        params.text = text;
+        params.delayMillis = delayMillis;
+        show(params);
+    }
+
+    public static void show(ToastParams params) {
         // 如果是空对象或者空文本就不显示
-        if (text == null || text.length() == 0) {
+        if (params.text == null || params.text.length() == 0) {
             return;
         }
 
-        if (sToastInterceptor == null) {
-            sToastInterceptor = new ToastLogInterceptor();
+        if (params.strategy == null) {
+            params.strategy = sToastStrategy;
         }
 
-        if (sToastInterceptor.intercept(text)) {
+        if (params.interceptor == null) {
+            if (sToastInterceptor == null) {
+                sToastInterceptor = new ToastLogInterceptor();
+            }
+            params.interceptor = sToastInterceptor;
+        }
+
+        if (params.style == null) {
+            params.style = sToastStyle;
+        }
+
+        if (params.interceptor.intercept(params)) {
             return;
         }
 
-        sToastStrategy.showToast(text, delayMillis);
+        if (params.toastDuration == -1) {
+            params.toastDuration = params.text.length() > 20 ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
+        }
+
+        params.strategy.showToast(params);
     }
 
     /**
@@ -197,7 +220,7 @@ public final class ToastUtils {
     }
 
     public static void setGravity(int gravity, int xOffset, int yOffset, float horizontalMargin, float verticalMargin) {
-        sToastStrategy.bindStyle(new LocationToastStyle(sToastStyle, gravity, xOffset, yOffset, horizontalMargin, verticalMargin));
+        sToastStyle = new LocationToastStyle(sToastStyle, gravity, xOffset, yOffset, horizontalMargin, verticalMargin);
     }
 
     /**
@@ -207,7 +230,9 @@ public final class ToastUtils {
         if (id <= 0) {
             return;
         }
-        setStyle(new ViewToastStyle(id, sToastStyle));
+        setStyle(new CustomViewToastStyle(id, sToastStyle.getGravity(),
+                sToastStyle.getXOffset(), sToastStyle.getYOffset(),
+                sToastStyle.getHorizontalMargin(), sToastStyle.getVerticalMargin()));
     }
 
     /**
@@ -219,7 +244,6 @@ public final class ToastUtils {
      */
     public static void setStyle(IToastStyle<?> style) {
         sToastStyle = style;
-        sToastStrategy.bindStyle(style);
     }
 
     public static IToastStyle<?> getStyle() {

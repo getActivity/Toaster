@@ -2,6 +2,8 @@ package com.hjq.toast.config;
 
 import android.app.Application;
 
+import com.hjq.toast.ToastParams;
+
 /**
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
@@ -16,19 +18,14 @@ public interface IToastStrategy {
     void registerStrategy(Application application);
 
     /**
-     * 绑定样式
-     */
-    void bindStyle(IToastStyle<?> style);
-
-    /**
      * 创建 Toast
      */
-    IToast createToast(Application application);
+    IToast createToast(IToastStyle<?> style);
 
     /**
      * 显示 Toast
      */
-    void showToast(CharSequence text, long delayMillis);
+    void showToast(ToastParams params);
 
     /**
      * 取消 Toast

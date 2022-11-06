@@ -1,5 +1,7 @@
 package com.hjq.toast.config;
 
+import com.hjq.toast.ToastParams;
+
 /**
  *    author : Android 轮子哥
  *    github : https://github.com/getActivity/ToastUtils
@@ -11,5 +13,5 @@ public interface IToastInterceptor {
     /**
      * 根据显示的文本决定是否拦截该 Toast
      */
-    boolean intercept(CharSequence text);
+    boolean intercept(ToastParams params);
 }
