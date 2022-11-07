@@ -94,15 +94,18 @@ public final class ToastUtils {
      */
 
     public static void delayedShow(int id, long delayMillis) {
-        show(id, delayMillis);
-    }
-
-    public static void delayedShow(CharSequence text, long delayMillis) {
-        show(text, delayMillis);
+        delayedShow(stringIdToCharSequence(id), delayMillis);
     }
 
     public static void delayedShow(Object object, long delayMillis) {
-        show(object, delayMillis);
+        delayedShow(objectToCharSequence(object), delayMillis);
+    }
+
+    public static void delayedShow(CharSequence text, long delayMillis) {
+        ToastParams params = new ToastParams();
+        params.text = text;
+        params.delayMillis = delayMillis;
+        show(params);
     }
 
     /**
@@ -110,24 +113,58 @@ public final class ToastUtils {
      */
 
     public static void debugShow(int id) {
-        if (!isDebugMode()) {
-            return;
-        }
-        show(id, 0);
+        debugShow(stringIdToCharSequence(id));
+    }
+
+    public static void debugShow(Object object) {
+        debugShow(objectToCharSequence(object));
     }
 
     public static void debugShow(CharSequence text) {
         if (!isDebugMode()) {
             return;
         }
-        show(text, 0);
+        ToastParams params = new ToastParams();
+        params.text = text;
+        show(params);
     }
 
-    public static void debugShow(Object object) {
-        if (!isDebugMode()) {
-            return;
-        }
-        show(object, 0);
+    /**
+     * 显示一个短 Toast
+     */
+
+    public static void showShort(int id) {
+        showShort(stringIdToCharSequence(id));
+    }
+
+    public static void showShort(Object object) {
+        showShort(objectToCharSequence(object));
+    }
+
+    public static void showShort(CharSequence text) {
+        ToastParams params = new ToastParams();
+        params.text = text;
+        params.duration = Toast.LENGTH_SHORT;
+        show(params);
+    }
+
+    /**
+     * 显示一个长 Toast
+     */
+
+    public static void showLong(int id) {
+        showLong(stringIdToCharSequence(id));
+    }
+
+    public static void showLong(Object object) {
+        showLong(objectToCharSequence(object));
+    }
+
+    public static void showLong(CharSequence text) {
+        ToastParams params = new ToastParams();
+        params.text = text;
+        params.duration = Toast.LENGTH_LONG;
+        show(params);
     }
 
     /**
@@ -135,35 +172,16 @@ public final class ToastUtils {
      */
 
     public static void show(int id) {
-        show(id, 0);
+        show(stringIdToCharSequence(id));
     }
 
     public static void show(Object object) {
-        show(object, 0);
+        show(objectToCharSequence(object));
     }
 
     public static void show(CharSequence text) {
-        show(text, 0);
-    }
-
-    private static void show(int id, long delayMillis) {
-        try {
-            // 如果这是一个资源 id
-            show(sApplication.getResources().getText(id));
-        } catch (Resources.NotFoundException ignored) {
-            // 如果这是一个 int 整数
-            show(String.valueOf(id));
-        }
-    }
-
-    private static void show(Object object, long delayMillis) {
-        show(object != null ? object.toString() : "null", delayMillis);
-    }
-
-    private static void show(CharSequence text, long delayMillis) {
         ToastParams params = new ToastParams();
         params.text = text;
-        params.delayMillis = delayMillis;
         show(params);
     }
 
@@ -192,8 +210,8 @@ public final class ToastUtils {
             return;
         }
 
-        if (params.toastDuration == -1) {
-            params.toastDuration = params.text.length() > 20 ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
+        if (params.duration == -1) {
+            params.duration = params.text.length() > 20 ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
         }
 
         params.strategy.showToast(params);
@@ -286,5 +304,19 @@ public final class ToastUtils {
             sDebugMode = (sApplication.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         }
         return sDebugMode;
+    }
+
+    private static CharSequence stringIdToCharSequence(int id) {
+        try {
+            // 如果这是一个资源 id
+            return sApplication.getResources().getText(id);
+        } catch (Resources.NotFoundException ignored) {
+            // 如果这是一个 int 整数
+            return String.valueOf(id);
+        }
+    }
+
+    private static CharSequence objectToCharSequence(Object object) {
+        return object != null ? object.toString() : "null";
     }
 }

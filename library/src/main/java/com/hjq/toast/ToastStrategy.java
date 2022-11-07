@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
 public class ToastStrategy implements IToastStrategy {
 
     /**
-     * 即显即示模式
+     * 即显即示模式（默认）
      *
      * 在发起多次 Toast 的显示请求情况下，显示下一个 Toast 之前
      * 会先立即取消上一个 Toast，保证当前显示 Toast 消息是最新的
@@ -192,9 +192,9 @@ public class ToastStrategy implements IToastStrategy {
      * 生成 Toast 等待时间
      */
     protected int generateToastWaitMillis(ToastParams params) {
-        if (params.toastDuration == Toast.LENGTH_SHORT) {
+        if (params.duration == Toast.LENGTH_SHORT) {
             return 1000;
-        } else if (params.toastDuration == Toast.LENGTH_LONG) {
+        } else if (params.duration == Toast.LENGTH_LONG) {
             return 1500;
         }
         return 0;
@@ -226,7 +226,7 @@ public class ToastStrategy implements IToastStrategy {
             // 为什么用 WeakReference，而不用 SoftReference ？
             // https://github.com/getActivity/ToastUtils/issues/79
             mToastReference = new WeakReference<>(toast);
-            toast.setDuration(mToastParams.toastDuration);
+            toast.setDuration(mToastParams.duration);
             toast.setText(mToastParams.text);
             toast.show();
         }

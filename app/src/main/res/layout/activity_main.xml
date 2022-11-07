@@ -34,6 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
                     android:onClick="showToast"
                     android:text="简简单单显示 Toast" />
 
@@ -41,7 +42,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
+                    android:onClick="showShortToast"
+                    android:text="显示一个短 Toast" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:onClick="showLongToast"
+                    android:text="显示一个长 Toast" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
                     android:onClick="delayShowToast"
                     android:text="延迟 2 秒显示 Toast" />
 
@@ -49,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:onClick="threadShowToast"
                     android:text="在子线程中显示吐司" />
 
@@ -57,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:onClick="switchToastStyleToWhite"
                     android:text="切换吐司的样式为白色" />
 
@@ -65,7 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:onClick="switchToastStyleToBlack"
                     android:text="切换吐司的样式为黑色" />
 
@@ -73,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:onClick="customLocalToastStyle"
                     android:text="自定义 Toast 布局（局部生效）" />
 
@@ -81,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:onClick="customGlobalToastStyle"
                     android:text="自定义 Toast 布局（全局生效）" />
 
@@ -89,7 +106,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:onClick="switchToastStrategy"
                     android:text="切换成 Toast 排队显示策略" />
 
@@ -108,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:onClick="toBackgroundShowToast"
                     android:text="在后台状态下显示 Toast" />
 
@@ -116,7 +133,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
                     android:onClick="combinationXToastShow"
                     android:text="搭配 XToast 悬浮窗框架" />
 

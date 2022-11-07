@@ -51,6 +51,14 @@ public final class MainActivity extends AppCompatActivity {
         ToastUtils.show("我是普通的 Toast");
     }
 
+    public void showShortToast(View v) {
+        ToastUtils.showShort("我是一个短 Toast");
+    }
+
+    public void showLongToast(View v) {
+        ToastUtils.showLong("我是一个长 Toast");
+    }
+
     public void showThriceToast(View v) {
         for (int i = 0; i < 3; i++) {
             ToastUtils.show("我是第 " + (i + 1) + " 个 Toast");
@@ -102,7 +110,14 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     public void toBackgroundShowToast(View v) {
-        Snackbar.make(getWindow().getDecorView(), "温馨提示：安卓 10 在后台显示 Toast 需要有通知栏权限或者悬浮窗权限的情况下才可以显示", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getWindow().getDecorView(), "系好安全带，即将跳转到手机桌面", Snackbar.LENGTH_SHORT).show();
+
+        v.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(getWindow().getDecorView(), "温馨提示：安卓 10 在后台显示 Toast 需要有通知栏权限或者悬浮窗权限的情况下才可以显示", Snackbar.LENGTH_SHORT).show();
+            }
+        }, 2000);
 
         v.postDelayed(new Runnable() {
             @Override
@@ -111,7 +126,7 @@ public final class MainActivity extends AppCompatActivity {
                 intent.addCategory(Intent.CATEGORY_HOME);
                 startActivity(intent);
             }
-        }, 2000);
+        }, 4000);
 
         v.postDelayed(new Runnable() {
             @Override
@@ -126,7 +141,7 @@ public final class MainActivity extends AppCompatActivity {
                     ToastUtils.show("我是在后台显示的 Toast");
                 }
             }
-        }, 3000);
+        }, 5000);
     }
 
     public void combinationXToastShow(View v) {

@@ -4,7 +4,7 @@
 
 * 博客地址：[只需体验三分钟，你就会跟我一样，爱上这款 Toast](https://www.jianshu.com/p/9b174ee2c571)
 
-* 可以扫码下载 Demo 进行演示或者测试，如果扫码下载不了的，[点击此处可直接下载](https://github.com/getActivity/ToastUtils/releases/download/11.0/ToastUtils.apk)
+* 可以扫码下载 Demo 进行演示或者测试，如果扫码下载不了的，[点击此处可直接下载](https://github.com/getActivity/ToastUtils/releases/download/11.2/ToastUtils.apk)
 
 ![](picture/demo_code.png)
 
@@ -47,7 +47,7 @@ android {
 
 dependencies {
     // 吐司框架：https://github.com/getActivity/ToastUtils
-    implementation 'com.github.getActivity:ToastUtils:11.0'
+    implementation 'com.github.getActivity:ToastUtils:11.2'
 }
 ```
 
@@ -72,23 +72,38 @@ public class XxxApplication extends Application {
 // 显示 Toast
 ToastUtils.show(CharSequence text);
 ToastUtils.show(int id);
-ToastUtils.show(ToastParams params);
+ToastUtils.show(Object object);
 
 // debug 模式下显示 Toast
-ToastUtils.debugShow(int id);
 ToastUtils.debugShow(CharSequence text);
+ToastUtils.debugShow(int id);
+ToastUtils.debugShow(Object object);
 
 // 延迟显示 Toast
-ToastUtils.delayedShow(int id, long delayMillis);
 ToastUtils.delayedShow(CharSequence text, long delayMillis);
+ToastUtils.delayedShow(int id, long delayMillis);
+ToastUtils.delayedShow(Object object, long delayMillis);
+
+// 显示短 Toast
+ToastUtils.showShort(CharSequence text);
+ToastUtils.showShort(int id);
+ToastUtils.showShort(Object object);
+
+// 显示长 Toast
+ToastUtils.showLong(CharSequence text);
+ToastUtils.showLong(int id);
+ToastUtils.showLong(Object object);
+
+// 自定义显示 Toast
+ToastUtils.show(ToastParams params);
 
 // 取消 Toast
 ToastUtils.cancel();
 
-// 设置 Toast 布局
+// 设置 Toast 布局（全局生效）
 ToastUtils.setView(int id);
 
-// 设置 Toast 布局样式
+// 设置 Toast 布局样式（全局生效）
 ToastUtils.setStyle(IToastStyle<?> style);
 // 获取 Toast 布局样式
 ToastUtils.getStyle()
@@ -96,7 +111,7 @@ ToastUtils.getStyle()
 // 判断当前框架是否已经初始化
 ToastUtils.isInit();
 
-// 设置 Toast 策略
+// 设置 Toast 策略（全局生效）
 ToastUtils.setStrategy(IToastStrategy strategy);
 // 获取 Toast 策略
 ToastUtils.getStrategy();
@@ -105,43 +120,19 @@ ToastUtils.getStrategy();
 ToastUtils.setGravity(int gravity);
 ToastUtils.setGravity(int gravity, int xOffset, int yOffset);
 
-// 设置 Toast 拦截器
+// 设置 Toast 拦截器（全局生效）
 ToastUtils.setInterceptor(IToastInterceptor interceptor);
 // 获取 Toast 拦截器
 ToastUtils.getInterceptor();
 ```
 
-* 如果你需要对 Toast 的进行深度定制化，可以使用以下方式
-
-```java
-ToastUtils.init(this, new ToastStrategy() {
-
-    @Override
-    public IToast createToast(Application application) {
-        IToast toast = super.createToast(application);
-        if (toast instanceof CustomToast) {
-            CustomToast customToast = ((CustomToast) toast);
-            // 设置 Toast 动画效果
-            customToast.setAnimationsId(R.anim.xxx);
-            // 设置短 Toast 的显示时长（默认是 2000 毫秒）
-            customToast.setShortDuration(1000);
-            // 设置长 Toast 的显示时长（默认是 3500 毫秒）
-            customToast.setLongDuration(5000);
-        }
-        return toast;
-    }
-});
-```
-
-* 这种方式的缺点是只有应用在前台的情况下才会生效，这是因为前台的 Toast 是用框架实现的，本质上是一个 WindowManager，优点是非常灵活，不受原生 Toast 机制限制，缺点是无法在后台的情况下显示；而后台的 Toast 是用系统来实现的，优点是能在后台的情况下显示，缺点是局限性非常大，无法做太深的定制化；而框架正是利用了两种方式的优缺点进行了互补。
-
-### 温馨提示：框架意在解决一些常规的 Toast 需求，如果是有一些特殊的定制化需求请配搭 [XToast](https://github.com/getActivity/XToast) 悬浮窗框架使用
+## [常见疑问请点击此处查看](HelpDoc.md)
 
 #### 不同 Toast 框架之间的对比
 
 |  功能或细节  | [ToastUtils](https://github.com/getActivity/ToastUtils) | [AndroidUtilCode](https://github.com/Blankj/AndroidUtilCode)  | [Toasty](https://github.com/GrenderG/Toasty) |
 | :----: | :------: |  :-----: |  :-----: |
-|    对应版本  |  11.0 |  1.30.6  |  1.5.0  |
+|    对应版本  |  11.2 |  1.30.6  |  1.5.0  |
 |    issues 数   |  [![](https://img.shields.io/github/issues/getActivity/ToastUtils.svg)](https://github.com/getActivity/ToastUtils/issues)  |  [![](https://img.shields.io/github/issues/Blankj/AndroidUtilCode.svg)](https://github.com/Blankj/AndroidUtilCode/issues)  |  [![](https://img.shields.io/github/issues/GrenderG/Toasty.svg)](https://github.com/GrenderG/Toasty/issues)  |
 |                  **aar 包大小**                 | 31 KB | 500 KB | 50 KB |
 |                   框架维护状态                   | **维护中** | 停止维护 | 停止维护 |
@@ -151,7 +142,7 @@ ToastUtils.init(this, new ToastStrategy() {
 |            支持设置**全局** Toast 样式            |  ✅  |  ❌  |  ❌  |
 |              支持 Toast **即显即示**             |  ✅  |  ✅  |  ❌  |
 |              支持 Toast **排队显示**             |  ✅  |  ❌  |  ✅  |
-|              支持 Toast **延迟显示**               |  ✅  |  ❌  |  ❌  |
+|              支持 Toast **延迟显示**             |  ✅  |  ❌  |  ❌  |
 |      **处理 Toast 在 Android 7.1 崩溃的问题**     |  ✅  |  ✅  |  ❌  |
 |    **兼容通知栏权限关闭后 Toast 显示不出来的问题**    |  ✅  |  ✅  |  ❌  |
 |   **适配 Android 11 不能在后台显示 Toast 的问题**   |  ✅  |  ❌  |  ❌  |

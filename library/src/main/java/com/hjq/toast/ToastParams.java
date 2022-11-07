@@ -10,23 +10,28 @@ import com.hjq.toast.config.IToastStyle;
  *    time   : 2022/10/31
  *    desc   : Toast 参数类
  */
-public final class ToastParams {
+public class ToastParams {
 
     /** 显示的文本 */
     public CharSequence text;
 
-    /** 延迟时间 */
-    public long delayMillis = 0;
+    /**
+     * Toast 显示时长，有两种值可选
+     *
+     * 短吐司：{@link android.widget.Toast#LENGTH_SHORT}
+     * 长吐司：{@link android.widget.Toast#LENGTH_LONG}
+     */
+    public int duration = -1;
 
-    /** 显示时长 */
-    public int toastDuration = -1;
+    /** 延迟显示时间 */
+    public long delayMillis = 0;
 
     /** Toast 样式 */
     public IToastStyle<?> style;
 
-    /** Toast 拦截器 */
-    public IToastInterceptor interceptor;
-
     /** Toast 策略 */
     public IToastStrategy strategy;
+
+    /** Toast 拦截器 */
+    public IToastInterceptor interceptor;
 }

@@ -1,0 +1,160 @@
+#### 目录
+
+* [怎么自定义 Toast 显示动画](#怎么自定义-toast-显示动画)
+
+* [怎么自定义 Toast 显示时长](#怎么自定义-toast-显示时长)
+
+* [怎么自定义 Toast 布局样式](#怎么自定义-toast-布局样式)
+
+* [怎么切换成 Toast 排队显示的策略](#怎么切换成-toast-排队显示的策略)
+
+* [框架无法满足我当前使用的场景怎么办](#框架无法满足我当前使用的场景怎么办)
+
+* [为什么框架优先使用 WindowManager 来实现 Toast](#为什么框架优先使用-windowManager-来实现-toast)
+
+#### 怎么自定义 Toast 显示动画
+
+* 在 Toast 初始化的时候，修改 Toast 策略即可
+
+```java
+ToastUtils.init(this, new ToastStrategy() {
+
+    @Override
+    public IToast createToast(IToastStyle<?> style) {
+        if (toast instanceof CustomToast) {
+            CustomToast customToast = ((CustomToast) toast);
+            // 设置 Toast 动画效果
+            customToast.setAnimationsId(R.anim.xxx);
+        }
+        return toast;
+    }
+});
+```
+
+* 这种方式的缺点是只有应用在前台的情况下才会生效，这是因为前台的 Toast 是用框架实现的，本质上是一个 WindowManager，优点是非常灵活，不受系统 Toast 机制限制，缺点是无法在后台的情况下显示；而后台的 Toast 是用系统来实现的，优点是能在后台的情况下显示，缺点是局限性非常大，无法做太深的定制化；而框架正是利用了两种方式的优缺点进行了互补。
+
+#### 怎么自定义 Toast 显示时长
+
+* 在 Toast 初始化的时候，修改 Toast 策略即可
+
+```java
+ToastUtils.init(this, new ToastStrategy() {
+
+    @Override
+    public IToast createToast(IToastStyle<?> style) {
+        IToast toast = super.createToast(style);
+        if (toast instanceof CustomToast) {
+            CustomToast customToast = ((CustomToast) toast);
+            // 设置短 Toast 的显示时长（默认是 2000 毫秒）
+            customToast.setShortDuration(1000);
+            // 设置长 Toast 的显示时长（默认是 3500 毫秒）
+            customToast.setLongDuration(5000);
+        }
+        return toast;
+    }
+});
+```
+
+* 这种方式的缺点是只有应用在前台的情况下才会生效，这是因为前台的 Toast 是用框架实现的，本质上是一个 WindowManager，优点是非常灵活，不受系统 Toast 机制限制，缺点是无法在后台的情况下显示；而后台的 Toast 是用系统来实现的，优点是能在后台的情况下显示，缺点是局限性非常大，无法做太深的定制化；而框架正是利用了两种方式的优缺点进行了互补。
+
+#### 怎么自定义 Toast 布局样式
+
+* 如果你想设置全局的 Toast 样式，可以这样调用（选择任一一种即可）
+
+```java
+// 修改 Toast 布局
+ToastUtils.setView(int id);
+```
+
+```java
+// 修改 Toast 布局，Toast 显示重心，Toast 显示位置偏移
+ToastUtils.setStyle(IToastStyle<?> style);
+```
+
+* 如果你想为某次 Toast 显示设置单独的样式，可以这样样用（选择任一一种即可）
+
+```java
+// 修改 Toast 布局
+ToastParams params = new ToastParams();
+params.text = "我是自定义布局的 Toast（局部生效）";
+params.style = new CustomViewToastStyle(R.layout.toast_custom_view);
+ToastUtils.show(params);
+```
+
+```java
+// 修改 Toast 布局、Toast 显示重心、Toast 显示位置偏移
+ToastParams params = new ToastParams();
+params.text = "我是自定义布局的 Toast（局部生效）";
+params.style = new CustomViewToastStyle(R.layout.toast_custom_view, Gravity.CENTER, 10, 20);
+ToastUtils.show(params);
+```
+
+#### 怎么切换成 Toast 排队显示的策略
+
+* 只需要修改 Toast 框架的初始化方式，手动传入 Toast 策略类，这里使用框架已经封装好的 ToastStrategy 类即可，
+
+```java
+// 初始化 Toast 框架
+// ToastUtils.init(this);
+ToastUtils.init(this, new ToastStrategy(ToastStrategy.SHOW_STRATEGY_TYPE_QUEUE));
+```
+
+* 注意构造函数需要传入 `ToastStrategy.SHOW_STRATEGY_TYPE_QUEUE`，关于这个字段的介绍可以看下面的代码注释
+
+```
+public class ToastStrategy
+
+    /**
+     * 即显即示模式（默认）
+     *
+     * 在发起多次 Toast 的显示请求情况下，显示下一个 Toast 之前
+     * 会先立即取消上一个 Toast，保证当前显示 Toast 消息是最新的
+     */
+    public static final int SHOW_STRATEGY_TYPE_IMMEDIATELY = 0;
+
+    /**
+     * 不丢消息模式
+     *
+     * 在发起多次 Toast 的显示请求情况下，等待上一个 Toast 显示 1 秒或者 1.5 秒后
+     * 然后再显示下一个 Toast，不按照 Toast 的显示时长来，因为那样等待时间会很长
+     * 这样既能保证用户能看到每一条 Toast 消息，又能保证用户不会等得太久，速战速决
+     */
+    public static final int SHOW_STRATEGY_TYPE_QUEUE = 1;
+}
+```
+
+#### 框架无法满足我当前使用的场景怎么办
+
+* ToastUtils 框架意在解决一些的 Toast 需求，如果 ToastUtils 无法满足你的需求，你可以考虑使用 [XToast](https://github.com/getActivity/XToast) 悬浮窗框架来实现。
+
+#### 为什么框架优先使用 WindowManager 来实现 Toast
+
+* 系统 Toast 的坑太多了，主要问题表现如下：
+
+    * 系统 Toast 会引发一些内存泄漏的问题
+
+    * 系统 Toast 无法实现自定义显示动画、显示时长控制
+
+    * Android 7.1 版本会主线程阻塞会出现 BadTokenException 的问题
+
+    * Android 10.0 以下关闭通知栏权限会导致系统 Toast 显示不出来的问题
+
+    * Android 11 及以上版本，无法自定义 Toast 样式（布局、位置重心、位置偏移）
+
+* 所以框架优先使用 WindowManager 来实现 Toast 显示，具体优缺点以下：
+
+    * 优点
+
+        * 不会出现内存泄漏，也不会有那么多奇奇怪怪的问题
+
+        * 可定制程度高，支持自定义动画和自定义显示时长
+
+        * 突破 Google 在新版本 Android 对 Toast 的一些限制
+
+    * 缺点
+
+        *  WindowManager 无法在没有悬浮窗权限情况下在后台弹出 <br> （框架的解决方案：如果是在后台的情况下显示，则使用系统的 Toast 来显示）
+
+       *  WindowManager 会和 Activity 绑定，会随 Activity 销毁而消失 <br> （框架的解决方案：延迟 200 毫秒显示，由此等待最新的 Activity 创建出来才调用显示，这样 WindowManager 就和最新 Activity 绑定在一起，就不会出现和旧 Activity finish 时一起消失的问题）
+
+* 当然不是说用系统 Toast 就不好，用 WindowManger 一定就好，视具体的使用场景而定，我觉得最好的方式是：应用在前台的情况下使用 WindowManager 来显示，在后台的情况下使用系统 Toast 来显示，两者相结合，优势互补才是最佳方案。
