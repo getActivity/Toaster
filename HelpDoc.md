@@ -89,6 +89,25 @@ params.style = new CustomViewToastStyle(R.layout.toast_custom_view, Gravity.CENT
 ToastUtils.show(params);
 ```
 
+* 到此，大家可能有一个疑惑，为什么设置新的 Toast 样式只能传入布局 id 而不是 View 对象？因为框架每次显示 Toast 的时候，都会创建新的 Toast 对象和 View 对象，如果传入 View 对象将无法做到每次显示的时候都创建，至于框架为什么不复用这个 View 对象，这是因为如果复用了这个 View 对象，可能会触发以下异常：
+
+```text
+java.lang.IllegalStateException: View android.widget.TextView{7ffea98 V.ED..... ......ID 0,0-396,153 #102000b android:id/message} 
+has already been added to the window manager.
+    at android.view.WindowManagerGlobal.addView(WindowManagerGlobal.java:371)
+    at android.view.WindowManagerImpl.addView(WindowManagerImpl.java:131)
+    at android.widget.Toast$TN.handleShow(Toast.java:501)
+    at android.widget.Toast$TN$1.handleMessage(Toast.java:403)
+    at android.os.Handler.dispatchMessage(Handler.java:112)
+    at android.os.Looper.loop(Looper.java:216)
+    at android.app.ActivityThread.main(ActivityThread.java:7625)
+    at java.lang.reflect.Method.invoke(Native Method)
+    at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:524)
+    at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:987)
+```
+
+* 这是因为 WindowManager addView 的时候成功了，但是 removeView 的时候失败了，导致下一个 Toast 显示的时候，无法复用上一个 Toast 的 View 对象，虽然这种情况比较少见，但是仍然有人跟我反馈过这个问题，为了解决这一问题，所以决定不去复用 View 对象，具体对这块的调整可以查看发版记录：[ToastUtils/releases/tag/9.0](https://github.com/getActivity/ToastUtils/releases/tag/9.0)
+
 #### 怎么切换成 Toast 排队显示的策略
 
 * 只需要修改 Toast 框架的初始化方式，手动传入 Toast 策略类，这里使用框架已经封装好的 ToastStrategy 类即可，
@@ -101,8 +120,8 @@ ToastUtils.init(this, new ToastStrategy(ToastStrategy.SHOW_STRATEGY_TYPE_QUEUE))
 
 * 注意构造函数需要传入 `ToastStrategy.SHOW_STRATEGY_TYPE_QUEUE`，关于这个字段的介绍可以看下面的代码注释
 
-```
-public class ToastStrategy
+```java
+public class ToastStrategy {
 
     /**
      * 即显即示模式（默认）
