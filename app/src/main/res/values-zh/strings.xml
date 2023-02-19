@@ -1,0 +1,41 @@
+<resources>
+    <string name="app_name">Toaster</string>
+
+    <string name="demo_show_toast">简单显示一个 Toast</string>
+    <string name="demo_show_short_toast">显示一个短 Toast</string>
+    <string name="demo_show_long_toast">显示一个长 Toast</string>
+    <string name="demo_show_toast_with_two_second_delay">延迟 2 秒显示 Toast</string>
+    <string name="demo_show_toast_in_the_subthread">在子线程中显示吐司</string>
+    <string name="demo_switch_to_white_style">切换为白色样式（局部生效）</string>
+    <string name="demo_switch_to_black_style">切换为黑色样式（局部生效）</string>
+    <string name="demo_switch_to_hint_style">切换为提示样式（局部生效）</string>
+    <string name="demo_switch_to_warn_style">切换为警告样式（局部生效）</string>
+    <string name="demo_switch_to_success_style">切换为成功样式（局部生效）</string>
+    <string name="demo_switch_to_error_style">切换为错误样式（局部生效）</string>
+    <string name="demo_custom_toast_layout">自定义 Toast 布局（全局生效）</string>
+    <string name="demo_switch_to_toast_queuing_strategy">切换成 Toast 排队显示策略</string>
+    <string name="demo_click_show_three_toast">点我连续显示 3 个 Toast</string>
+    <string name="demo_show_toast_in_background_state">在后台状态下显示 Toast</string>
+    <string name="demo_combining_xtoast_use">搭配 XToast 悬浮窗框架</string>
+
+    <string name="demo_show_toast_result">我是普通的 Toast</string>
+    <string name="demo_show_short_toast_result">我是一个短 Toast</string>
+    <string name="demo_show_long_toast_result">我是一个长 Toast</string>
+    <string name="demo_show_toast_with_two_second_delay_result">我是延迟 2 秒显示的 Toast</string>
+    <string name="demo_show_toast_in_the_subthread_result">我是子线程中弹出的吐司</string>
+    <string name="demo_switch_to_white_style_result">我是白色样式的 Toast</string>
+    <string name="demo_switch_to_black_style_result">我是黑色样式的 Toast</string>
+    <string name="demo_switch_to_info_style_result">我是提示样式的 Toast</string>
+    <string name="demo_switch_to_warn_style_result">我是警告样式的 Toast</string>
+    <string name="demo_switch_to_success_style_result">我是成功样式的 Toast</string>
+    <string name="demo_switch_to_error_style_result">我是错误样式的 Toast</string>
+    <string name="demo_custom_toast_layout_result">我是自定义布局的 Toast（全局生效）</string>
+    <string name="demo_switch_to_toast_queuing_strategy_result">切换到排队显示策略成功，请点击下方文本来体验效果</string>
+    <string name="demo_show_three_toast_copywriting">我是第 %d 个 Toast</string>
+    <string name="demo_show_toast_in_background_state_hint">系好安全带，即将跳转到手机桌面</string>
+    <string name="demo_show_toast_in_background_state_snack_bar">温馨提示：安卓 10 在后台显示 Toast 需要有通知栏权限或者悬浮窗权限的情况下才可以显示</string>
+    <string name="demo_show_toast_in_background_state_result_1">我是在后台显示的 Toast（有悬浮窗权限真的可以为所欲为）</string>
+    <string name="demo_show_toast_in_background_state_result_2">我是在后台显示的 Toast（安卓 11 及以上在后台显示只能使用系统样式）</string>
+    <string name="demo_show_toast_in_background_state_result_3">我是在后台显示的 Toast</string>
+    <string name="demo_combining_xtoast_use_result">就问你溜不溜</string>
+</resources>

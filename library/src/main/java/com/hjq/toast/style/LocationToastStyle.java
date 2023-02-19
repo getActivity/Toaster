@@ -7,7 +7,7 @@ import com.hjq.toast.config.IToastStyle;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2021/03/09
  *    desc   : Toast 位置包装样式实现
  */

@@ -14,7 +14,7 @@ import com.hjq.toast.config.IToastStyle;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/09/01
  *    desc   : 默认黑色样式实现
  */
@@ -80,7 +80,7 @@ public class BlackToastStyle implements IToastStyle<View> {
     protected Drawable getBackgroundDrawable(Context context) {
         GradientDrawable drawable = new GradientDrawable();
         // 设置颜色
-        drawable.setColor(0X88000000);
+        drawable.setColor(0XB3000000);
         // 设置圆角
         drawable.setCornerRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, context.getResources().getDisplayMetrics()));
         return drawable;

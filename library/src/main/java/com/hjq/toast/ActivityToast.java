@@ -4,7 +4,7 @@ import android.app.Activity;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2021/11/30
  *    desc   : 利用 Activity 弹出 Toast
  */

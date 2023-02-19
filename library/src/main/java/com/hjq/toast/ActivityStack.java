@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2021/04/07
  *    desc   : Activity 生命周期监控
  */

@@ -6,7 +6,7 @@ import android.view.View;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/09/01
  *    desc   : 默认样式接口
  */

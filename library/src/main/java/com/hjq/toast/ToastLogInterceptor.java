@@ -8,7 +8,7 @@ import java.lang.reflect.Modifier;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2020/11/04
  *    desc   : 自定义 Toast 拦截器（用于追踪 Toast 调用的位置）
  */
@@ -40,6 +40,7 @@ public class ToastLogInterceptor implements IToastInterceptor {
                 Class<?> clazz = Class.forName(className);
                 if (!filterClass(clazz)) {
                     printLog("(" + stackTrace.getFileName() + ":" + lineNumber + ") " + text.toString());
+                    // 跳出循环
                     break;
                 }
             } catch (ClassNotFoundException e) {
@@ -49,35 +50,21 @@ public class ToastLogInterceptor implements IToastInterceptor {
     }
 
     protected boolean isLogEnable() {
-        return ToastUtils.isDebugMode();
+        return Toaster.isDebugMode();
     }
 
     protected void printLog(String msg) {
         // 这里解释一下，为什么不用 Log.d，而用 Log.i，因为 Log.d 在魅族 16th 手机上面无法输出日志
-        Log.i("ToastUtils", msg);
+        Log.i("Toaster", msg);
     }
 
     protected boolean filterClass(Class<?> clazz) {
-        // 排除自身
-        if (ToastLogInterceptor.class.equals(clazz)) {
-            return true;
-        }
-
-        // 排除 ToastUtils 类
-        if (ToastUtils.class.equals(clazz)) {
-            return true;
-        }
-
-        // 是否为接口类
-        if (clazz.isInterface()) {
-            return true;
-        }
-
-        // 是否为抽象类
-        if (Modifier.isAbstract(clazz.getModifiers())) {
-            return true;
-        }
-
-        return false;
+        // 排查以下几种情况：
+        // 1. 排除自身
+        // 2. 排除 Toaster 类
+        // 3. 排除接口类
+        // 4. 排除抽象类
+        return this.getClass().equals(clazz) || Toaster.class.equals(clazz) ||
+                clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers());
     }
 }

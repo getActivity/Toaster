@@ -9,7 +9,7 @@ import com.hjq.toast.config.IToast;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/11/03
  *    desc   : 系统 Toast
  */

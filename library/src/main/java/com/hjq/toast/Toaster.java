@@ -9,18 +9,18 @@ import com.hjq.toast.config.IToastInterceptor;
 import com.hjq.toast.config.IToastStrategy;
 import com.hjq.toast.config.IToastStyle;
 import com.hjq.toast.style.BlackToastStyle;
-import com.hjq.toast.style.CustomViewToastStyle;
+import com.hjq.toast.style.CustomToastStyle;
 import com.hjq.toast.style.LocationToastStyle;
 import com.hjq.toast.style.WhiteToastStyle;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/09/01
  *    desc   : Toast 框架（专治 Toast 疑难杂症）
  */
 @SuppressWarnings("unused")
-public final class ToastUtils {
+public final class Toaster {
 
     /** Application 对象 */
     private static Application sApplication;
@@ -40,7 +40,7 @@ public final class ToastUtils {
     /**
      * 不允许被外部实例化
      */
-    private ToastUtils() {}
+    private Toaster() {}
 
     /**
      * 初始化 Toast，需要在 Application.create 中初始化
@@ -186,6 +186,8 @@ public final class ToastUtils {
     }
 
     public static void show(ToastParams params) {
+        checkInitStatus();
+
         // 如果是空对象或者空文本就不显示
         if (params.text == null || params.text.length() == 0) {
             return;
@@ -248,7 +250,7 @@ public final class ToastUtils {
         if (id <= 0) {
             return;
         }
-        setStyle(new CustomViewToastStyle(id, sToastStyle.getGravity(),
+        setStyle(new CustomToastStyle(id, sToastStyle.getGravity(),
                 sToastStyle.getXOffset(), sToastStyle.getYOffset(),
                 sToastStyle.getHorizontalMargin(), sToastStyle.getVerticalMargin()));
     }
@@ -299,14 +301,26 @@ public final class ToastUtils {
         sDebugMode = debug;
     }
 
+    /**
+     * 检查框架初始化状态，如果未初始化请先调用{@link Toaster#init(Application)}
+     */
+    private static void checkInitStatus() {
+        // 框架当前还没有被初始化，必须要先调用 init 方法进行初始化
+        if (sApplication == null) {
+            throw new IllegalStateException("Toaster has not been initialized");
+        }
+    }
+
     static boolean isDebugMode() {
         if (sDebugMode == null) {
+            checkInitStatus();
             sDebugMode = (sApplication.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         }
         return sDebugMode;
     }
 
     private static CharSequence stringIdToCharSequence(int id) {
+        checkInitStatus();
         try {
             // 如果这是一个资源 id
             return sApplication.getResources().getText(id);

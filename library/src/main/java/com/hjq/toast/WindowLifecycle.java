@@ -9,7 +9,7 @@ import android.view.WindowManager;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/11/06
  *    desc   : WindowManager 生命周期管控
  */

@@ -6,7 +6,7 @@ import com.hjq.toast.config.IToastStyle;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2022/10/31
  *    desc   : Toast 参数类
  */
@@ -29,7 +29,7 @@ public class ToastParams {
     /** Toast 样式 */
     public IToastStyle<?> style;
 
-    /** Toast 策略 */
+    /** Toast 处理策略 */
     public IToastStrategy strategy;
 
     /** Toast 拦截器 */

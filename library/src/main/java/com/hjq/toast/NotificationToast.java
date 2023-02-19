@@ -10,7 +10,7 @@ import java.lang.reflect.Proxy;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2021/11/24
  *    desc   : 处理 Toast 关闭通知栏权限之后无法弹出的问题
  */

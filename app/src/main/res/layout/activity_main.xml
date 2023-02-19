@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:leftIcon="@null"
-        app:title="https://github.com/getActivity/ToastUtils" />
+        app:title="https://github.com/getActivity/Toaster" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -34,9 +34,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:onClick="showToast"
-                    android:text="简简单单显示 Toast" />
+                    android:text="@string/demo_show_toast" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:onClick="showShortToast"
-                    android:text="显示一个短 Toast" />
+                    android:text="@string/demo_show_short_toast" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -52,7 +52,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:onClick="showLongToast"
-                    android:text="显示一个长 Toast" />
+                    android:text="@string/demo_show_long_toast" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:onClick="delayShowToast"
-                    android:text="延迟 2 秒显示 Toast" />
+                    android:text="@string/demo_show_toast_with_two_second_delay" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:onClick="threadShowToast"
-                    android:text="在子线程中显示吐司" />
+                    android:text="@string/demo_show_toast_in_the_subthread" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:onClick="switchToastStyleToWhite"
-                    android:text="切换吐司的样式为白色" />
+                    android:text="@string/demo_switch_to_white_style" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -84,15 +84,39 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:onClick="switchToastStyleToBlack"
-                    android:text="切换吐司的样式为黑色" />
+                    android:text="@string/demo_switch_to_black_style" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
-                    android:onClick="customLocalToastStyle"
-                    android:text="自定义 Toast 布局（局部生效）" />
+                    android:onClick="switchToastStyleToInfo"
+                    android:text="@string/demo_switch_to_hint_style" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:onClick="switchToastStyleToWarn"
+                    android:text="@string/demo_switch_to_warn_style" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:onClick="switchToastStyleToSuccess"
+                    android:text="@string/demo_switch_to_success_style" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:onClick="switchToastStyleToError"
+                    android:text="@string/demo_switch_to_error_style" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -100,7 +124,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:onClick="customGlobalToastStyle"
-                    android:text="自定义 Toast 布局（全局生效）" />
+                    android:text="@string/demo_custom_toast_layout" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -108,7 +132,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:onClick="switchToastStrategy"
-                    android:text="切换成 Toast 排队显示策略" />
+                    android:text="@string/demo_switch_to_toast_queuing_strategy" />
 
                 <TextView
                     android:id="@+id/tv_main_thrice_show"
@@ -117,7 +141,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
                     android:onClick="showThriceToast"
-                    android:text="点我连续显示 3 个 Toast"
+                    android:text="@string/demo_click_show_three_toast"
                     android:visibility="gone"
                     tools:visibility="visible" />
 
@@ -127,16 +151,16 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:onClick="toBackgroundShowToast"
-                    android:text="在后台状态下显示 Toast" />
+                    android:text="@string/demo_show_toast_in_background_state" />
 
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="10dp"
                     android:onClick="combinationXToastShow"
-                    android:text="搭配 XToast 悬浮窗框架" />
+                    android:text="@string/demo_combining_xtoast_use" />
 
             </LinearLayout>
 

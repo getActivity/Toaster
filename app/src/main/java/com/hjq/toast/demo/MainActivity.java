@@ -17,17 +17,17 @@ import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.hjq.toast.ToastParams;
 import com.hjq.toast.ToastStrategy;
-import com.hjq.toast.ToastUtils;
+import com.hjq.toast.Toaster;
 import com.hjq.toast.style.BlackToastStyle;
-import com.hjq.toast.style.CustomViewToastStyle;
+import com.hjq.toast.style.CustomToastStyle;
 import com.hjq.toast.style.WhiteToastStyle;
 import com.hjq.xtoast.XToast;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/09/01
- *    desc   : ToastUtils 使用案例
+ *    desc   : Toaster 使用案例
  */
 public final class MainActivity extends AppCompatActivity {
 
@@ -48,25 +48,19 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     public void showToast(View v) {
-        ToastUtils.show("我是普通的 Toast");
+        Toaster.show(R.string.demo_show_toast_result);
     }
 
     public void showShortToast(View v) {
-        ToastUtils.showShort("我是一个短 Toast");
+        Toaster.showShort(R.string.demo_show_short_toast_result);
     }
 
     public void showLongToast(View v) {
-        ToastUtils.showLong("我是一个长 Toast");
-    }
-
-    public void showThriceToast(View v) {
-        for (int i = 0; i < 3; i++) {
-            ToastUtils.show("我是第 " + (i + 1) + " 个 Toast");
-        }
+        Toaster.showLong(R.string.demo_show_long_toast_result);
     }
 
     public void delayShowToast(View v) {
-        ToastUtils.delayedShow("我是延迟 2 秒显示的 Toast", 2000);
+        Toaster.delayedShow(R.string.demo_show_toast_with_two_second_delay_result, 2000);
     }
 
     @SuppressWarnings("AlibabaAvoidManuallyCreateThread")
@@ -75,47 +69,78 @@ public final class MainActivity extends AppCompatActivity {
 
             @Override
             public void run() {
-                ToastUtils.show("我是子线程中弹出的吐司");
+                Toaster.show(R.string.demo_show_toast_in_the_subthread_result);
             }
         }).start();
     }
 
     public void switchToastStyleToWhite(View v) {
-        ToastUtils.setStyle(new WhiteToastStyle());
-        ToastUtils.show("动态切换白色吐司样式成功");
+        ToastParams params = new ToastParams();
+        params.text = getString(R.string.demo_switch_to_white_style_result);
+        params.style = new WhiteToastStyle();
+        Toaster.show(params);
     }
 
     public void switchToastStyleToBlack(View v) {
-        ToastUtils.setStyle(new BlackToastStyle());
-        ToastUtils.show("动态切换黑色吐司样式成功");
+        ToastParams params = new ToastParams();
+        params.text = getString(R.string.demo_switch_to_black_style_result);
+        params.style = new BlackToastStyle();
+        Toaster.show(params);
     }
 
-    public void customLocalToastStyle(View v) {
+    public void switchToastStyleToInfo(View v) {
         ToastParams params = new ToastParams();
-        params.text = "我是自定义布局的 Toast（局部生效）";
-        params.style = new CustomViewToastStyle(R.layout.toast_custom_view);
-        ToastUtils.show(params);
+        params.text = getString(R.string.demo_switch_to_info_style_result);
+        params.style = new CustomToastStyle(R.layout.toast_info);
+        Toaster.show(params);
+    }
+
+    public void switchToastStyleToWarn(View v) {
+        ToastParams params = new ToastParams();
+        params.text = getString(R.string.demo_switch_to_warn_style_result);
+        params.style = new CustomToastStyle(R.layout.toast_warn);
+        Toaster.show(params);
+    }
+
+    public void switchToastStyleToSuccess(View v) {
+        ToastParams params = new ToastParams();
+        params.text = getString(R.string.demo_switch_to_success_style_result);
+        params.style = new CustomToastStyle(R.layout.toast_success);
+        Toaster.show(params);
+    }
+
+    public void switchToastStyleToError(View v) {
+        ToastParams params = new ToastParams();
+        params.text = getString(R.string.demo_switch_to_error_style_result);
+        params.style = new CustomToastStyle(R.layout.toast_error);
+        Toaster.show(params);
     }
 
     public void customGlobalToastStyle(View v) {
-        ToastUtils.setView(R.layout.toast_custom_view);
-        ToastUtils.setGravity(Gravity.CENTER);
-        ToastUtils.show("我是自定义布局的 Toast（全局生效）");
+        Toaster.setView(R.layout.toast_custom_view);
+        Toaster.setGravity(Gravity.CENTER);
+        Toaster.show(R.string.demo_custom_toast_layout_result);
     }
 
     public void switchToastStrategy(View v) {
-        ToastUtils.setStrategy(new ToastStrategy(ToastStrategy.SHOW_STRATEGY_TYPE_QUEUE));
-        ToastUtils.show("切换到排队显示策略成功，请点击下方文本来体验效果");
+        Toaster.setStrategy(new ToastStrategy(ToastStrategy.SHOW_STRATEGY_TYPE_QUEUE));
+        Toaster.show(R.string.demo_switch_to_toast_queuing_strategy_result);
         findViewById(R.id.tv_main_thrice_show).setVisibility(View.VISIBLE);
     }
 
+    public void showThriceToast(View v) {
+        for (int i = 0; i < 3; i++) {
+            Toaster.show(String.format(getString(R.string.demo_show_three_toast_copywriting), i + 1));
+        }
+    }
+
     public void toBackgroundShowToast(View v) {
-        Snackbar.make(getWindow().getDecorView(), "系好安全带，即将跳转到手机桌面", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getWindow().getDecorView(), getString(R.string.demo_show_toast_in_background_state_hint), Snackbar.LENGTH_SHORT).show();
 
         v.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Snackbar.make(getWindow().getDecorView(), "温馨提示：安卓 10 在后台显示 Toast 需要有通知栏权限或者悬浮窗权限的情况下才可以显示", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getWindow().getDecorView(), getString(R.string.demo_show_toast_in_background_state_snack_bar), Snackbar.LENGTH_SHORT).show();
             }
         }, 2000);
 
@@ -133,12 +158,12 @@ public final class MainActivity extends AppCompatActivity {
             public void run() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     if (XXPermissions.isGranted(MainActivity.this, Permission.SYSTEM_ALERT_WINDOW)) {
-                        ToastUtils.show("我是在后台显示的 Toast（有悬浮窗权限真的可以为所欲为）");
+                        Toaster.show(R.string.demo_show_toast_in_background_state_result_1);
                     } else {
-                        ToastUtils.show("我是在后台显示的 Toast（安卓 11 及以上在后台显示只能使用系统样式）");
+                        Toaster.show(R.string.demo_show_toast_in_background_state_result_2);
                     }
                 } else {
-                    ToastUtils.show("我是在后台显示的 Toast");
+                    Toaster.show(R.string.demo_show_toast_in_background_state_result_3);
                 }
             }
         }, 5000);
@@ -147,10 +172,10 @@ public final class MainActivity extends AppCompatActivity {
     public void combinationXToastShow(View v) {
         new XToast<>(this)
                 .setDuration(1000)
-                // 将 ToastUtils 中的 View 转移给 XToast 来显示
-                .setContentView(ToastUtils.getStyle().createView(getApplication()))
+                // 将 Toaster 中的 View 转移给 XToast 来显示
+                .setContentView(Toaster.getStyle().createView(getApplication()))
                 .setAnimStyle(android.R.style.Animation_Translucent)
-                .setText(android.R.id.message, "就问你溜不溜")
+                .setText(android.R.id.message, R.string.demo_combining_xtoast_use_result)
                 .setGravity(Gravity.BOTTOM)
                 .setYOffset((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()))
                 .show();

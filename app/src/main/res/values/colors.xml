@@ -3,4 +3,9 @@
     <color name="colorPrimary">#000000</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF0033</color>
+
+    <color name="toast_hint_color">#3F51B5</color>
+    <color name="toast_success_color">#388E3C</color>
+    <color name="toast_warn_color">#FFA900</color>
+    <color name="toast_error_color">#D50000</color>
 </resources>

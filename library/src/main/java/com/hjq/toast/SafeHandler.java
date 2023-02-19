@@ -6,7 +6,7 @@ import android.view.WindowManager;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/12/06
  *    desc   : Toast 显示安全处理
  */

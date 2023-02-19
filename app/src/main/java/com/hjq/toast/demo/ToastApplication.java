@@ -2,13 +2,13 @@ package com.hjq.toast.demo;
 
 import android.app.Application;
 
-import com.hjq.toast.ToastUtils;
+import com.hjq.toast.Toaster;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/09/01
- *    desc   : ToastUtils 初始化
+ *    desc   : Toaster 初始化
  */
 public final class ToastApplication extends Application {
 
@@ -17,6 +17,6 @@ public final class ToastApplication extends Application {
         super.onCreate();
 
         // 初始化 Toast 框架
-        ToastUtils.init(this);
+        Toaster.init(this);
     }
 }

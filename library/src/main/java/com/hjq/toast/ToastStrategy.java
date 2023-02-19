@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/11/12
  *    desc   : Toast 默认处理器
  *    doc    : https://developer.android.google.cn/reference/android/widget/Toast
@@ -224,7 +224,7 @@ public class ToastStrategy implements IToastStrategy {
             }
             toast = createToast(mToastParams.style);
             // 为什么用 WeakReference，而不用 SoftReference ？
-            // https://github.com/getActivity/ToastUtils/issues/79
+            // https://github.com/getActivity/Toaster/issues/79
             mToastReference = new WeakReference<>(toast);
             toast.setDuration(mToastParams.duration);
             toast.setText(mToastParams.text);
@@ -249,7 +249,7 @@ public class ToastStrategy implements IToastStrategy {
             }
             toast.cancel();
         }
-    };
+    }
 
     /**
      * 是否有通知栏权限

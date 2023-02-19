@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/11/02
  *    desc   : 自定义 Toast 实现类
  */

@@ -7,7 +7,7 @@ import com.hjq.toast.config.IToast;
 
 /**
  *    author : Android 轮子哥
- *    github : https://github.com/getActivity/ToastUtils
+ *    github : https://github.com/getActivity/Toaster
  *    time   : 2018/11/02
  *    desc   : 自定义 Toast 基类
  */
@@ -31,9 +31,9 @@ public abstract class CustomToast implements IToast {
     private float mVerticalMargin;
     /** Toast 动画 */
     private int mAnimations = android.R.style.Animation_Toast;
-    /** 短吐司显示的时长 */
+    /** 短吐司显示的时长，参考至 NotificationManagerService.SHORT_DELAY */
     private int mShortDuration = 2000;
-    /** 长吐司显示的时长 */
+    /** 长吐司显示的时长，参考至 NotificationManagerService.LONG_DELAY */
     private int mLongDuration = 3500;
 
     @Override
