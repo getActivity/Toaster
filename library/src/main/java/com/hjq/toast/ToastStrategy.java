@@ -124,8 +124,7 @@ public class ToastStrategy implements IToastStrategy {
         } else {
             toast = new SystemToast(mApplication);
         }
-
-        if (isSupportToastStyle(toast)) {
+        if (isSupportToastStyle(toast) || !onlyShowSystemToastStyle()) {
             diyToastStyle(toast, style);
         }
         return toast;
@@ -249,6 +248,41 @@ public class ToastStrategy implements IToastStrategy {
             }
             toast.cancel();
         }
+    }
+
+    /**
+     * 当前是否只能显示系统 Toast 样式
+     */
+    protected boolean onlyShowSystemToastStyle() {
+        // Github issue 地址：https://github.com/getActivity/Toaster/issues/103
+        // Toast.CHANGE_TEXT_TOASTS_IN_THE_SYSTEM = 147798919L
+        return isChangeEnabledCompat(147798919L);
+    }
+
+    @SuppressLint("PrivateApi")
+    protected boolean isChangeEnabledCompat(long changeId) {
+        // 需要注意的是这个 api 是在 android 11 的时候出现的，反射前需要先判断好版本
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            return true;
+        }
+        try {
+            // 因为 Compatibility.isChangeEnabled() 普通应用根本调用不到，反射也不行
+            // 通过 Toast.isSystemRenderedTextToast 也没有办法反射到
+            // 最后发现反射 CompatChanges.isChangeEnabled 是可以的
+            Class<?> aClass = Class.forName("android.app.compat.CompatChanges");
+            Method method = aClass.getMethod("isChangeEnabled", long.class);
+            method.setAccessible(true);
+            return Boolean.parseBoolean(String.valueOf(method.invoke(null, changeId)));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**

@@ -93,6 +93,8 @@ public interface IToast {
                 view.setId(android.R.id.message);
             } else if (view.getId() != android.R.id.message) {
                 // 必须将 TextView 的 id 值设置成 android.R.id.message
+                // 否则 Android 11 手机上在后台 toast.setText 的时候会出现报错
+                // java.lang.RuntimeException: This Toast was not created with Toast.makeText()
                 throw new IllegalArgumentException("You must set the ID value of TextView to android.R.id.message");
             }
             return (TextView) view;
