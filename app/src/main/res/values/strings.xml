@@ -17,7 +17,7 @@
     <string name="demo_switch_to_toast_queuing_strategy">Switch to toast queuing display strategy</string>
     <string name="demo_click_show_three_toast">Click and I show 3 toast in a row</string>
     <string name="demo_show_toast_in_background_state">Show toast in background state</string>
-    <string name="demo_combining_xtoast_use">Combining xtoast suspension window frames</string>
+    <string name="demo_combining_window_framework_use">Combining EasyWindow suspension window frames</string>
 
     <string name="demo_show_toast_result">I am an normal toast</string>
     <string name="demo_show_short_toast_result">I am a short toast</string>
@@ -38,5 +38,5 @@
     <string name="demo_show_toast_in_background_state_result_1">I display the toast in the background (you can really do whatever you want with the floating window permission)</string>
     <string name="demo_show_toast_in_background_state_result_2">I am displaying the toast in the background (Android 11 and above can only use the system style in the background display)</string>
     <string name="demo_show_toast_in_background_state_result_3">I am displaying toast in the background</string>
-    <string name="demo_combining_xtoast_use_result">Hello Word</string>
+    <string name="demo_combining_window_framework_use_result">Hello Word</string>
 </resources>

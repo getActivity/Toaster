@@ -151,6 +151,11 @@ final class ToastImpl {
             if (mGlobalShow) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+                    // 在 type 等于 TYPE_APPLICATION_OVERLAY 的时候
+                    // 不能添加 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE 标记
+                    // 否则会导致在 Android 13 上面会出现 Toast 布局被半透明化的效果
+                    // Github issue 地址：https://github.com/getActivity/Toaster/issues/108
+                    params.flags &= ~WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
                 } else {
                     params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
                 }

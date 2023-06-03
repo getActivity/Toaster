@@ -16,9 +16,9 @@
     <string name="demo_switch_to_toast_queuing_strategy">切换成 Toast 排队显示策略</string>
     <string name="demo_click_show_three_toast">点我连续显示 3 个 Toast</string>
     <string name="demo_show_toast_in_background_state">在后台状态下显示 Toast</string>
-    <string name="demo_combining_xtoast_use">搭配 XToast 悬浮窗框架</string>
+    <string name="demo_combining_window_framework_use">搭配 EasyWindow 悬浮窗框架</string>
 
-    <string name="demo_show_toast_result">我是普通的 Toast</string>
+    <string name="demo_show_toast_result">我是普通的 Toast我是普通的 Toast我是普通的 Toast我是普通的 Toast我是普通的 Toast</string>
     <string name="demo_show_short_toast_result">我是一个短 Toast</string>
     <string name="demo_show_long_toast_result">我是一个长 Toast</string>
     <string name="demo_show_toast_with_two_second_delay_result">我是延迟 2 秒显示的 Toast</string>
@@ -32,10 +32,10 @@
     <string name="demo_custom_toast_layout_result">我是自定义布局的 Toast（全局生效）</string>
     <string name="demo_switch_to_toast_queuing_strategy_result">切换到排队显示策略成功，请点击下方文本来体验效果</string>
     <string name="demo_show_three_toast_copywriting">我是第 %d 个 Toast</string>
-    <string name="demo_show_toast_in_background_state_hint">系好安全带，即将跳转到手机桌面</string>
+    <string name="demo_show_toast_in_background_state_hint">请系好安全带，即将跳转到手机桌面</string>
     <string name="demo_show_toast_in_background_state_snack_bar">温馨提示：安卓 10 在后台显示 Toast 需要有通知栏权限或者悬浮窗权限的情况下才可以显示</string>
     <string name="demo_show_toast_in_background_state_result_1">我是在后台显示的 Toast（有悬浮窗权限真的可以为所欲为）</string>
     <string name="demo_show_toast_in_background_state_result_2">我是在后台显示的 Toast（安卓 11 及以上在后台显示只能使用系统样式）</string>
     <string name="demo_show_toast_in_background_state_result_3">我是在后台显示的 Toast</string>
-    <string name="demo_combining_xtoast_use_result">就问你溜不溜</string>
+    <string name="demo_combining_window_framework_use_result">就问你溜不溜</string>
 </resources>

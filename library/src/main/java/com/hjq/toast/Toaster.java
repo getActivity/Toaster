@@ -284,7 +284,7 @@ public final class Toaster {
 
     /**
      * 设置 Toast 拦截器（可以根据显示的内容决定是否拦截这个Toast）
-     * 场景：打印 Toast 内容日志、根据 Toast 内容是否包含敏感字来动态切换其他方式显示（这里可以使用我的另外一套框架 XToast）
+     * 场景：打印 Toast 内容日志、根据 Toast 内容是否包含敏感字来动态切换其他方式显示（这里可以使用我的另外一套框架 EasyWindow）
      */
     public static void setInterceptor(IToastInterceptor interceptor) {
         sToastInterceptor = interceptor;

@@ -159,8 +159,8 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:onClick="combinationXToastShow"
-                    android:text="@string/demo_combining_xtoast_use" />
+                    android:onClick="combinationEasyWindowShow"
+                    android:text="@string/demo_combining_window_framework_use" />
 
             </LinearLayout>
 

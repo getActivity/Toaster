@@ -8,12 +8,12 @@ import android.app.Application;
  *    time   : 2021/11/30
  *    desc   : 利用悬浮窗权限弹出全局 Toast
  */
-public class ApplicationToast extends CustomToast {
+public class GlobalToast extends CustomToast {
 
     /** Toast 实现类 */
     private final ToastImpl mToastImpl;
 
-    public ApplicationToast(Application application) {
+    public GlobalToast(Application application) {
         mToastImpl = new ToastImpl(application, this);
     }
 

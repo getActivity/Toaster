@@ -144,7 +144,7 @@ public class ToastStrategy {
 
 #### What should I do if the framework cannot meet the scene I am currently using
 
-* The Toaster framework is intended to solve some toast requirements. If Toaster cannot meet your needs, you can consider using the [XToast](https://github.com/getActivity/XToast) floating window framework to achieve it.
+* The Toaster framework is intended to solve some toast requirements. If Toaster cannot meet your needs, you can consider using the [EasyWindow](https://github.com/getActivity/EasyWindow) floating window framework to achieve it.
 
 #### Why the framework prefers to use window manager to implement toast
 

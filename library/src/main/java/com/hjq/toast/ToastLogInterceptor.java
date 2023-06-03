@@ -60,11 +60,13 @@ public class ToastLogInterceptor implements IToastInterceptor {
 
     protected boolean filterClass(Class<?> clazz) {
         // 排查以下几种情况：
-        // 1. 排除自身
+        // 1. 排除自身及其子类
         // 2. 排除 Toaster 类
         // 3. 排除接口类
         // 4. 排除抽象类
-        return this.getClass().equals(clazz) || Toaster.class.equals(clazz) ||
-                clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers());
+        return IToastInterceptor.class.isAssignableFrom(clazz) ||
+                Toaster.class.equals(clazz) ||
+                clazz.isInterface() ||
+                Modifier.isAbstract(clazz.getModifiers());
     }
 }

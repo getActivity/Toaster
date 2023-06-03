@@ -21,7 +21,7 @@ import com.hjq.toast.Toaster;
 import com.hjq.toast.style.BlackToastStyle;
 import com.hjq.toast.style.CustomToastStyle;
 import com.hjq.toast.style.WhiteToastStyle;
-import com.hjq.xtoast.XToast;
+import com.hjq.window.EasyWindow;
 
 /**
  *    author : Android 轮子哥
@@ -169,13 +169,13 @@ public final class MainActivity extends AppCompatActivity {
         }, 5000);
     }
 
-    public void combinationXToastShow(View v) {
-        new XToast<>(this)
+    public void combinationEasyWindowShow(View v) {
+        new EasyWindow<>(this)
                 .setDuration(1000)
-                // 将 Toaster 中的 View 转移给 XToast 来显示
+                // 将 Toaster 中的 View 转移给 EasyWindow 来显示
                 .setContentView(Toaster.getStyle().createView(getApplication()))
                 .setAnimStyle(android.R.style.Animation_Translucent)
-                .setText(android.R.id.message, R.string.demo_combining_xtoast_use_result)
+                .setText(android.R.id.message, R.string.demo_combining_window_framework_use_result)
                 .setGravity(Gravity.BOTTOM)
                 .setYOffset((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()))
                 .show();

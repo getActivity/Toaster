@@ -105,7 +105,7 @@ public class ToastStrategy implements IToastStrategy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 Settings.canDrawOverlays(mApplication)) {
             // 如果有悬浮窗权限，就开启全局的 Toast
-            toast = new ApplicationToast(mApplication);
+            toast = new GlobalToast(mApplication);
         } else if (foregroundActivity != null) {
             // 如果没有悬浮窗权限，就开启一个依附于 Activity 的 Toast
             toast = new ActivityToast(foregroundActivity);

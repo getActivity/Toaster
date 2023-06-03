@@ -160,7 +160,7 @@ public class ToastStrategy {
 
 #### 框架无法满足我当前使用的场景怎么办
 
-* Toaster 框架意在解决一些的 Toast 需求，如果 Toaster 无法满足你的需求，你可以考虑使用 [XToast](https://github.com/getActivity/XToast) 悬浮窗框架来实现。
+* Toaster 框架意在解决一些的 Toast 需求，如果 Toaster 无法满足你的需求，你可以考虑使用 [EasyWindow](https://github.com/getActivity/EasyWindow) 悬浮窗框架来实现。
 
 #### 为什么框架优先使用 WindowManager 来实现 Toast
 
