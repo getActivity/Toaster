@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.widget.Toast;
-
 import com.hjq.toast.config.IToastInterceptor;
 import com.hjq.toast.config.IToastStrategy;
 import com.hjq.toast.config.IToastStyle;
@@ -250,6 +249,9 @@ public final class Toaster {
         if (id <= 0) {
             return;
         }
+        if (sToastStyle == null) {
+            return;
+        }
         setStyle(new CustomToastStyle(id, sToastStyle.getGravity(),
                 sToastStyle.getXOffset(), sToastStyle.getYOffset(),
                 sToastStyle.getHorizontalMargin(), sToastStyle.getVerticalMargin()));
@@ -263,6 +265,9 @@ public final class Toaster {
      *                      白色样式：{@link WhiteToastStyle}
      */
     public static void setStyle(IToastStyle<?> style) {
+        if (style == null) {
+            return;
+        }
         sToastStyle = style;
     }
 
@@ -274,6 +279,9 @@ public final class Toaster {
      * 设置 Toast 显示策略
      */
     public static void setStrategy(IToastStrategy strategy) {
+        if (strategy == null) {
+            return;
+        }
         sToastStrategy = strategy;
         sToastStrategy.registerStrategy(sApplication);
     }

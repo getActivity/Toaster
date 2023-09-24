@@ -10,6 +10,8 @@
 
 * [What should I do if the framework cannot meet the scene I am currently using](#what-should-i-do-if-the-framework-cannot-meet-the-scene-i-am-currently-using)
 
+* [How to implement cross page display of toast in the framework](#how-to-implement-cross-page-display-of-toast-in-the-framework)
+
 * [Why the framework prefers to use window manager to implement toast](#why-the-framework-prefers-to-use-window-manager-to-implement-toast)
 
 #### How to customize toast display animation
@@ -145,6 +147,17 @@ public class ToastStrategy {
 #### What should I do if the framework cannot meet the scene I am currently using
 
 * The Toaster framework is intended to solve some toast requirements. If Toaster cannot meet your needs, you can consider using the [EasyWindow](https://github.com/getActivity/EasyWindow) floating window framework to achieve it.
+
+#### How to implement cross page display of toast in the framework
+
+* By default, Toasts in the Toaster framework are only displayed on the current Activity. If an Activity switch occurs, the Toast becomes invisible as the current Activity is destroyed, making it impossible to display on the new Activity. The framework added support for this feature in version [12.5](https://github.com/getActivity/Toaster/releases/tag/12.5). The following is an example of how to use it:
+
+```java
+ToastParams params = new ToastParams();
+params.text = "I am a Toast that can be displayed across pages";
+// Indicates that this Toast needs to be displayed across pages
+params.crossPageShow = true;
+Toaster.show(params);
 
 #### Why the framework prefers to use window manager to implement toast
 

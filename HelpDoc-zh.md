@@ -12,6 +12,8 @@
 
 * [框架无法满足我当前使用的场景怎么办](#框架无法满足我当前使用的场景怎么办)
 
+* [框架中的 Toast 如何实现跨页面显示](#框架中的-toast-如何实现跨页面显示)
+
 * [为什么框架优先使用 WindowManager 来实现 Toast](#为什么框架优先使用-windowManager-来实现-toast)
 
 #### 框架怎么改名了
@@ -161,6 +163,18 @@ public class ToastStrategy {
 #### 框架无法满足我当前使用的场景怎么办
 
 * Toaster 框架意在解决一些的 Toast 需求，如果 Toaster 无法满足你的需求，你可以考虑使用 [EasyWindow](https://github.com/getActivity/EasyWindow) 悬浮窗框架来实现。
+
+#### 框架中的 Toast 如何实现跨页面显示
+
+* Toaster 中默认 Toast 是只在当前 Activity 上面展示的，如果遇到 Activity 切换，那么在 Toast 随着当前 Activity 销毁而不可见，导致无法在新 Activity 上面展示，框架在 [12.5](https://github.com/getActivity/Toaster/releases/tag/12.5) 版本新增支持了这一功能，具体调用示例如下：
+
+```java
+ToastParams params = new ToastParams();
+params.text = "我是一个能跨页面展示的 Toast";
+// 表示这个 Toast 需要跨页面展示
+params.crossPageShow = true;
+Toaster.show(params);
+```
 
 #### 为什么框架优先使用 WindowManager 来实现 Toast
 

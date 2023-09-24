@@ -24,7 +24,8 @@ public class WhiteToastStyle extends BlackToastStyle {
         // 设置颜色
         drawable.setColor(0XFFEAEAEA);
         // 设置圆角
-        drawable.setCornerRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics()));
+        drawable.setCornerRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+            10, context.getResources().getDisplayMetrics()));
         return drawable;
     }
 }

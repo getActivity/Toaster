@@ -26,6 +26,9 @@ public class ToastParams {
     /** 延迟显示时间 */
     public long delayMillis = 0;
 
+    /** 是否跨页面展示（如果为 true 则优先用系统 Toast 实现） */
+    public boolean crossPageShow;
+
     /** Toast 样式 */
     public IToastStyle<?> style;
 

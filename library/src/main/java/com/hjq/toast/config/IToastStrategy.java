@@ -1,7 +1,6 @@
 package com.hjq.toast.config;
 
 import android.app.Application;
-
 import com.hjq.toast.ToastParams;
 
 /**
@@ -20,7 +19,7 @@ public interface IToastStrategy {
     /**
      * 创建 Toast
      */
-    IToast createToast(IToastStyle<?> style);
+    IToast createToast(ToastParams params);
 
     /**
      * 显示 Toast

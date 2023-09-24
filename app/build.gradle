@@ -7,8 +7,8 @@ android {
         applicationId "com.hjq.toast.demo"
         minSdkVersion 16
         targetSdkVersion 33
-        versionCode 1203
-        versionName "12.3"
+        versionCode 1205
+        versionName "12.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -62,14 +62,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
 
     // 标题栏框架：https://github.com/getActivity/TitleBar
-    implementation 'com.github.getActivity:TitleBar:10.3'
+    implementation 'com.github.getActivity:TitleBar:10.5'
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
-    implementation 'com.github.getActivity:XXPermissions:18.0'
+    implementation 'com.github.getActivity:XXPermissions:18.3'
 
     // 悬浮窗框架：https://github.com/getActivity/EasyWindow
-    implementation 'com.github.getActivity:EasyWindow:10.0'
+    implementation 'com.github.getActivity:EasyWindow:10.3'
 
     // 内存泄漏捕捉：https://github.com/square/leakcanary
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
 }

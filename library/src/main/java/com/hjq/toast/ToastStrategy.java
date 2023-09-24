@@ -12,11 +12,9 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.widget.Toast;
-
 import com.hjq.toast.config.IToast;
 import com.hjq.toast.config.IToastStrategy;
 import com.hjq.toast.config.IToastStyle;
-
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -99,14 +97,14 @@ public class ToastStrategy implements IToastStrategy {
     }
 
     @Override
-    public IToast createToast(IToastStyle<?> style) {
+    public IToast createToast(ToastParams params) {
         Activity foregroundActivity = ActivityStack.getInstance().getForegroundActivity();
         IToast toast;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 Settings.canDrawOverlays(mApplication)) {
             // 如果有悬浮窗权限，就开启全局的 Toast
             toast = new GlobalToast(mApplication);
-        } else if (foregroundActivity != null) {
+        } else if (foregroundActivity != null && !params.crossPageShow) {
             // 如果没有悬浮窗权限，就开启一个依附于 Activity 的 Toast
             toast = new ActivityToast(foregroundActivity);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
@@ -125,7 +123,7 @@ public class ToastStrategy implements IToastStrategy {
             toast = new SystemToast(mApplication);
         }
         if (isSupportToastStyle(toast) || !onlyShowSystemToastStyle()) {
-            diyToastStyle(toast, style);
+            diyToastStyle(toast, params.style);
         }
         return toast;
     }
@@ -136,13 +134,13 @@ public class ToastStrategy implements IToastStrategy {
             case SHOW_STRATEGY_TYPE_IMMEDIATELY: {
                 // 移除之前未显示的 Toast 消息
                 HANDLER.removeCallbacksAndMessages(mShowMessageToken);
-                long uptimeMillis = SystemClock.uptimeMillis() + params.delayMillis + DEFAULT_DELAY_TIMEOUT;
+                long uptimeMillis = SystemClock.uptimeMillis() + params.delayMillis + (params.crossPageShow ? 0 : DEFAULT_DELAY_TIMEOUT);
                 HANDLER.postAtTime(new ShowToastRunnable(params), mShowMessageToken, uptimeMillis);
                 break;
             }
             case SHOW_STRATEGY_TYPE_QUEUE: {
                 // 计算出这个 Toast 显示时间
-                long showToastMillis = SystemClock.uptimeMillis() + params.delayMillis + DEFAULT_DELAY_TIMEOUT;
+                long showToastMillis = SystemClock.uptimeMillis() + params.delayMillis + (params.crossPageShow ? 0 : DEFAULT_DELAY_TIMEOUT);
                 // 根据吐司的长短计算出等待时间
                 long waitMillis = generateToastWaitMillis(params);
                 // 如果当前显示的时间在上一个 Toast 的显示范围之内
@@ -221,7 +219,7 @@ public class ToastStrategy implements IToastStrategy {
                 // 取消上一个 Toast 的显示，避免出现重叠的效果
                 toast.cancel();
             }
-            toast = createToast(mToastParams.style);
+            toast = createToast(mToastParams);
             // 为什么用 WeakReference，而不用 SoftReference ？
             // https://github.com/getActivity/Toaster/issues/79
             mToastReference = new WeakReference<>(toast);

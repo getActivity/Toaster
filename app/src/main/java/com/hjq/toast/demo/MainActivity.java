@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.snackbar.Snackbar;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
@@ -57,6 +55,13 @@ public final class MainActivity extends AppCompatActivity {
 
     public void showLongToast(View v) {
         Toaster.showLong(R.string.demo_show_long_toast_result);
+    }
+
+    public void showCrossPageToast(View v) {
+        ToastParams params = new ToastParams();
+        params.text = getString(R.string.demo_show_cross_page_toast_result);
+        params.crossPageShow = true;
+        Toaster.show(params);
     }
 
     public void delayShowToast(View v) {

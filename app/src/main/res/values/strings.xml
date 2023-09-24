@@ -5,6 +5,7 @@
     <string name="demo_show_toast">Simple show a toast</string>
     <string name="demo_show_short_toast">Show a short toast</string>
     <string name="demo_show_long_toast">Show a long toast</string>
+    <string name="demo_show_cross_page_toast">Show a cross page toast</string>
     <string name="demo_show_toast_with_two_second_delay">Show toast with 2 second delay</string>
     <string name="demo_show_toast_in_the_subthread">Show toast in the subthread</string>
     <string name="demo_switch_to_white_style">Switch to white style (local effect)</string>
@@ -22,6 +23,7 @@
     <string name="demo_show_toast_result">I am an normal toast</string>
     <string name="demo_show_short_toast_result">I am a short toast</string>
     <string name="demo_show_long_toast_result">I am a long toast</string>
+    <string name="demo_show_cross_page_toast_result">I am a cross page toast</string>
     <string name="demo_show_toast_with_two_second_delay_result">I am a toast displayed with a delay of 2 seconds</string>
     <string name="demo_show_toast_in_the_subthread_result">I am the toast that pops up in the subthread</string>
     <string name="demo_switch_to_white_style_result">I am toast in white style</string>

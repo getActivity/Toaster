@@ -9,7 +9,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.hjq.toast.config.IToastStyle;
 
 /**
@@ -66,15 +65,18 @@ public class BlackToastStyle implements IToastStyle<View> {
     }
 
     protected float getTextSize(Context context) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, context.getResources().getDisplayMetrics());
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
+            14, context.getResources().getDisplayMetrics());
     }
 
     protected int getHorizontalPadding(Context context) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, context.getResources().getDisplayMetrics());
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+            24, context.getResources().getDisplayMetrics());
     }
 
     protected int getVerticalPadding(Context context) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, context.getResources().getDisplayMetrics());
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+            16, context.getResources().getDisplayMetrics());
     }
 
     protected Drawable getBackgroundDrawable(Context context) {
@@ -82,7 +84,8 @@ public class BlackToastStyle implements IToastStyle<View> {
         // 设置颜色
         drawable.setColor(0XB3000000);
         // 设置圆角
-        drawable.setCornerRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, context.getResources().getDisplayMetrics()));
+        drawable.setCornerRadius(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+            10, context.getResources().getDisplayMetrics()));
         return drawable;
     }
 

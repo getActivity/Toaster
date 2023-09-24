@@ -59,6 +59,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
+                    android:onClick="showCrossPageToast"
+                    android:text="@string/demo_show_cross_page_toast" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
                     android:onClick="delayShowToast"
                     android:text="@string/demo_show_toast_with_two_second_delay" />
 
