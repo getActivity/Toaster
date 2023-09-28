@@ -253,8 +253,8 @@ public class ToastStrategy implements IToastStrategy {
      */
     protected boolean onlyShowSystemToastStyle() {
         // Github issue 地址：https://github.com/getActivity/Toaster/issues/103
-        // Toast.CHANGE_TEXT_TOASTS_IN_THE_SYSTEM = 147798919L
-        return isChangeEnabledCompat(147798919L);
+        // NotificationManagerService.CHANGE_BACKGROUND_CUSTOM_TOAST_BLOCK = 128611929L
+        return isChangeEnabledCompat(128611929L);
     }
 
     @SuppressLint("PrivateApi")
