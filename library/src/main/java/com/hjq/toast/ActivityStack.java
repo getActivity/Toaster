@@ -16,6 +16,9 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
     @SuppressLint("StaticFieldLeak")
     private static volatile ActivityStack sInstance;
 
+    /** 是否已经注册过了{@link #register(Application)} */
+    private boolean mRegister = false;
+
     public static ActivityStack getInstance() {
         if(sInstance == null) {
             synchronized (ActivityStack.class) {
@@ -37,6 +40,10 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
         if (application == null) {
             return;
         }
+        if (mRegister) {
+            return;
+        }
+        mRegister = true;
         application.registerActivityLifecycleCallbacks(this);
     }
 
