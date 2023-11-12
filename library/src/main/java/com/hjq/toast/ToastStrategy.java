@@ -105,8 +105,7 @@ public class ToastStrategy implements IToastStrategy {
                 Settings.canDrawOverlays(mApplication)) {
             // 如果有悬浮窗权限，就开启全局的 Toast
             toast = new GlobalToast(mApplication);
-        } else if (!params.crossPageShow && foregroundActivity != null && !foregroundActivity.isFinishing() &&
-            (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1 && !foregroundActivity.isDestroyed())) {
+        } else if (!params.crossPageShow && isActivityAvailable(foregroundActivity)) {
             // 如果没有悬浮窗权限，就开启一个依附于 Activity 的 Toast
             toast = new ActivityToast(foregroundActivity);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
@@ -313,5 +312,23 @@ public class ToastStrategy implements IToastStrategy {
      */
     protected Activity getForegroundActivity() {
         return ActivityStack.getInstance().getForegroundActivity();
+    }
+
+    /**
+     * Activity 是否可用
+     */
+    protected boolean isActivityAvailable(Activity activity) {
+        if (activity == null) {
+            return false;
+        }
+
+        if (activity.isFinishing()) {
+            return false;
+        }
+
+        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
+            return !activity.isDestroyed();
+        }
+        return true;
     }
 }
