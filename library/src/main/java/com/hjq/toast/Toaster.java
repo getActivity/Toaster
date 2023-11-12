@@ -66,7 +66,13 @@ public final class Toaster {
      * @param style             Toast 样式
      */
     public static void init(Application application, IToastStrategy strategy, IToastStyle<?> style) {
+        // 如果当前已经初始化过了，就不要再重复初始化了
+        if (isInit()) {
+            return;
+        }
+
         sApplication = application;
+        ActivityStack.getInstance().register(application);
 
         // 初始化 Toast 策略
         if (strategy == null) {

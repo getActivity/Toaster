@@ -112,12 +112,18 @@ final class ToastImpl {
         if (!accessibilityManager.isEnabled()) {
             return;
         }
-        // 将 Toast 视为通知，因为它们用于向用户宣布短暂的信息
-        AccessibilityEvent event = AccessibilityEvent.obtain(
-                AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED);
+        int eventType = AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED;
+        AccessibilityEvent event;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            event = new AccessibilityEvent();
+            event.setEventType(eventType);
+        } else {
+            event = AccessibilityEvent.obtain(eventType);
+        }
         event.setClassName(Toast.class.getName());
         event.setPackageName(context.getPackageName());
         view.dispatchPopulateAccessibilityEvent(event);
+        // 将 Toast 视为通知，因为它们用于向用户宣布短暂的信息
         accessibilityManager.sendAccessibilityEvent(event);
     }
 
@@ -162,7 +168,6 @@ final class ToastImpl {
             }
 
             try {
-
                 windowManager.addView(mToast.getView(), params);
                 // 添加一个移除吐司的任务
                 HANDLER.postDelayed(() -> cancel(), mToast.getDuration() == Toast.LENGTH_LONG ?

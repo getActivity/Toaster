@@ -7,6 +7,8 @@ import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
@@ -47,7 +49,7 @@ public class ToastStrategy implements IToastStrategy {
     public static final int SHOW_STRATEGY_TYPE_QUEUE = 1;
 
     /** Handler 对象 */
-    private final static Handler HANDLER = new Handler(Looper.getMainLooper());
+    private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
     /**
      * 默认延迟时间
@@ -79,6 +81,11 @@ public class ToastStrategy implements IToastStrategy {
         this(ToastStrategy.SHOW_STRATEGY_TYPE_IMMEDIATELY);
     }
 
+    @Override
+    public void registerStrategy(Application application) {
+        mApplication = application;
+    }
+
     public ToastStrategy(int type) {
         mShowStrategyType = type;
         switch (mShowStrategyType) {
@@ -91,20 +98,15 @@ public class ToastStrategy implements IToastStrategy {
     }
 
     @Override
-    public void registerStrategy(Application application) {
-        mApplication = application;
-        ActivityStack.getInstance().register(application);
-    }
-
-    @Override
     public IToast createToast(ToastParams params) {
-        Activity foregroundActivity = ActivityStack.getInstance().getForegroundActivity();
+        Activity foregroundActivity = getForegroundActivity();
         IToast toast;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 Settings.canDrawOverlays(mApplication)) {
             // 如果有悬浮窗权限，就开启全局的 Toast
             toast = new GlobalToast(mApplication);
-        } else if (foregroundActivity != null && !params.crossPageShow) {
+        } else if (!params.crossPageShow && foregroundActivity != null && !foregroundActivity.isFinishing() &&
+            (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1 && !foregroundActivity.isDestroyed())) {
             // 如果没有悬浮窗权限，就开启一个依附于 Activity 的 Toast
             toast = new ActivityToast(foregroundActivity);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
@@ -267,17 +269,11 @@ public class ToastStrategy implements IToastStrategy {
             // 因为 Compatibility.isChangeEnabled() 普通应用根本调用不到，反射也不行
             // 通过 Toast.isSystemRenderedTextToast 也没有办法反射到
             // 最后发现反射 CompatChanges.isChangeEnabled 是可以的
-            Class<?> aClass = Class.forName("android.app.compat.CompatChanges");
-            Method method = aClass.getMethod("isChangeEnabled", long.class);
+            Class<?> clazz = Class.forName("android.app.compat.CompatChanges");
+            Method method = clazz.getMethod("isChangeEnabled", long.class);
             method.setAccessible(true);
             return Boolean.parseBoolean(String.valueOf(method.invoke(null, changeId)));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return false;
@@ -310,5 +306,12 @@ public class ToastStrategy implements IToastStrategy {
             }
         }
         return true;
+    }
+
+    /**
+     * 获取前台的 Activity
+     */
+    protected Activity getForegroundActivity() {
+        return ActivityStack.getInstance().getForegroundActivity();
     }
 }

@@ -6,7 +6,7 @@
 
 * 博客地址：[只需体验三分钟，你就会跟我一样，爱上这款 Toast](https://www.jianshu.com/p/9b174ee2c571)
 
-* 可以扫码下载 Demo 进行演示或者测试，如果扫码下载不了的，[点击此处可直接下载](https://github.com/getActivity/Toaster/releases/download/12.5/Toaster.apk)
+* 可以扫码下载 Demo 进行演示或者测试，如果扫码下载不了的，[点击此处可直接下载](https://github.com/getActivity/Toaster/releases/download/12.6/Toaster.apk)
 
 ![](picture/zh/download_demo_apk_qr_code.png)
 
@@ -53,7 +53,7 @@ android {
 
 dependencies {
     // 吐司框架：https://github.com/getActivity/Toaster
-    implementation 'com.github.getActivity:Toaster:12.5'
+    implementation 'com.github.getActivity:Toaster:12.6'
 }
 ```
 
@@ -146,7 +146,7 @@ Toaster.getInterceptor();
 
 |  功能或细节  | [Toaster](https://github.com/getActivity/Toaster) | [AndroidUtilCode-ToastUtils](https://github.com/Blankj/AndroidUtilCode)  | [Toasty](https://github.com/GrenderG/Toasty) |
 | :----: | :------: |  :-----: |  :-----: |
-|    对应版本  |  12.5 |  1.30.6  |  1.5.0  |
+|    对应版本  |  12.6 |  1.30.6  |  1.5.0  |
 |    issues 数   |  [![](https://img.shields.io/github/issues/getActivity/Toaster.svg)](https://github.com/getActivity/Toaster/issues)  |  [![](https://img.shields.io/github/issues/Blankj/AndroidUtilCode.svg)](https://github.com/Blankj/AndroidUtilCode/issues)  |  [![](https://img.shields.io/github/issues/GrenderG/Toasty.svg)](https://github.com/GrenderG/Toasty/issues)  |
 |                    框架体积                 | 32 KB | 500 KB | 50 KB |
 |                   框架维护状态               | 维护中 | 停止维护 | 停止维护 |

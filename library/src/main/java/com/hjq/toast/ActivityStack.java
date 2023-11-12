@@ -19,7 +19,7 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
     public static ActivityStack getInstance() {
         if(sInstance == null) {
             synchronized (ActivityStack.class) {
-                if(sInstance == null) {
+                if (sInstance == null) {
                     sInstance = new ActivityStack();
                 }
             }
