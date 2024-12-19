@@ -105,7 +105,10 @@ public interface IToast {
             return ((TextView) messageView);
         }
 
-        // 如果设置的布局没有包含一个 TextView 则抛出异常，必须要包含一个 id 值为 message 的 TextView（xml 代码 android:id="@android:id/message"，java 代码 view.setId(android.R.id.message)）
-        throw new IllegalArgumentException("You must include a TextView with an ID value of message (xml code: android:id=\"@android:id/message\", java code: view.setId(android.R.id.message))");
+        // 如果设置的布局没有包含一个 TextView 则抛出异常，必须要包含一个 id 值为 message 的 TextView
+        // xml 代码 android:id="@android:id/message"
+        // java 代码 view.setId(android.R.id.message)
+        throw new IllegalArgumentException("You must include a TextView with an ID value of message "
+            + "(xml code: android:id=\"@android:id/message\", java code: view.setId(android.R.id.message))");
     }
 }
