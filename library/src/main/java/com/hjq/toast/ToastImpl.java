@@ -105,7 +105,8 @@ final class ToastImpl {
     /**
      * 发送无障碍事件
      */
-    private void trySendAccessibilityEvent(View view) {
+    @SuppressWarnings("deprecation")
+    private void sendAccessibilityEvent(View view) {
         final Context context = view.getContext();
         AccessibilityManager accessibilityManager =
                 (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
@@ -177,7 +178,7 @@ final class ToastImpl {
                 // 当前已经显示
                 setShow(true);
                 // 发送无障碍事件
-                trySendAccessibilityEvent(mToast.getView());
+                sendAccessibilityEvent(mToast.getView());
             } catch (IllegalStateException | WindowManager.BadTokenException e) {
                 // 如果这个 View 对象被重复添加到 WindowManager 则会抛出异常
                 // java.lang.IllegalStateException: View android.widget.TextView has already been added to the window manager.
