@@ -154,6 +154,15 @@ final class ToastImpl {
             params.horizontalMargin = mToast.getHorizontalMargin();
             params.windowAnimations = mToast.getAnimationsId();
 
+            // 指定 WindowManager 忽略系统窗口可见性的影响
+            // 例如下面这些的显示和隐藏都会影响当前 WindowManager 的显示（触发位置调整）
+            // WindowInsets.Type.statusBars()：状态栏
+            // WindowInsets.Type.navigationBars()：导航栏
+            // WindowInsets.Type.ime()：输入法（软键盘）
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                params.setFitInsetsIgnoringVisibility(true);
+            }
+
             // 如果是全局显示
             if (mGlobalShow) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
