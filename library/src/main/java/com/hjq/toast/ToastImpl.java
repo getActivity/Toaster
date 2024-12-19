@@ -22,6 +22,8 @@ import android.widget.Toast;
  */
 final class ToastImpl {
 
+    private static final String WINDOW_TITLE = "Toast";
+
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
     /** 当前的吐司对象 */
@@ -153,6 +155,7 @@ final class ToastImpl {
             params.verticalMargin = mToast.getVerticalMargin();
             params.horizontalMargin = mToast.getHorizontalMargin();
             params.windowAnimations = mToast.getAnimationsId();
+            params.setTitle(WINDOW_TITLE);
 
             // 指定 WindowManager 忽略系统窗口可见性的影响
             // 例如下面这些的显示和隐藏都会影响当前 WindowManager 的显示（触发位置调整）
