@@ -19,7 +19,7 @@
     <string name="demo_show_toast_in_background_state">在后台状态下显示 Toast</string>
     <string name="demo_combining_window_framework_use">搭配 EasyWindow 悬浮窗框架</string>
 
-    <string name="demo_show_toast_result">我是普通的 Toast我是普通的 Toast我是普通的 Toast我是普通的 Toast我是普通的 Toast</string>
+    <string name="demo_show_toast_result">我是普通的 Toast</string>
     <string name="demo_show_short_toast_result">我是一个短 Toast</string>
     <string name="demo_show_long_toast_result">我是一个长 Toast</string>
     <string name="demo_show_cross_page_toast_result">我是跨页面显示的 Toast</string>
