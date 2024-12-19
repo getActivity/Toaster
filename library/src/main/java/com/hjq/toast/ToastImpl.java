@@ -42,7 +42,7 @@ final class ToastImpl {
     ToastImpl(Activity activity, CustomToast toast) {
         this((Context) activity, toast);
         mGlobalShow = false;
-        mWindowLifecycle = new WindowLifecycle((activity));
+        mWindowLifecycle = new WindowLifecycle(activity);
     }
 
     ToastImpl(Application application, CustomToast toast) {
