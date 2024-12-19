@@ -218,7 +218,7 @@ public final class Toaster {
         }
 
         if (params.duration == -1) {
-            params.duration = params.text.length() > 20 ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
+            params.duration = params.strategy.computeShowDuration(params.text);
         }
 
         params.strategy.showToast(params);

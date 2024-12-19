@@ -81,11 +81,6 @@ public class ToastStrategy implements IToastStrategy {
         this(ToastStrategy.SHOW_STRATEGY_TYPE_IMMEDIATELY);
     }
 
-    @Override
-    public void registerStrategy(Application application) {
-        mApplication = application;
-    }
-
     public ToastStrategy(int type) {
         mShowStrategyType = type;
         switch (mShowStrategyType) {
@@ -95,6 +90,16 @@ public class ToastStrategy implements IToastStrategy {
             default:
                 throw new IllegalArgumentException("Please don't pass non-existent toast show strategy");
         }
+    }
+
+    @Override
+    public void registerStrategy(Application application) {
+        mApplication = application;
+    }
+
+    @Override
+    public int computeShowDuration(CharSequence text) {
+        return text.length() > 20 ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
     }
 
     @Override
@@ -123,7 +128,7 @@ public class ToastStrategy implements IToastStrategy {
         } else {
             toast = new SystemToast(mApplication);
         }
-        if (isSupportToastStyle(toast) || !onlyShowSystemToastStyle()) {
+        if (areSupportCustomToastStyle(toast) || !onlyShowSystemToastStyle()) {
             diyToastStyle(toast, params.style);
         }
         return toast;
@@ -168,7 +173,7 @@ public class ToastStrategy implements IToastStrategy {
     /**
      * 是否支持设置自定义 Toast 样式
      */
-    protected boolean isSupportToastStyle(IToast toast) {
+    protected boolean areSupportCustomToastStyle(IToast toast) {
         // targetSdkVersion >= 30 的情况下在后台显示自定义样式的 Toast 会被系统屏蔽，并且日志会输出以下警告：
         // Blocking custom toast from package com.xxx.xxx due to package not in the foreground
         // targetSdkVersion < 30 的情况下 new Toast，并且不设置视图显示，系统会抛出以下异常：

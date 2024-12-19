@@ -17,6 +17,11 @@ public interface IToastStrategy {
     void registerStrategy(Application application);
 
     /**
+     * 计算 Toast 显示时长
+     */
+    int computeShowDuration(CharSequence text);
+
+    /**
      * 创建 Toast
      */
     IToast createToast(ToastParams params);
