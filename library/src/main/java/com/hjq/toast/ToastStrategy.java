@@ -174,12 +174,11 @@ public class ToastStrategy implements IToastStrategy {
      * 是否支持设置自定义 Toast 样式
      */
     protected boolean areSupportCustomToastStyle(IToast toast) {
-        // targetSdkVersion >= 30 的情况下在后台显示自定义样式的 Toast 会被系统屏蔽，并且日志会输出以下警告：
+        // sdk 版本 >= 30 的情况下在后台显示自定义样式的 Toast 会被系统屏蔽，并且日志会输出以下警告：
         // Blocking custom toast from package com.xxx.xxx due to package not in the foreground
-        // targetSdkVersion < 30 的情况下 new Toast，并且不设置视图显示，系统会抛出以下异常：
+        // sdk 版本 < 30 的情况下 new Toast，并且不设置视图显示，系统会抛出以下异常：
         // java.lang.RuntimeException: This Toast was not created with Toast.makeText()
-        return toast instanceof CustomToast || Build.VERSION.SDK_INT < Build.VERSION_CODES.R ||
-                mApplication.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.R;
+        return toast instanceof CustomToast || Build.VERSION.SDK_INT < Build.VERSION_CODES.R;
     }
 
     /**
@@ -267,7 +266,7 @@ public class ToastStrategy implements IToastStrategy {
     protected boolean isChangeEnabledCompat(long changeId) {
         // 需要注意的是这个 api 是在 android 11 的时候出现的，反射前需要先判断好版本
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            return true;
+            return false;
         }
         try {
             // 因为 Compatibility.isChangeEnabled() 普通应用根本调用不到，反射也不行
@@ -279,8 +278,8 @@ public class ToastStrategy implements IToastStrategy {
             return Boolean.parseBoolean(String.valueOf(method.invoke(null, changeId)));
         } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     /**
