@@ -139,7 +139,7 @@ public class ToastStrategy implements IToastStrategy {
         switch (mShowStrategyType) {
             case SHOW_STRATEGY_TYPE_IMMEDIATELY: {
                 // 移除之前未显示的 Toast 消息
-                HANDLER.removeCallbacksAndMessages(mShowMessageToken);
+                cancelToast();
                 long uptimeMillis = SystemClock.uptimeMillis() + params.delayMillis + (params.crossPageShow ? 0 : DEFAULT_DELAY_TIMEOUT);
                 HANDLER.postAtTime(new ShowToastRunnable(params), mShowMessageToken, uptimeMillis);
                 break;
@@ -165,7 +165,6 @@ public class ToastStrategy implements IToastStrategy {
 
     @Override
     public void cancelToast() {
-        HANDLER.removeCallbacksAndMessages(mCancelMessageToken);
         long uptimeMillis = SystemClock.uptimeMillis();
         HANDLER.postAtTime(new CancelToastRunnable(), mCancelMessageToken, uptimeMillis);
     }
