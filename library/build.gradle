@@ -5,8 +5,8 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        versionCode 1206
-        versionName "12.6"
+        versionCode 1280
+        versionName "12.8"
     }
 
     // 使用 JDK 1.8
@@ -20,7 +20,7 @@ android {
         exclude 'META-INF/*******'
     }
 
-    android.libraryVariants.all { variant ->
+    android.libraryVariants.configureEach { variant ->
         // aar 输出文件名配置
         variant.outputs.all { output ->
             outputFileName = "${rootProject.name}-${android.defaultConfig.versionName}.aar"
@@ -36,23 +36,24 @@ afterEvaluate {
     generateDebugResValues.enabled = false
 }
 
-tasks.withType(Javadoc) {
+tasks.withType(Javadoc).configureEach {
     options.addStringOption('Xdoclint:none', '-quiet')
     options.addStringOption('encoding', 'UTF-8')
     options.addStringOption('charSet', 'UTF-8')
 }
 
-task sourcesJar(type: Jar) {
+tasks.register('sourcesJar', Jar) {
     from android.sourceSets.main.java.srcDirs
     classifier = 'sources'
 }
 
-task javadoc(type: Javadoc) {
+tasks.register('javadoc', Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
+tasks.register('javadocJar', Jar) {
+    dependsOn javadoc
     classifier = 'javadoc'
     from javadoc.destinationDir
 }
