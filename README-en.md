@@ -128,14 +128,6 @@ Toaster.setInterceptor(IToastInterceptor interceptor);
 Toaster.getInterceptor();
 ```
 
-#### Framework proguard rules
-
-* Added in the `proguard-rules.pro` file:
-
-```text
--keep class com.hjq.toast.** {*;}
-```
-
 ## [Please click here to view frequently asked questions](HelpDoc-en.md)
 
 #### Comparison between different Toast frameworks

@@ -132,14 +132,6 @@ Toaster.setInterceptor(IToastInterceptor interceptor);
 Toaster.getInterceptor();
 ```
 
-#### 框架混淆规则
-
-* 在混淆规则文件 `proguard-rules.pro` 中加入
-
-```text
--keep class com.hjq.toast.** {*;}
-```
-
 ## [常见疑问请点击此处查看](HelpDoc-zh.md)
 
 #### 不同 Toast 框架之间的对比
