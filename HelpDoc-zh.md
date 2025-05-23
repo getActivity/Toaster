@@ -39,6 +39,7 @@ Toaster.init(this, new ToastStrategy() {
 
     @Override
     public IToast createToast(IToastStyle<?> style) {
+        IToast toast = super.createToast(style);
         if (toast instanceof CustomToast) {
             CustomToast customToast = ((CustomToast) toast);
             // 设置 Toast 动画效果
