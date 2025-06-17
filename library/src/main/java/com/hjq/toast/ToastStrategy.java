@@ -97,11 +97,15 @@ public class ToastStrategy implements IToastStrategy {
     public IToast createToast(ToastParams params) {
         Activity foregroundActivity = getForegroundActivity();
         IToast toast;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+        if ((params.priorityType == ToastParams.PRIORITY_TYPE_DEFAULT ||
+             params.priorityType == ToastParams.PRIORITY_TYPE_GLOBAL) &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 Settings.canDrawOverlays(mApplication)) {
             // 如果有悬浮窗权限，就开启全局的 Toast
             toast = new GlobalToast(mApplication);
-        } else if (!params.crossPageShow && isActivityAvailable(foregroundActivity)) {
+        } else if ((params.priorityType == ToastParams.PRIORITY_TYPE_DEFAULT ||
+                    params.priorityType == ToastParams.PRIORITY_TYPE_LOCAL) &&
+                    isActivityAvailable(foregroundActivity)) {
             // 如果没有悬浮窗权限，就开启一个依附于 Activity 的 Toast
             toast = new ActivityToast(foregroundActivity);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.N_MR1) {
@@ -131,13 +135,13 @@ public class ToastStrategy implements IToastStrategy {
             case SHOW_STRATEGY_TYPE_IMMEDIATELY: {
                 // 移除之前未显示的 Toast 消息
                 cancelToast();
-                long uptimeMillis = SystemClock.uptimeMillis() + params.delayMillis + (params.crossPageShow ? 0 : getDefaultDelayTime());
+                long uptimeMillis = SystemClock.uptimeMillis() + params.delayMillis + generateShowDelayTime(params);
                 HANDLER.postAtTime(new ShowToastRunnable(params), mShowMessageToken, uptimeMillis);
                 break;
             }
             case SHOW_STRATEGY_TYPE_QUEUE: {
                 // 计算出这个 Toast 显示时间
-                long showToastMillis = SystemClock.uptimeMillis() + params.delayMillis + (params.crossPageShow ? 0 : getDefaultDelayTime());
+                long showToastMillis = SystemClock.uptimeMillis() + params.delayMillis + generateShowDelayTime(params);
                 // 根据吐司的长短计算出等待时间
                 long waitMillis = generateToastWaitMillis(params);
                 // 如果当前显示的时间在上一个 Toast 的显示范围之内
@@ -158,6 +162,20 @@ public class ToastStrategy implements IToastStrategy {
     public void cancelToast() {
         long uptimeMillis = SystemClock.uptimeMillis();
         HANDLER.postAtTime(new CancelToastRunnable(), mCancelMessageToken, uptimeMillis);
+    }
+
+    /**
+     * 生成默认延迟时间
+     */
+    protected int generateShowDelayTime(ToastParams params) {
+        // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示在当前 Activity 上面（即使用 ActivityToast）
+        // 如果当前 Activity 在 showToast 之后立马进行 finish 了，那么这个时候 Toast 可能会显示不出来
+        // 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面，所以会导致显示不出来的问题
+        // 另外有悬浮窗权限的情况下，使用全局的 Toast（即使用 GlobalToast），这种立刻显示也会有一些问题
+        // 我在小米 12 Android 12 的手机上面测试，从权限设置页返回的时候，发现 Toast 有几率会从左上的位置显示，然后会变回正常的位置
+        // 如果是系统的 Toast（即使用 SystemToast、SafeToast、NotificationToast 任意一个）则不会有这个问题
+        // 300 只是一个经验值，经过很多次验证得出来的值，当然你觉得这个值不是自己想要的，也可以重写此方法改成自己想要的
+        return 300;
     }
 
     /**
@@ -190,16 +208,6 @@ public class ToastStrategy implements IToastStrategy {
             return 1500;
         }
         return 0;
-    }
-
-    /**
-     * 获取默认延迟时间
-     */
-    protected int getDefaultDelayTime() {
-        // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示在当前 Activity 上面
-        // 如果当前 Activity 在 showToast 之后立马进行 finish 了，那么这个时候 Toast 可能会显示不出来
-        // 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面
-        return 200;
     }
 
     /**

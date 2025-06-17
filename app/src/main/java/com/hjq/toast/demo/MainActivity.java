@@ -60,7 +60,7 @@ public final class MainActivity extends AppCompatActivity {
     public void showCrossPageToast(View v) {
         ToastParams params = new ToastParams();
         params.text = getString(R.string.demo_show_cross_page_toast_result);
-        params.crossPageShow = true;
+        params.priorityType = ToastParams.PRIORITY_TYPE_GLOBAL;
         Toaster.show(params);
     }
 

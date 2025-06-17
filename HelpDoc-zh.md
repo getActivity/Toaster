@@ -173,7 +173,7 @@ public class ToastStrategy {
 ToastParams params = new ToastParams();
 params.text = "我是一个能跨页面展示的 Toast";
 // 表示这个 Toast 需要跨页面展示
-params.crossPageShow = true;
+params.priorityType = ToastParams.PRIORITY_TYPE_GLOBAL;
 Toaster.show(params);
 ```
 
