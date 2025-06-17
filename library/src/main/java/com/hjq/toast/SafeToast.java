@@ -39,22 +39,22 @@ public class SafeToast extends NotificationToast {
 
         try {
             // 获取 Toast.mTN 字段对象
-            Field mTNField = Toast.class.getDeclaredField("mTN");
-            mTNField.setAccessible(true);
-            Object mTN = mTNField.get(this);
+            Field tnField = Toast.class.getDeclaredField("mTN");
+            tnField.setAccessible(true);
+            Object tnObject = tnField.get(this);
 
             // 获取 mTN 中的 mHandler 字段对象
-            Field mHandlerField = mTNField.getType().getDeclaredField("mHandler");
-            mHandlerField.setAccessible(true);
-            Handler mHandler = (Handler) mHandlerField.get(mTN);
+            Field handlerField = tnField.getType().getDeclaredField("mHandler");
+            handlerField.setAccessible(true);
+            Handler handlerObject = (Handler) handlerField.get(tnObject);
 
             // 如果这个对象已经被反射替换过了
-            if (mHandler instanceof SafeHandler) {
+            if (handlerObject instanceof SafeHandler) {
                 return;
             }
 
             // 偷梁换柱
-            mHandlerField.set(mTN, new SafeHandler(mHandler));
+            handlerField.set(tnObject, new SafeHandler(handlerObject));
 
         } catch (IllegalAccessException | NoSuchFieldException e) {
             // Android 9.0 上反射会出现报错

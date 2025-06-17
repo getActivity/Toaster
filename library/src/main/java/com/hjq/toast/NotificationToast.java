@@ -38,26 +38,26 @@ public class NotificationToast extends SystemToast {
         sHookService = true;
         try {
             // 获取到 Toast 中的 getService 静态方法
-            Method getService = Toast.class.getDeclaredMethod("getService");
-            getService.setAccessible(true);
+            Method getServiceMethod = Toast.class.getDeclaredMethod("getService");
+            getServiceMethod.setAccessible(true);
             // 执行方法，会返回一个 INotificationManager$Stub$Proxy 类型的对象
-            final Object iNotificationManager = getService.invoke(null);
-            if (iNotificationManager == null) {
+            final Object notificationManagerSourceObject = getServiceMethod.invoke(null);
+            if (notificationManagerSourceObject == null) {
                 return;
             }
             // 如果这个对象已经被动态代理过了，并且已经 Hook 过了，则不需要重复 Hook
-            if (Proxy.isProxyClass(iNotificationManager.getClass()) &&
-                    Proxy.getInvocationHandler(iNotificationManager) instanceof NotificationServiceProxy) {
+            if (Proxy.isProxyClass(notificationManagerSourceObject.getClass()) &&
+                    Proxy.getInvocationHandler(notificationManagerSourceObject) instanceof NotificationServiceProxy) {
                 return;
             }
-            Object iNotificationManagerProxy = Proxy.newProxyInstance(
+            Object notificationManagerProxyObject = Proxy.newProxyInstance(
                     Thread.currentThread().getContextClassLoader(),
                     new Class[]{Class.forName("android.app.INotificationManager")},
-                    new NotificationServiceProxy(iNotificationManager));
+                    new NotificationServiceProxy(notificationManagerSourceObject));
             // 将原来的 INotificationManager$Stub$Proxy 替换掉
-            Field sService = Toast.class.getDeclaredField("sService");
-            sService.setAccessible(true);
-            sService.set(null, iNotificationManagerProxy);
+            Field serviceField = Toast.class.getDeclaredField("sService");
+            serviceField.setAccessible(true);
+            serviceField.set(null, notificationManagerProxyObject);
         } catch (Exception e) {
             e.printStackTrace();
         }
