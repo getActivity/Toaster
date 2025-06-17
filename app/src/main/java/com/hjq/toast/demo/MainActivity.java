@@ -162,7 +162,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    if (XXPermissions.isGranted(MainActivity.this, Permission.SYSTEM_ALERT_WINDOW)) {
+                    if (XXPermissions.isGrantedPermissions(MainActivity.this, Permission.SYSTEM_ALERT_WINDOW)) {
                         Toaster.show(R.string.demo_show_toast_in_background_state_result_1);
                     } else {
                         Toaster.show(R.string.demo_show_toast_in_background_state_result_2);
@@ -176,11 +176,11 @@ public final class MainActivity extends AppCompatActivity {
 
     public void combinationEasyWindowShow(View v) {
         new EasyWindow<>(this)
-                .setDuration(1000)
+                .setWindowDuration(1000)
                 // 将 Toaster 中的 View 转移给 EasyWindow 来显示
                 .setContentView(Toaster.getStyle().createView(getApplication()))
                 .setAnimStyle(android.R.style.Animation_Translucent)
-                .setText(android.R.id.message, R.string.demo_combining_window_framework_use_result)
+                .setTextByTextView(android.R.id.message, R.string.demo_combining_window_framework_use_result)
                 .setGravity(Gravity.BOTTOM)
                 .setYOffset((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()))
                 .show();
