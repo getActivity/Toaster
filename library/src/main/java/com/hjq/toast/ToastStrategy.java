@@ -136,7 +136,7 @@ public class ToastStrategy implements IToastStrategy {
                 // 移除之前未显示的 Toast 消息
                 cancelToast();
                 long uptimeMillis = SystemClock.uptimeMillis() + params.delayMillis + generateShowDelayTime(params);
-                HANDLER.postAtTime(new ShowToastRunnable(params), mShowMessageToken, uptimeMillis);
+                getHandler().postAtTime(new ShowToastRunnable(params), mShowMessageToken, uptimeMillis);
                 break;
             }
             case SHOW_STRATEGY_TYPE_QUEUE: {
@@ -149,7 +149,7 @@ public class ToastStrategy implements IToastStrategy {
                 if (showToastMillis < (mLastShowToastMillis + waitMillis)) {
                     showToastMillis = mLastShowToastMillis + waitMillis;
                 }
-                HANDLER.postAtTime(new ShowToastRunnable(params), mShowMessageToken, showToastMillis);
+                getHandler().postAtTime(new ShowToastRunnable(params), mShowMessageToken, showToastMillis);
                 mLastShowToastMillis = showToastMillis;
                 break;
             }
@@ -161,7 +161,14 @@ public class ToastStrategy implements IToastStrategy {
     @Override
     public void cancelToast() {
         long uptimeMillis = SystemClock.uptimeMillis();
-        HANDLER.postAtTime(new CancelToastRunnable(), mCancelMessageToken, uptimeMillis);
+        getHandler().postAtTime(new CancelToastRunnable(), mCancelMessageToken, uptimeMillis);
+    }
+
+    /**
+     * 获取 Handler 对象
+     */
+    protected static Handler getHandler() {
+        return HANDLER;
     }
 
     /**
