@@ -51,15 +51,6 @@ public class ToastStrategy implements IToastStrategy {
     /** Handler 对象 */
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
-    /**
-     * 默认延迟时间
-     *
-     * 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示在当前 Activity 上面
-     * 如果当前 Activity 在 showToast 之后立马进行 finish 了，那么这个时候 Toast 可能会显示不出来
-     * 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面
-     */
-    private static final int DEFAULT_DELAY_TIMEOUT = 200;
-
     /** 应用上下文 */
     private Application mApplication;
 
@@ -140,13 +131,13 @@ public class ToastStrategy implements IToastStrategy {
             case SHOW_STRATEGY_TYPE_IMMEDIATELY: {
                 // 移除之前未显示的 Toast 消息
                 cancelToast();
-                long uptimeMillis = SystemClock.uptimeMillis() + params.delayMillis + (params.crossPageShow ? 0 : DEFAULT_DELAY_TIMEOUT);
+                long uptimeMillis = SystemClock.uptimeMillis() + params.delayMillis + (params.crossPageShow ? 0 : getDefaultDelayTime());
                 HANDLER.postAtTime(new ShowToastRunnable(params), mShowMessageToken, uptimeMillis);
                 break;
             }
             case SHOW_STRATEGY_TYPE_QUEUE: {
                 // 计算出这个 Toast 显示时间
-                long showToastMillis = SystemClock.uptimeMillis() + params.delayMillis + (params.crossPageShow ? 0 : DEFAULT_DELAY_TIMEOUT);
+                long showToastMillis = SystemClock.uptimeMillis() + params.delayMillis + (params.crossPageShow ? 0 : getDefaultDelayTime());
                 // 根据吐司的长短计算出等待时间
                 long waitMillis = generateToastWaitMillis(params);
                 // 如果当前显示的时间在上一个 Toast 的显示范围之内
@@ -199,6 +190,16 @@ public class ToastStrategy implements IToastStrategy {
             return 1500;
         }
         return 0;
+    }
+
+    /**
+     * 获取默认延迟时间
+     */
+    protected int getDefaultDelayTime() {
+        // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示在当前 Activity 上面
+        // 如果当前 Activity 在 showToast 之后立马进行 finish 了，那么这个时候 Toast 可能会显示不出来
+        // 因为 Toast 会显示在销毁 Activity 界面上，而不会显示在新跳转的 Activity 上面
+        return 200;
     }
 
     /**
