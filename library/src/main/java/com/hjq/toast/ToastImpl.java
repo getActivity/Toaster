@@ -191,11 +191,13 @@ final class ToastImpl {
                 setShow(true);
                 // 发送无障碍事件
                 sendAccessibilityEvent(mToast.getView());
-            } catch (IllegalStateException | WindowManager.BadTokenException e) {
-                // 如果这个 View 对象被重复添加到 WindowManager 则会抛出异常
+            } catch (Exception e) {
+                // 1. 如果这个 View 对象被重复添加到 WindowManager 则会抛出异常
                 // java.lang.IllegalStateException: View android.widget.TextView has already been added to the window manager.
-                // 如果 WindowManager 绑定的 Activity 已经销毁，则会抛出异常
+                // 2. 如果 WindowManager 绑定的 Activity 已经销毁，则会抛出异常
                 // android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@ef1ccb6 is not valid; is your activity running?
+                /// 3. 厂商的问题也会导致异常的出现，Github issue 地址：https://github.com/getActivity/Toaster/issues/149
+                // java.lang.RuntimeException: InputChannel is not initialized.
                 e.printStackTrace();
             }
         }
@@ -214,8 +216,8 @@ final class ToastImpl {
 
                 windowManager.removeViewImmediate(mToast.getView());
 
-            } catch (IllegalArgumentException e) {
-                // 如果当前 WindowManager 没有附加这个 View 则会抛出异常
+            } catch (Exception e) {
+                // 如果当前 WindowManager 没有添加这个 View 则会抛出异常
                 // java.lang.IllegalArgumentException: View=android.widget.TextView not attached to window manager
                 e.printStackTrace();
             } finally {
