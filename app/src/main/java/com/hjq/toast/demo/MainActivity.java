@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.hjq.bar.OnTitleBarListener;
 import com.hjq.bar.TitleBar;
-import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.hjq.permissions.permission.PermissionLists;
 import com.hjq.toast.ToastParams;
 import com.hjq.toast.ToastStrategy;
 import com.hjq.toast.Toaster;
@@ -162,7 +162,7 @@ public final class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    if (XXPermissions.isGrantedPermissions(MainActivity.this, Permission.SYSTEM_ALERT_WINDOW)) {
+                    if (XXPermissions.isGrantedPermission(MainActivity.this, PermissionLists.getSystemAlertWindowPermission())) {
                         Toaster.show(R.string.demo_show_toast_in_background_state_result_1);
                     } else {
                         Toaster.show(R.string.demo_show_toast_in_background_state_result_2);
@@ -176,13 +176,12 @@ public final class MainActivity extends AppCompatActivity {
 
     public void combinationEasyWindowShow(View v) {
         new EasyWindow<>(this)
-                .setWindowDuration(1000)
                 // 将 Toaster 中的 View 转移给 EasyWindow 来显示
                 .setContentView(Toaster.getStyle().createView(getApplication()))
-                .setAnimStyle(android.R.style.Animation_Translucent)
+                .setWindowDuration(1000)
+                .setWindowAnim(android.R.style.Animation_Translucent)
                 .setTextByTextView(android.R.id.message, R.string.demo_combining_window_framework_use_result)
-                .setGravity(Gravity.BOTTOM)
-                .setYOffset((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()))
+                .setWindowLocation(Gravity.BOTTOM, 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()))
                 .show();
     }
 }

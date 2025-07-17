@@ -65,10 +65,10 @@ dependencies {
     implementation 'com.github.getActivity:TitleBar:10.6'
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
-    implementation 'com.github.getActivity:XXPermissions:23.0'
+    implementation 'com.github.getActivity:XXPermissions:25.0'
 
     // 悬浮窗框架：https://github.com/getActivity/EasyWindow
-    implementation 'com.github.getActivity:EasyWindow:12.0'
+    implementation 'com.github.getActivity:EasyWindow:13.0'
 
     // 内存泄漏捕捉：https://github.com/square/leakcanary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
