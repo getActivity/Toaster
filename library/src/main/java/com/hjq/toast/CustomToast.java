@@ -2,7 +2,6 @@ package com.hjq.toast;
 
 import android.view.View;
 import android.widget.TextView;
-
 import com.hjq.toast.config.IToast;
 
 /**
@@ -30,7 +29,7 @@ public abstract class CustomToast implements IToast {
     /** 垂直间距 */
     private float mVerticalMargin;
     /** Toast 动画 */
-    private int mAnimations = android.R.style.Animation_Toast;
+    private int mAnimationsId = android.R.style.Animation_Toast;
     /** 短吐司显示的时长，参考至 NotificationManagerService.SHORT_DELAY */
     private int mShortDuration = 2000;
     /** 长吐司显示的时长，参考至 NotificationManagerService.LONG_DELAY */
@@ -116,11 +115,11 @@ public abstract class CustomToast implements IToast {
     }
 
     public void setAnimationsId(int animationsId) {
-        mAnimations = animationsId;
+        mAnimationsId = animationsId;
     }
 
     public int getAnimationsId() {
-        return mAnimations;
+        return mAnimationsId;
     }
 
     public void setShortDuration(int duration) {
