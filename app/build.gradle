@@ -57,7 +57,7 @@ dependencies {
     implementation 'com.github.getActivity:TitleBar:10.6'
 
     // 权限请求框架：https://github.com/getActivity/XXPermissions
-    implementation 'com.github.getActivity:XXPermissions:25.0'
+    implementation 'com.github.getActivity:XXPermissions:26.5'
 
     // 悬浮窗框架：https://github.com/getActivity/EasyWindow
     implementation 'com.github.getActivity:EasyWindow:13.0'
