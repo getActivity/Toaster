@@ -40,34 +40,57 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
         application.registerActivityLifecycleCallbacks(this);
     }
 
-    /** 前台 Activity 对象 */
-    private Activity mForegroundActivity;
+    /** 当前焦点的 Activity 对象 */
+    private Activity mFocusActivity;
 
-    public Activity getForegroundActivity() {
-        return mForegroundActivity;
+    /** 当前可见的 Activity 对象 */
+    private Activity mVisibleActivity;
+
+    /** Activity 可见时候的时间戳 */
+    private long mActivityResumedTime;
+
+    public Activity getFocusActivity() {
+        return mFocusActivity;
+    }
+
+    public Activity getVisibleActivity() {
+        return mVisibleActivity;
+    }
+
+    public long getActivityResumedTime() {
+        return mActivityResumedTime;
     }
 
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
 
     @Override
-    public void onActivityStarted(Activity activity) {}
+    public void onActivityStarted(Activity activity) {
+        mFocusActivity = activity;
+    }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        mForegroundActivity = activity;
+        mVisibleActivity = activity;
+        mActivityResumedTime = System.currentTimeMillis();
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-        if (mForegroundActivity != activity) {
+        if (mFocusActivity != activity) {
             return;
         }
-        mForegroundActivity = null;
+        mFocusActivity = null;
     }
 
     @Override
-    public void onActivityStopped(Activity activity) {}
+    public void onActivityStopped(Activity activity) {
+        if (mVisibleActivity != activity) {
+            return;
+        }
+        mVisibleActivity = null;
+        mActivityResumedTime = 0;
+    }
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}

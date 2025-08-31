@@ -98,6 +98,12 @@ public final class MainActivity extends AppCompatActivity {
         }).start();
     }
 
+    public void startActivityShowToast(View v) {
+        Toaster.show(R.string.demo_show_toast_result);
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+    }
+
     public void switchToastStyleToWhite(View v) {
         ToastParams params = new ToastParams();
         params.text = getString(R.string.demo_switch_to_white_style_result);

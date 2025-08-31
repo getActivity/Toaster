@@ -83,6 +83,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="10dp"
+                    android:onClick="startActivityShowToast"
+                    android:text="@string/demo_show_toast_in_the_start_activity" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
                     android:onClick="switchToastStyleToWhite"
                     android:text="@string/demo_switch_to_white_style" />
 
