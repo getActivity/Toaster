@@ -4,7 +4,7 @@
 
 * Project address: [Github](https://github.com/getActivity/Toaster)
 
-* [Click here to download demo apk directly](https://github.com/getActivity/Toaster/releases/download/13.2/Toaster.apk)
+* [Click here to download demo apk directly](https://github.com/getActivity/Toaster/releases/download/13.5/Toaster.apk)
 
 ![](picture/en/demo_toast_activity.jpg) ![](picture/en/demo_toast_style_white.jpg) ![](picture/en/demo_toast_style_black.jpg)
 
@@ -49,7 +49,7 @@ android {
 
 dependencies {
     // Toast framework：https://github.com/getActivity/Toaster
-    implementation 'com.github.getActivity:Toaster:13.2'
+    implementation 'com.github.getActivity:Toaster:13.5'
 }
 ```
 
@@ -134,7 +134,7 @@ Toaster.getInterceptor();
 
 |  Function or detail  | [Toaster](https://github.com/getActivity/Toaster) |[ AndroidUtilCode-ToastUtils ](https://github.com/Blankj/AndroidUtilCode)| [Toasty](https://github.com/GrenderG/Toasty) |
 | :----: | :------: |  :-----: |  :-----: |
-| Corresponding version |  13.2 |  1.30.6  |  1.5.0  |
+| Corresponding version |  13.5 |  1.30.6  |  1.5.0  |
 |    Number of issues   |  [![](https://img.shields.io/github/issues/getActivity/Toaster.svg)](https://github.com/getActivity/Toaster/issues)  |[![](https://img.shields.io/github/issues/Blankj/AndroidUtilCode.svg)](https://github.com/Blankj/AndroidUtilCode/issues)|  [![](https://img.shields.io/github/issues/GrenderG/Toasty.svg)](https://github.com/GrenderG/Toasty/issues)  |
 |  Framework pack size | 33 KB | 500 KB | 50 KB |
 | Framework maintenance status| 维护中 | 停止维护 | 停止维护 |
