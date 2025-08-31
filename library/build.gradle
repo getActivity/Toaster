@@ -1,64 +1,20 @@
 apply plugin: 'com.android.library'
+apply from : '../common.gradle'
 
 android {
-    compileSdkVersion 33
+
+    namespace 'com.hjq.toast'
 
     defaultConfig {
         minSdkVersion 14
-        versionCode 1302
-        versionName "13.2"
     }
 
-    // 使用 JDK 1.8
-    compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
-        sourceCompatibility JavaVersion.VERSION_1_8
-    }
-
-    packagingOptions {
-        // 剔除这个包下的所有文件（不会移除签名信息）
-        exclude 'META-INF/*******'
-    }
-
-    android.libraryVariants.configureEach { variant ->
-        // aar 输出文件名配置
-        variant.outputs.all { output ->
-            outputFileName = "${rootProject.name}-${android.defaultConfig.versionName}.aar"
+    libraryVariants.configureEach { variant ->
+        variant.packageLibraryProvider.configure { packageLib ->
+            // 剔除 META-INF 目录
+            packageLib.exclude 'META-INF/'
+            // 剔除 R.txt 文件
+            packageLib.exclude 'R.txt'
         }
     }
-}
-
-afterEvaluate {
-    // 排除 BuildConfig.class 和 R.class
-    generateReleaseBuildConfig.enabled = false
-    generateDebugBuildConfig.enabled = false
-    generateReleaseResValues.enabled = false
-    generateDebugResValues.enabled = false
-}
-
-tasks.withType(Javadoc).configureEach {
-    options.addStringOption('Xdoclint:none', '-quiet')
-    options.addStringOption('encoding', 'UTF-8')
-    options.addStringOption('charSet', 'UTF-8')
-}
-
-tasks.register('sourcesJar', Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-tasks.register('javadoc', Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-tasks.register('javadocJar', Jar) {
-    dependsOn javadoc
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
 }
