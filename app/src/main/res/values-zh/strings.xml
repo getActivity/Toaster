@@ -19,6 +19,7 @@
     <string name="demo_click_show_three_toast">点我连续显示 3 个 Toast</string>
     <string name="demo_show_toast_in_background_state">在后台状态下显示 Toast</string>
     <string name="demo_combining_window_framework_use">搭配 EasyWindow 悬浮窗框架</string>
+    <string name="demo_show_toast_with_trace_and_skip_stacks">调用代码定位和跳过堆栈</string>
 
     <string name="demo_show_toast_result">我是普通的 Toast</string>
     <string name="demo_show_short_toast_result">我是一个短 Toast</string>
@@ -42,4 +43,5 @@
     <string name="demo_show_toast_in_background_state_result_2">我是在后台显示的 Toast（安卓 11 及以上在后台显示只能使用系统样式）</string>
     <string name="demo_show_toast_in_background_state_result_3">我是在后台显示的 Toast</string>
     <string name="demo_combining_window_framework_use_result">就问你溜不溜</string>
+    <string name="demo_show_toast_with_trace_and_skip_stacks_result">我会在 Logcat 中打印一条日志，定位和跳过指定堆栈数</string>
 </resources>

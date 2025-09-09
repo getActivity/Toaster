@@ -30,6 +30,11 @@ public class ToastParams {
      */
     public int duration = -1;
 
+    /**
+     * 打印调用栈时，跳过的方法数
+     */
+    public int stackSkips = 0;
+
     /** 延迟显示时间 */
     public long delayMillis = 0;
 

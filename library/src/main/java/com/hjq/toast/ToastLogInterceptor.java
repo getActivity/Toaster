@@ -16,17 +16,20 @@ public class ToastLogInterceptor implements IToastInterceptor {
 
     @Override
     public boolean intercept(ToastParams params) {
-        printToast(params.text);
+        int stackSkips = params.stackSkips;
+        printToast(params.text, stackSkips);
         return false;
     }
 
-    protected void printToast(CharSequence text) {
+    protected void printToast(CharSequence text, int stackSkips) {
         if (!isLogEnable()) {
             return;
         }
 
         // 获取调用的堆栈信息
         StackTraceElement[] stackTraces = new Throwable().getStackTrace();
+        // 跳过方法调用层数的计数器
+        int currentSkips = 0;
         for (StackTraceElement stackTrace : stackTraces) {
             // 获取代码行数
             int lineNumber = stackTrace.getLineNumber();
@@ -39,6 +42,12 @@ public class ToastLogInterceptor implements IToastInterceptor {
             try {
                 Class<?> clazz = Class.forName(className);
                 if (!filterClass(clazz)) {
+                    // 跳过指定层数方法调用
+                    if (currentSkips < stackSkips) {
+                        currentSkips++;
+                        continue;
+                    }
+                    // 打印日志
                     printLog("(" + stackTrace.getFileName() + ":" + lineNumber + ") " + text.toString());
                     // 跳出循环
                     break;

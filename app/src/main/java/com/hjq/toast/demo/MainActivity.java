@@ -209,4 +209,17 @@ public final class MainActivity extends AppCompatActivity {
                 .setWindowLocation(Gravity.BOTTOM, 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics()))
                 .show();
     }
+
+    public void skipStacks(View v) {
+        toastTraceAndSkipStacks(getString(R.string.demo_show_toast_with_trace_and_skip_stacks_result));
+    }
+
+    // 在封装的方法使用 Toaster 时，打印的栈信息跳过指定调用层数
+    void toastTraceAndSkipStacks(String message) {
+        ToastParams params = new ToastParams();
+        params.text = message;
+        params.stackSkips = 1; // 根据实际情况调整层数
+        Toaster.show(params);
+    }
+
 }
