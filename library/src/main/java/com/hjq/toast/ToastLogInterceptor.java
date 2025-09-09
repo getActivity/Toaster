@@ -16,8 +16,7 @@ public class ToastLogInterceptor implements IToastInterceptor {
 
     @Override
     public boolean intercept(ToastParams params) {
-        int stackSkips = params.stackSkips;
-        printToast(params.text, stackSkips);
+        printToast(params.text, params.stackSkips);
         return false;
     }
 
