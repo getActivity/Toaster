@@ -73,6 +73,17 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
     public void onActivityResumed(Activity activity) {
         mVisibleActivity = activity;
         mActivityResumedTime = System.currentTimeMillis();
+        // 这里解释一下为什么要在 Resumed 时给 FocusActivity 对象赋值？
+        // 这是因为有人反馈在跳转到新的 Activity 后又立马销毁的情况下，无法显示自定义样式的 Toast，
+        // 经过排查发现，在这个过程 Activity 会回调 Paused 生命周期，然后直接回调 Resumed 生命周期，
+        // 这样就会导致 Started 生命周期没有被回调，这样就导致 FocusActivity 对象会为 null，
+        // 为了处理这种情况，最好的方式就是在 Resumed 生命周期中再检查一下 FocusActivity 对象是否为空，
+        // 如果 FocusActivity 对象为空，则直接赋值为 Resumed 生命周期时的 Activity 对象。
+        // Github 地址：https://github.com/getActivity/Toaster/issues/157
+        if (mFocusActivity != null) {
+            return;
+        }
+        mFocusActivity = activity;
     }
 
     @Override
