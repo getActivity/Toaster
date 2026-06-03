@@ -1,8 +1,12 @@
 package com.hjq.toast;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.View;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import com.hjq.toast.config.IToast;
 
 /**
@@ -13,6 +17,7 @@ import com.hjq.toast.config.IToast;
  */
 public abstract class CustomToast implements IToast {
 
+    @NonNull
     private final Context mContext;
 
     /** Toast 布局 */
@@ -38,25 +43,31 @@ public abstract class CustomToast implements IToast {
     /** 长吐司显示的时长，参考至 NotificationManagerService.LONG_DELAY */
     private int mLongDuration = 3500;
 
-    public CustomToast(Context context) {
+    public CustomToast(@NonNull Context context) {
         mContext = context;
     }
 
+    @NonNull
     @Override
     public Context getContext() {
         return mContext;
     }
 
     @Override
-    public void setText(int id) {
-        if (mView == null) {
+    public void setText(@StringRes int id) {
+        Resources resources = mContext.getResources();
+        if (resources == null) {
             return;
         }
-        setText(mView.getResources().getString(id));
+        try {
+            setText(resources.getString(id));
+        } catch (Resources.NotFoundException ignored) {
+            // default implementation ignored
+        }
     }
 
     @Override
-    public void setText(CharSequence text) {
+    public void setText(@NonNull CharSequence text) {
         if (mMessageView == null) {
             return;
         }
@@ -64,7 +75,7 @@ public abstract class CustomToast implements IToast {
     }
 
     @Override
-    public void setView(View view) {
+    public void setView(@Nullable View view) {
         mView = view;
         if (mView == null) {
             mMessageView = null;
@@ -73,6 +84,7 @@ public abstract class CustomToast implements IToast {
         mMessageView = findMessageView(view);
     }
 
+    @Nullable
     @Override
     public View getView() {
         return mView;

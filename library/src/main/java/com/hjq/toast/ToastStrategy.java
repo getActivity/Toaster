@@ -12,6 +12,8 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.hjq.toast.config.IToast;
 import com.hjq.toast.config.IToastStrategy;
 import com.hjq.toast.config.IToastStyle;
@@ -47,12 +49,15 @@ public class ToastStrategy implements IToastStrategy {
     public static final int SHOW_STRATEGY_TYPE_QUEUE = 1;
 
     /** Handler 对象 */
+    @NonNull
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
     /** 应用上下文 */
+    @NonNull
     private final Application mApplication;
 
     /** Toast 对象 */
+    @Nullable
     private WeakReference<IToast> mToastReference;
 
     /** 吐司显示策略 */
@@ -61,11 +66,11 @@ public class ToastStrategy implements IToastStrategy {
     /** 上一个 Toast 显示的时间 */
     private volatile long mLastShowToastMillis;
 
-    public ToastStrategy(Application application) {
+    public ToastStrategy(@NonNull Application application) {
         this(application, ToastStrategy.SHOW_STRATEGY_TYPE_IMMEDIATELY);
     }
 
-    public ToastStrategy(Application application, int type) {
+    public ToastStrategy(@NonNull Application application, int type) {
         mApplication = application;
         mShowStrategyType = type;
         switch (mShowStrategyType) {
@@ -78,12 +83,12 @@ public class ToastStrategy implements IToastStrategy {
     }
 
     @Override
-    public int computeShowDuration(CharSequence text) {
+    public int computeShowDuration(@NonNull CharSequence text) {
         return text.length() > 20 ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
     }
 
     @Override
-    public IToast createToast(ToastParams params) {
+    public IToast createToast(@NonNull ToastParams params) {
         final Application application = getApplication();
         final Activity toastActivity = getToastActivity();
 
@@ -121,7 +126,7 @@ public class ToastStrategy implements IToastStrategy {
     }
 
     @Override
-    public void showToast(ToastParams params) {
+    public void showToast(@NonNull ToastParams params) {
         HANDLER.postDelayed(new ShowRunnable(params), getMustShowDelayDuration(params));
     }
 
@@ -134,6 +139,7 @@ public class ToastStrategy implements IToastStrategy {
     /**
      * 获取 Handler 对象
      */
+    @NonNull
     protected static Handler getHandler() {
         return HANDLER;
     }
@@ -141,7 +147,7 @@ public class ToastStrategy implements IToastStrategy {
     /**
      * 获取必须的显示延迟时长
      */
-    protected int getMustShowDelayDuration(ToastParams params) {
+    protected int getMustShowDelayDuration(@NonNull ToastParams params) {
         if (params.priorityType != ToastParams.PRIORITY_TYPE_GLOBAL) {
             return 100;
         }
@@ -151,7 +157,7 @@ public class ToastStrategy implements IToastStrategy {
     /**
      * 获取最佳的显示延迟时长
      */
-    protected int getBestShowDelayDuration(ToastParams params) {
+    protected int getBestShowDelayDuration(@NonNull ToastParams params) {
         if (params.priorityType != ToastParams.PRIORITY_TYPE_GLOBAL && getToastActivity() == null) {
             // 延迟一段时间之后再执行，因为在没有通知栏权限的情况下，Toast 只能显示在当前 Activity 上面（即使用 ActivityToast）
             // 如果当前 Activity 在 showToast 之后立马进行 finish 了，那么这个时候 Toast 可能会显示不出来
@@ -168,7 +174,7 @@ public class ToastStrategy implements IToastStrategy {
     /**
      * 是否支持设置自定义 Toast 样式
      */
-    protected boolean areSupportCustomToastStyle(IToast toast) {
+    protected boolean areSupportCustomToastStyle(@NonNull IToast toast) {
         // sdk 版本 >= 30 的情况下在后台显示自定义样式的 Toast 会被系统屏蔽，并且日志会输出以下警告：
         // Blocking custom toast from package com.xxx.xxx due to package not in the foreground
         // sdk 版本 < 30 的情况下 new Toast，并且不设置视图显示，系统会抛出以下异常：
@@ -179,7 +185,7 @@ public class ToastStrategy implements IToastStrategy {
     /**
      * 定制 Toast 的样式
      */
-    protected void diyToastStyle(IToast toast, IToastStyle<?> style) {
+    protected void diyToastStyle(@NonNull IToast toast, @NonNull IToastStyle<?> style) {
         toast.setView(style.createView(toast.getContext()));
         toast.setGravity(style.getGravity(), style.getXOffset(), style.getYOffset());
         toast.setMargin(style.getHorizontalMargin(), style.getVerticalMargin());
@@ -188,7 +194,7 @@ public class ToastStrategy implements IToastStrategy {
     /**
      * 生成 Toast 等待时间
      */
-    protected int generateToastWaitMillis(ToastParams params) {
+    protected int generateToastWaitMillis(@NonNull ToastParams params) {
         if (params.duration == Toast.LENGTH_SHORT) {
             return 1000;
         } else if (params.duration == Toast.LENGTH_LONG) {
@@ -202,9 +208,10 @@ public class ToastStrategy implements IToastStrategy {
      */
     private class ShowRunnable implements Runnable {
 
+        @NonNull
         private final ToastParams mToastParams;
 
-        private ShowRunnable(ToastParams params) {
+        private ShowRunnable(@NonNull ToastParams params) {
             mToastParams = params;
         }
 
@@ -243,9 +250,10 @@ public class ToastStrategy implements IToastStrategy {
      */
     private class ShowToastRunnable implements Runnable {
 
+        @NonNull
         private final ToastParams mToastParams;
 
-        private ShowToastRunnable(ToastParams params) {
+        private ShowToastRunnable(@NonNull ToastParams params) {
             mToastParams = params;
         }
 
@@ -323,7 +331,7 @@ public class ToastStrategy implements IToastStrategy {
      */
     @SuppressWarnings("ConstantConditions")
     @SuppressLint("PrivateApi")
-    protected boolean areNotificationsEnabled(Context context) {
+    protected boolean areNotificationsEnabled(@NonNull Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return context.getSystemService(NotificationManager.class).areNotificationsEnabled();
         }
@@ -350,6 +358,7 @@ public class ToastStrategy implements IToastStrategy {
     /**
      * 获取 Application 对象
      */
+    @NonNull
     protected Application getApplication() {
         return mApplication;
     }
@@ -357,6 +366,7 @@ public class ToastStrategy implements IToastStrategy {
     /**
      * 获取显示自定义 Toast 的 Activity 对象
      */
+    @Nullable
     protected Activity getToastActivity() {
         Activity visibleActivity = ActivityStack.getInstance().getVisibleActivity();
         Activity focusActivity = ActivityStack.getInstance().getFocusActivity();

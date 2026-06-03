@@ -4,6 +4,9 @@ import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.widget.Toast;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.hjq.toast.config.IToastInterceptor;
 import com.hjq.toast.config.IToastStrategy;
 import com.hjq.toast.config.IToastStyle;
@@ -22,18 +25,23 @@ import com.hjq.toast.style.WhiteToastStyle;
 public final class Toaster {
 
     /** Application 对象 */
+    @Nullable
     private static Application sApplication;
 
     /** Toast 处理策略 */
+    @Nullable
     private static IToastStrategy sToastStrategy;
 
     /** Toast 样式 */
+    @Nullable
     private static IToastStyle<?> sToastStyle;
 
     /** Toast 拦截器（可空） */
+    @Nullable
     private static IToastInterceptor sToastInterceptor;
 
     /** 调试模式 */
+    @Nullable
     private static Boolean sDebugMode;
 
     /**
@@ -42,19 +50,19 @@ public final class Toaster {
     private Toaster() {}
 
     /**
-     * 初始化 Toast，需要在 Application.create 中初始化
+     * 初始化 Toast
      *
      * @param application       应用的上下文
      */
-    public static void init(Application application) {
+    public static void init(@NonNull Application application) {
         init(application, sToastStyle);
     }
 
-    public static void init(Application application, IToastStrategy strategy) {
+    public static void init(@NonNull Application application, @Nullable IToastStrategy strategy) {
         init(application, strategy, null);
     }
 
-    public static void init(Application application, IToastStyle<?> style) {
+    public static void init(@NonNull Application application, @Nullable IToastStyle<?> style) {
         init(application, null, style);
     }
 
@@ -65,7 +73,7 @@ public final class Toaster {
      * @param strategy          Toast 策略
      * @param style             Toast 样式
      */
-    public static void init(Application application, IToastStrategy strategy, IToastStyle<?> style) {
+    public static void init(@NonNull Application application, @Nullable IToastStrategy strategy, @Nullable IToastStyle<?> style) {
         // 如果当前已经初始化过了，就不要再重复初始化了
         if (isInit()) {
             return;
@@ -74,14 +82,14 @@ public final class Toaster {
         sApplication = application;
         ActivityStack.getInstance().register(application);
 
-        // 初始化 Toast 策略
         if (strategy == null) {
+            // 初始化 Toast 默认策略
             strategy = new ToastStrategy(application);
         }
         setStrategy(strategy);
 
-        // 设置 Toast 样式
         if (style == null) {
+            // 初始化 Toast 默认样式
             style = new BlackToastStyle();
         }
         setStyle(style);
@@ -102,11 +110,11 @@ public final class Toaster {
         delayedShow(stringIdToCharSequence(id), delayMillis);
     }
 
-    public static void delayedShow(Object object, long delayMillis) {
+    public static void delayedShow(@Nullable Object object, long delayMillis) {
         delayedShow(objectToCharSequence(object), delayMillis);
     }
 
-    public static void delayedShow(CharSequence text, long delayMillis) {
+    public static void delayedShow(@Nullable CharSequence text, long delayMillis) {
         ToastParams params = new ToastParams();
         params.text = text;
         params.delayMillis = delayMillis;
@@ -121,11 +129,11 @@ public final class Toaster {
         debugShow(stringIdToCharSequence(id));
     }
 
-    public static void debugShow(Object object) {
+    public static void debugShow(@Nullable Object object) {
         debugShow(objectToCharSequence(object));
     }
 
-    public static void debugShow(CharSequence text) {
+    public static void debugShow(@Nullable CharSequence text) {
         if (!isDebugMode()) {
             return;
         }
@@ -142,11 +150,11 @@ public final class Toaster {
         showShort(stringIdToCharSequence(id));
     }
 
-    public static void showShort(Object object) {
+    public static void showShort(@Nullable Object object) {
         showShort(objectToCharSequence(object));
     }
 
-    public static void showShort(CharSequence text) {
+    public static void showShort(@Nullable CharSequence text) {
         ToastParams params = new ToastParams();
         params.text = text;
         params.duration = Toast.LENGTH_SHORT;
@@ -161,11 +169,11 @@ public final class Toaster {
         showLong(stringIdToCharSequence(id));
     }
 
-    public static void showLong(Object object) {
+    public static void showLong(@Nullable Object object) {
         showLong(objectToCharSequence(object));
     }
 
-    public static void showLong(CharSequence text) {
+    public static void showLong(@Nullable CharSequence text) {
         ToastParams params = new ToastParams();
         params.text = text;
         params.duration = Toast.LENGTH_LONG;
@@ -180,18 +188,20 @@ public final class Toaster {
         show(stringIdToCharSequence(id));
     }
 
-    public static void show(Object object) {
+    public static void show(@Nullable Object object) {
         show(objectToCharSequence(object));
     }
 
-    public static void show(CharSequence text) {
+    public static void show(@Nullable CharSequence text) {
         ToastParams params = new ToastParams();
         params.text = text;
         show(params);
     }
 
-    public static void show(ToastParams params) {
-        checkInitStatus();
+    public static void show(@NonNull ToastParams params) {
+        if (!isInit()) {
+            return;
+        }
 
         // 如果是空对象或者空文本就不显示
         if (params.text == null || params.text.length() == 0) {
@@ -228,6 +238,9 @@ public final class Toaster {
      * 取消吐司的显示
      */
     public static void cancel() {
+        if (sToastStrategy == null) {
+            return;
+        }
         sToastStrategy.cancelToast();
     }
 
@@ -245,22 +258,27 @@ public final class Toaster {
     }
 
     public static void setGravity(int gravity, int xOffset, int yOffset, float horizontalMargin, float verticalMargin) {
-        sToastStyle = new LocationToastStyle(sToastStyle, gravity, xOffset, yOffset, horizontalMargin, verticalMargin);
+        final IToastStyle<?> toastStyle = sToastStyle;
+        if (toastStyle == null) {
+            return;
+        }
+        sToastStyle = new LocationToastStyle(toastStyle, gravity, xOffset, yOffset, horizontalMargin, verticalMargin);
     }
 
     /**
      * 给当前 Toast 设置新的布局
      */
-    public static void setView(int id) {
-        if (id <= 0) {
+    public static void setView(@LayoutRes int layoutId) {
+        if (layoutId == 0) {
             return;
         }
-        if (sToastStyle == null) {
+        final IToastStyle<?> toastStyle = sToastStyle;
+        if (toastStyle == null) {
             return;
         }
-        setStyle(new CustomToastStyle(id, sToastStyle.getGravity(),
-                sToastStyle.getXOffset(), sToastStyle.getYOffset(),
-                sToastStyle.getHorizontalMargin(), sToastStyle.getVerticalMargin()));
+        setStyle(new CustomToastStyle(layoutId, toastStyle.getGravity(),
+                    toastStyle.getXOffset(), toastStyle.getYOffset(),
+                    toastStyle.getHorizontalMargin(), toastStyle.getVerticalMargin()));
     }
 
     /**
@@ -270,13 +288,14 @@ public final class Toaster {
      *                      黑色样式：{@link BlackToastStyle}
      *                      白色样式：{@link WhiteToastStyle}
      */
-    public static void setStyle(IToastStyle<?> style) {
+    public static void setStyle(@Nullable IToastStyle<?> style) {
         if (style == null) {
             return;
         }
         sToastStyle = style;
     }
 
+    @Nullable
     public static IToastStyle<?> getStyle() {
         return sToastStyle;
     }
@@ -284,13 +303,14 @@ public final class Toaster {
     /**
      * 设置 Toast 显示策略
      */
-    public static void setStrategy(IToastStrategy strategy) {
+    public static void setStrategy(@Nullable IToastStrategy strategy) {
         if (strategy == null) {
             return;
         }
         sToastStrategy = strategy;
     }
 
+    @Nullable
     public static IToastStrategy getStrategy() {
         return sToastStrategy;
     }
@@ -299,10 +319,11 @@ public final class Toaster {
      * 设置 Toast 拦截器（可以根据显示的内容决定是否拦截这个Toast）
      * 场景：打印 Toast 内容日志、根据 Toast 内容是否包含敏感字来动态切换其他方式显示（这里可以使用我的另外一套框架 EasyWindow）
      */
-    public static void setInterceptor(IToastInterceptor interceptor) {
+    public static void setInterceptor(@Nullable IToastInterceptor interceptor) {
         sToastInterceptor = interceptor;
     }
 
+    @Nullable
     public static IToastInterceptor getInterceptor() {
         return sToastInterceptor;
     }
@@ -314,36 +335,32 @@ public final class Toaster {
         sDebugMode = debug;
     }
 
-    /**
-     * 检查框架初始化状态，如果未初始化请先调用{@link Toaster#init(Application)}
-     */
-    private static void checkInitStatus() {
-        // 框架当前还没有被初始化，必须要先调用 init 方法进行初始化
-        if (sApplication == null) {
-            throw new IllegalStateException("Toaster has not been initialized");
-        }
-    }
-
     static boolean isDebugMode() {
+        final Application application = sApplication;
+        if (application == null) {
+            return false;
+        }
         if (sDebugMode == null) {
-            checkInitStatus();
-            sDebugMode = (sApplication.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+            sDebugMode = (application.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
         }
         return sDebugMode;
     }
 
     private static CharSequence stringIdToCharSequence(int id) {
-        checkInitStatus();
+        final Application application = sApplication;
+        if (application == null) {
+            return "";
+        }
         try {
             // 如果这是一个资源 id
-            return sApplication.getResources().getText(id);
+            return application.getResources().getText(id);
         } catch (Resources.NotFoundException ignored) {
             // 如果这是一个 int 整数
             return String.valueOf(id);
         }
     }
 
-    private static CharSequence objectToCharSequence(Object object) {
+    private static CharSequence objectToCharSequence(@Nullable Object object) {
         return object != null ? object.toString() : "null";
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.TypedValue;
+import androidx.annotation.NonNull;
 
 /**
  *    author : Android 轮子哥
@@ -14,12 +15,12 @@ import android.util.TypedValue;
 public class WhiteToastStyle extends BlackToastStyle {
 
     @Override
-    protected int getTextColor(Context context) {
+    protected int getTextColor(@NonNull Context context) {
         return 0XBB000000;
     }
 
     @Override
-    protected Drawable getBackgroundDrawable(Context context) {
+    protected Drawable getBackgroundDrawable(@NonNull Context context) {
         GradientDrawable drawable = new GradientDrawable();
         // 设置颜色
         drawable.setColor(0XFFEAEAEA);

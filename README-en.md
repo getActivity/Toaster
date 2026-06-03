@@ -72,29 +72,29 @@ public class XxxApplication extends Application {
 
 ```java
 // Show toast
-Toaster.show(CharSequence text);
 Toaster.show(int id);
-Toaster.show(Object object);
+Toaster.show(@Nullable Object object);
+Toaster.show(@Nullable CharSequence text);
 
 // Toast is displayed in debug mode
-Toaster.debugShow(CharSequence text);
 Toaster.debugShow(int id);
-Toaster.debugShow(Object object);
+Toaster.debugShow(@Nullable Object object);
+Toaster.debugShow(@Nullable CharSequence text);
 
 // Delayed display of toast
-Toaster.delayedShow(CharSequence text, long delayMillis);
 Toaster.delayedShow(int id, long delayMillis);
-Toaster.delayedShow(Object object, long delayMillis);
+Toaster.delayedShow(@Nullable Object object, long delayMillis);
+Toaster.delayedShow(@Nullable CharSequence text, long delayMillis);
 
 // Show short toast
-Toaster.showShort(CharSequence text);
 Toaster.showShort(int id);
-Toaster.showShort(Object object);
+Toaster.showShort(@Nullable Object object);
+Toaster.showShort(@Nullable CharSequence text);
 
 // Show long toast
-Toaster.showLong(CharSequence text);
 Toaster.showLong(int id);
-Toaster.showLong(Object object);
+Toaster.showLong(@Nullable Object object);
+Toaster.showLong(@Nullable CharSequence text);
 
 // Custom display toast
 Toaster.show(ToastParams params);
@@ -103,10 +103,10 @@ Toaster.show(ToastParams params);
 Toaster.cancel();
 
 // Set toast layout (global effect)
-Toaster.setView(int id);
+Toaster.setView(@LayoutRes int layoutId);
 
 // Set toast style (global effect)
-Toaster.setStyle(IToastStyle<?> style);
+Toaster.setStyle(@Nullable IToastStyle<?> style);
 // Get toast style
 Toaster.getStyle()
 
@@ -114,7 +114,7 @@ Toaster.getStyle()
 Toaster.isInit();
 
 // Set toast strategy (global effect)
-Toaster.setStrategy(IToastStrategy strategy);
+Toaster.setStrategy(@Nullable IToastStrategy strategy);
 // Get toast strategy
 Toaster.getStrategy();
 
@@ -123,7 +123,7 @@ Toaster.setGravity(int gravity);
 Toaster.setGravity(int gravity, int xOffset, int yOffset);
 
 // Set Toast interceptor (global effect)
-Toaster.setInterceptor(IToastInterceptor interceptor);
+Toaster.setInterceptor(@Nullable IToastInterceptor interceptor);
 // Get Toast interceptor
 Toaster.getInterceptor();
 ```

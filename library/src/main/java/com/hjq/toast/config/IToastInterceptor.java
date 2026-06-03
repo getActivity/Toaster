@@ -1,5 +1,6 @@
 package com.hjq.toast.config;
 
+import androidx.annotation.NonNull;
 import com.hjq.toast.ToastParams;
 
 /**
@@ -13,5 +14,5 @@ public interface IToastInterceptor {
     /**
      * 根据显示的文本决定是否拦截该 Toast
      */
-    boolean intercept(ToastParams params);
+    boolean intercept(@NonNull ToastParams params);
 }

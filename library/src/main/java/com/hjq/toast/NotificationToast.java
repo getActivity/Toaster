@@ -3,6 +3,7 @@ package com.hjq.toast;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -19,7 +20,7 @@ public class NotificationToast extends SystemToast {
         hookNotificationService();
     }
 
-    public NotificationToast(Application application) {
+    public NotificationToast(@NonNull Application application) {
         super(application);
     }
 

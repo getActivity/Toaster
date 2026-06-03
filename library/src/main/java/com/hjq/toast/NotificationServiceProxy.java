@@ -1,5 +1,7 @@
 package com.hjq.toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
@@ -12,14 +14,15 @@ import java.lang.reflect.Method;
 final class NotificationServiceProxy implements InvocationHandler {
 
     /** 被代理的对象 */
+    @NonNull
     private final Object mRealObject;
 
-    public NotificationServiceProxy(Object realObject) {
+    public NotificationServiceProxy(@NonNull Object realObject) {
         mRealObject = realObject;
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(@NonNull Object proxy, @NonNull Method method, @Nullable Object[] args) throws Throwable {
         switch (method.getName()) {
             case "enqueueToast":
             case "enqueueToastEx":

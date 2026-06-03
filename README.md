@@ -76,41 +76,41 @@ public class XxxApplication extends Application {
 
 ```java
 // 显示 Toast
-Toaster.show(CharSequence text);
 Toaster.show(int id);
-Toaster.show(Object object);
+Toaster.show(@Nullable Object object);
+Toaster.show(@Nullable CharSequence text);
 
 // debug 模式下显示 Toast
-Toaster.debugShow(CharSequence text);
 Toaster.debugShow(int id);
-Toaster.debugShow(Object object);
+Toaster.debugShow(@Nullable Object object);
+Toaster.debugShow(@Nullable CharSequence text);
 
 // 延迟显示 Toast
-Toaster.delayedShow(CharSequence text, long delayMillis);
 Toaster.delayedShow(int id, long delayMillis);
-Toaster.delayedShow(Object object, long delayMillis);
+Toaster.delayedShow(@Nullable Object object, long delayMillis);
+Toaster.delayedShow(@Nullable CharSequence text, long delayMillis);
 
 // 显示短 Toast
-Toaster.showShort(CharSequence text);
 Toaster.showShort(int id);
-Toaster.showShort(Object object);
+Toaster.showShort(@Nullable Object object);
+Toaster.showShort(@Nullable CharSequence text);
 
 // 显示长 Toast
-Toaster.showLong(CharSequence text);
 Toaster.showLong(int id);
-Toaster.showLong(Object object);
+Toaster.showLong(@Nullable Object object);
+Toaster.showLong(@Nullable CharSequence text);
 
 // 自定义显示 Toast
-Toaster.show(ToastParams params);
+Toaster.show(@NonNull ToastParams params);
 
 // 取消 Toast
 Toaster.cancel();
 
 // 设置 Toast 布局（全局生效）
-Toaster.setView(int id);
+Toaster.setView(@LayoutRes int layoutId);
 
 // 设置 Toast 样式（全局生效）
-Toaster.setStyle(IToastStyle<?> style);
+Toaster.setStyle(@Nullable IToastStyle<?> style);
 // 获取 Toast 样式
 Toaster.getStyle()
 
@@ -118,7 +118,7 @@ Toaster.getStyle()
 Toaster.isInit();
 
 // 设置 Toast 策略（全局生效）
-Toaster.setStrategy(IToastStrategy strategy);
+Toaster.setStrategy(@Nullable IToastStrategy strategy);
 // 获取 Toast 策略
 Toaster.getStrategy();
 
@@ -127,7 +127,7 @@ Toaster.setGravity(int gravity);
 Toaster.setGravity(int gravity, int xOffset, int yOffset);
 
 // 设置 Toast 拦截器（全局生效）
-Toaster.setInterceptor(IToastInterceptor interceptor);
+Toaster.setInterceptor(@Nullable IToastInterceptor interceptor);
 // 获取 Toast 拦截器
 Toaster.getInterceptor();
 ```

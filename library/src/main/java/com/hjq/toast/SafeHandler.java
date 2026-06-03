@@ -3,6 +3,7 @@ package com.hjq.toast;
 import android.os.Handler;
 import android.os.Message;
 import android.view.WindowManager;
+import androidx.annotation.NonNull;
 
 /**
  *    author : Android 轮子哥
@@ -13,14 +14,15 @@ import android.view.WindowManager;
 @SuppressWarnings("deprecation")
 final class SafeHandler extends Handler {
 
+    @NonNull
     private final Handler mHandler;
 
-    SafeHandler(Handler handler) {
+    SafeHandler(@NonNull Handler handler) {
         mHandler = handler;
     }
 
     @Override
-    public void handleMessage(final Message msg) {
+    public void handleMessage(@NonNull Message msg) {
         // 捕获这个异常，避免程序崩溃
         try {
             // 目前发现在 Android 7.1 主线程被阻塞之后弹吐司会导致崩溃，可使用 Thread.sleep(5000) 进行复现

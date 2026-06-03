@@ -1,6 +1,7 @@
 package com.hjq.toast;
 
 import android.app.Activity;
+import androidx.annotation.NonNull;
 
 /**
  *    author : Android 轮子哥
@@ -11,9 +12,10 @@ import android.app.Activity;
 public class ActivityToast extends CustomToast {
 
     /** Toast 实现类 */
+    @NonNull
     private final ToastImpl mToastImpl;
 
-    public ActivityToast(Activity activity) {
+    public ActivityToast(@NonNull Activity activity) {
         super(activity);
         mToastImpl = new ToastImpl(activity, this);
     }

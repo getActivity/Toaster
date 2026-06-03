@@ -2,7 +2,7 @@ package com.hjq.toast.style;
 
 import android.content.Context;
 import android.view.View;
-
+import androidx.annotation.NonNull;
 import com.hjq.toast.config.IToastStyle;
 
 /**
@@ -14,6 +14,7 @@ import com.hjq.toast.config.IToastStyle;
 @SuppressWarnings("unused")
 public class LocationToastStyle implements IToastStyle<View> {
 
+    @NonNull
     private final IToastStyle<?> mStyle;
 
     private final int mGravity;
@@ -22,11 +23,11 @@ public class LocationToastStyle implements IToastStyle<View> {
     private final float mHorizontalMargin;
     private final float mVerticalMargin;
 
-    public LocationToastStyle(IToastStyle<?> style, int gravity) {
+    public LocationToastStyle(@NonNull IToastStyle<?> style, int gravity) {
         this(style, gravity, 0, 0, 0, 0);
     }
 
-    public LocationToastStyle(IToastStyle<?> style, int gravity, int xOffset, int yOffset, float horizontalMargin, float verticalMargin) {
+    public LocationToastStyle(@NonNull IToastStyle<?> style, int gravity, int xOffset, int yOffset, float horizontalMargin, float verticalMargin) {
         mStyle = style;
         mGravity = gravity;
         mXOffset = xOffset;
@@ -35,8 +36,9 @@ public class LocationToastStyle implements IToastStyle<View> {
         mVerticalMargin = verticalMargin;
     }
 
+    @NonNull
     @Override
-    public View createView(Context context) {
+    public View createView(@NonNull Context context) {
         return mStyle.createView(context);
     }
 

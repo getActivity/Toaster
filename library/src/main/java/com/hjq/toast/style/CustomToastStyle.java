@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-
+import androidx.annotation.NonNull;
 import com.hjq.toast.config.IToastStyle;
 
 /**
@@ -43,8 +43,9 @@ public class CustomToastStyle implements IToastStyle<View> {
         mVerticalMargin = verticalMargin;
     }
 
+    @NonNull
     @Override
-    public View createView(Context context) {
+    public View createView(@NonNull Context context) {
         return LayoutInflater.from(context).inflate(mLayoutId, null);
     }
 

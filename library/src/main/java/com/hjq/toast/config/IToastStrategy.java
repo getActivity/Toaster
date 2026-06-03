@@ -1,5 +1,6 @@
 package com.hjq.toast.config;
 
+import androidx.annotation.NonNull;
 import com.hjq.toast.ToastParams;
 
 /**
@@ -13,17 +14,17 @@ public interface IToastStrategy {
     /**
      * 计算 Toast 显示时长
      */
-    int computeShowDuration(CharSequence text);
+    int computeShowDuration(@NonNull CharSequence text);
 
     /**
      * 创建 Toast
      */
-    IToast createToast(ToastParams params);
+    IToast createToast(@NonNull ToastParams params);
 
     /**
      * 显示 Toast
      */
-    void showToast(ToastParams params);
+    void showToast(@NonNull ToastParams params);
 
     /**
      * 取消 Toast

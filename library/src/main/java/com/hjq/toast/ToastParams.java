@@ -12,7 +12,7 @@ import com.hjq.toast.config.IToastStyle;
  */
 public class ToastParams {
 
-    /** 优先级类型：框架默认选择最优方案来显示，具体实现可以看一下 {@link ToastStrategy#createToast(ToastParams)} */
+    /** 优先级类型：框架默认选择最优方案来显示，具体逻辑在 {@link IToastStrategy#createToast(ToastParams)} */
     public static final int PRIORITY_TYPE_DEFAULT = 0;
     /** 优先级类型：优先使用全局级 Toast 来显示（显示在所有应用上面，可能需要通知栏权限或者悬浮窗权限） */
     public static final int PRIORITY_TYPE_GLOBAL = 1;

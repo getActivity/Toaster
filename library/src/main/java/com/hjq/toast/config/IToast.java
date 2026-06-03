@@ -3,6 +3,9 @@ package com.hjq.toast.config;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 /**
  *    author : Android 轮子哥
@@ -16,6 +19,7 @@ public interface IToast {
     /**
      * 获取上下文对象
      */
+    @NonNull
     Context getContext();
 
     /**
@@ -31,18 +35,19 @@ public interface IToast {
     /**
      * 设置文本
      */
-    void setText(int id);
+    void setText(@StringRes int id);
 
-    void setText(CharSequence text);
+    void setText(@NonNull CharSequence text);
 
     /**
      * 设置布局
      */
-    void setView(View view);
+    void setView(@Nullable View view);
 
     /**
      * 获取布局
      */
+    @Nullable
     View getView();
 
     /**
@@ -93,6 +98,7 @@ public interface IToast {
     /**
      * 智能获取用于显示消息的 TextView
      */
+    @NonNull
     default TextView findMessageView(View view) {
         if (view instanceof TextView) {
             if (view.getId() == View.NO_ID) {

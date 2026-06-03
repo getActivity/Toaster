@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import com.hjq.toast.config.IToastStyle;
 
 /**
@@ -20,8 +21,9 @@ import com.hjq.toast.config.IToastStyle;
 @SuppressWarnings({"unused", "deprecation"})
 public class BlackToastStyle implements IToastStyle<View> {
 
+    @NonNull
     @Override
-    public View createView(Context context) {
+    public View createView(@NonNull Context context) {
         TextView textView = new TextView(context);
         textView.setId(android.R.id.message);
         textView.setGravity(getTextGravity(context));
@@ -56,30 +58,30 @@ public class BlackToastStyle implements IToastStyle<View> {
         return textView;
     }
 
-    protected int getTextGravity(Context context) {
+    protected int getTextGravity(@NonNull Context context) {
         return Gravity.CENTER;
     }
 
-    protected int getTextColor(Context context) {
+    protected int getTextColor(@NonNull Context context) {
         return 0XEEFFFFFF;
     }
 
-    protected float getTextSize(Context context) {
+    protected float getTextSize(@NonNull Context context) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
             14, context.getResources().getDisplayMetrics());
     }
 
-    protected int getHorizontalPadding(Context context) {
+    protected int getHorizontalPadding(@NonNull Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
             24, context.getResources().getDisplayMetrics());
     }
 
-    protected int getVerticalPadding(Context context) {
+    protected int getVerticalPadding(@NonNull Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
             16, context.getResources().getDisplayMetrics());
     }
 
-    protected Drawable getBackgroundDrawable(Context context) {
+    protected Drawable getBackgroundDrawable(@NonNull Context context) {
         GradientDrawable drawable = new GradientDrawable();
         // 设置颜色
         drawable.setColor(0XB3000000);
@@ -89,7 +91,7 @@ public class BlackToastStyle implements IToastStyle<View> {
         return drawable;
     }
 
-    protected float getTranslationZ(Context context) {
+    protected float getTranslationZ(@NonNull Context context) {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, context.getResources().getDisplayMetrics());
     }
 }

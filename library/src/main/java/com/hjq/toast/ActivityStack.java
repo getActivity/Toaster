@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  *    author : Android 轮子哥
@@ -16,6 +18,7 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
     @SuppressLint("StaticFieldLeak")
     private static volatile ActivityStack sInstance;
 
+    @NonNull
     public static ActivityStack getInstance() {
         if(sInstance == null) {
             synchronized (ActivityStack.class) {
@@ -33,26 +36,27 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
     /**
      * 注册 Activity 生命周期监听
      */
-    public void register(Application application) {
-        if (application == null) {
-            return;
-        }
+    public void register(@NonNull Application application) {
         application.registerActivityLifecycleCallbacks(this);
     }
 
     /** 当前焦点的 Activity 对象 */
+    @Nullable
     private Activity mFocusActivity;
 
     /** 当前可见的 Activity 对象 */
+    @Nullable
     private Activity mVisibleActivity;
 
     /** Activity 可见时候的时间戳 */
     private long mActivityResumedTime;
 
+    @Nullable
     public Activity getFocusActivity() {
         return mFocusActivity;
     }
 
+    @Nullable
     public Activity getVisibleActivity() {
         return mVisibleActivity;
     }
@@ -62,15 +66,17 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
     }
 
     @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
+    public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+        // default implementation ignored
+    }
 
     @Override
-    public void onActivityStarted(Activity activity) {
+    public void onActivityStarted(@NonNull Activity activity) {
         mFocusActivity = activity;
     }
 
     @Override
-    public void onActivityResumed(Activity activity) {
+    public void onActivityResumed(@NonNull Activity activity) {
         mVisibleActivity = activity;
         mActivityResumedTime = System.currentTimeMillis();
         // 这里解释一下为什么要在 Resumed 时给 FocusActivity 对象赋值？
@@ -87,7 +93,7 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
     }
 
     @Override
-    public void onActivityPaused(Activity activity) {
+    public void onActivityPaused(@NonNull Activity activity) {
         if (mFocusActivity != activity) {
             return;
         }
@@ -95,7 +101,7 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
     }
 
     @Override
-    public void onActivityStopped(Activity activity) {
+    public void onActivityStopped(@NonNull Activity activity) {
         if (mVisibleActivity != activity) {
             return;
         }
@@ -104,8 +110,12 @@ final class ActivityStack implements Application.ActivityLifecycleCallbacks {
     }
 
     @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
+    public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+        // default implementation ignored
+    }
 
     @Override
-    public void onActivityDestroyed(Activity activity) {}
+    public void onActivityDestroyed(@NonNull Activity activity) {
+        // default implementation ignored
+    }
 }

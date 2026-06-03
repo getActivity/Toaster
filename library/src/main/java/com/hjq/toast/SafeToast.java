@@ -5,6 +5,7 @@ import android.app.Application;
 import android.os.Build;
 import android.os.Handler;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import java.lang.reflect.Field;
 
 /**
@@ -21,7 +22,7 @@ public class SafeToast extends NotificationToast {
         hookToastTN();
     }
 
-    public SafeToast(Application application) {
+    public SafeToast(@NonNull Application application) {
         super(application);
     }
 
@@ -37,8 +38,13 @@ public class SafeToast extends NotificationToast {
             handlerField.setAccessible(true);
             Handler handlerObject = (Handler) handlerField.get(tnObject);
 
-            // 如果这个对象已经被反射替换过了
+            if (handlerObject == null) {
+                // 这个对象是空的，说明 Toast 没有被正确创建出来，直接返回就好了
+                return;
+            }
+
             if (handlerObject instanceof SafeHandler) {
+                // 如果这个对象已经被反射替换过了
                 return;
             }
 

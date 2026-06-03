@@ -3,6 +3,7 @@ package com.hjq.toast.config;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
+import androidx.annotation.NonNull;
 
 /**
  *    author : Android 轮子哥
@@ -15,7 +16,8 @@ public interface IToastStyle<V extends View> {
     /**
      * 创建 Toast 视图
      */
-    V createView(Context context);
+    @NonNull
+    V createView(@NonNull Context context);
 
     /**
      * 获取 Toast 显示重心

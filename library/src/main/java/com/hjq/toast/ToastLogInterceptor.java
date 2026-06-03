@@ -1,9 +1,8 @@
 package com.hjq.toast;
 
 import android.util.Log;
-
+import androidx.annotation.NonNull;
 import com.hjq.toast.config.IToastInterceptor;
-
 import java.lang.reflect.Modifier;
 
 /**
@@ -15,12 +14,15 @@ import java.lang.reflect.Modifier;
 public class ToastLogInterceptor implements IToastInterceptor {
 
     @Override
-    public boolean intercept(ToastParams params) {
-        printToast(params.text);
+    public boolean intercept(@NonNull ToastParams params) {
+        CharSequence text = params.text;
+        if (text != null && text.length() > 0) {
+            printToast(text);
+        }
         return false;
     }
 
-    protected void printToast(CharSequence text) {
+    protected void printToast(@NonNull CharSequence text) {
         if (!isLogEnable()) {
             return;
         }
@@ -39,7 +41,7 @@ public class ToastLogInterceptor implements IToastInterceptor {
             try {
                 Class<?> clazz = Class.forName(className);
                 if (!filterClass(clazz)) {
-                    printLog("(" + stackTrace.getFileName() + ":" + lineNumber + ") " + text.toString());
+                    printLog("(" + stackTrace.getFileName() + ":" + lineNumber + ") " + text);
                     // 跳出循环
                     break;
                 }
@@ -53,12 +55,12 @@ public class ToastLogInterceptor implements IToastInterceptor {
         return Toaster.isDebugMode();
     }
 
-    protected void printLog(String msg) {
+    protected void printLog(@NonNull String msg) {
         // 这里解释一下，为什么不用 Log.d，而用 Log.i，因为 Log.d 在魅族 16th 手机上面无法输出日志
         Log.i("Toaster", msg);
     }
 
-    protected boolean filterClass(Class<?> clazz) {
+    protected boolean filterClass(@NonNull Class<?> clazz) {
         // 排查以下几种情况：
         // 1. 排除自身及其子类
         // 2. 排除 Toaster 类

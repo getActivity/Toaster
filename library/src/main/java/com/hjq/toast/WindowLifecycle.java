@@ -6,6 +6,8 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.WindowManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  *    author : Android 轮子哥
@@ -16,38 +18,38 @@ import android.view.WindowManager;
 final class WindowLifecycle implements Application.ActivityLifecycleCallbacks {
 
     /** 当前 Activity 对象 */
+    @Nullable
     private Activity mActivity;
 
     /** 当前 Application 对象 */
+    @Nullable
     private Application mApplication;
 
     /** 自定义 Toast 实现类 */
+    @Nullable
     private ToastImpl mToastImpl;
 
-    WindowLifecycle(Activity activity) {
+    WindowLifecycle(@NonNull Activity activity) {
         mActivity = activity;
     }
 
-    WindowLifecycle(Application application) {
+    WindowLifecycle(@NonNull Application application) {
         mApplication = application;
     }
 
     /**
      * 获取 WindowManager 对象
      */
+    @Nullable
     public WindowManager getWindowManager() {
         if (mActivity != null) {
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && mActivity.isDestroyed()) {
                 return null;
             }
             return mActivity.getWindowManager();
-
         } else if (mApplication != null) {
-
             return (WindowManager) mApplication.getSystemService(Context.WINDOW_SERVICE);
         }
-
         return null;
     }
 
@@ -56,19 +58,25 @@ final class WindowLifecycle implements Application.ActivityLifecycleCallbacks {
      */
 
     @Override
-    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {}
+    public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+        // default implementation ignored
+    }
 
     @Override
-    public void onActivityStarted(Activity activity) {}
+    public void onActivityStarted(@NonNull Activity activity) {
+        // default implementation ignored
+    }
 
     @Override
-    public void onActivityResumed(Activity activity) {}
+    public void onActivityResumed(@NonNull Activity activity) {
+        // default implementation ignored
+    }
 
     // A 跳转 B 页面的生命周期方法执行顺序：
     // onPause(A) ---> onCreate(B) ---> onStart(B) ---> onResume(B) ---> onStop(A) ---> onDestroyed(A)
 
     @Override
-    public void onActivityPaused(Activity activity) {
+    public void onActivityPaused(@NonNull Activity activity) {
         if (mActivity != activity) {
             return;
         }
@@ -83,13 +91,17 @@ final class WindowLifecycle implements Application.ActivityLifecycleCallbacks {
     }
 
     @Override
-    public void onActivityStopped(Activity activity) {}
+    public void onActivityStopped(@NonNull Activity activity) {
+        // default implementation ignored
+    }
 
     @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {}
+    public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+        // default implementation ignored
+    }
 
     @Override
-    public void onActivityDestroyed(Activity activity) {
+    public void onActivityDestroyed(@NonNull Activity activity) {
         if (mActivity != activity) {
             return;
         }
@@ -105,7 +117,7 @@ final class WindowLifecycle implements Application.ActivityLifecycleCallbacks {
     /**
      * 注册
      */
-    void register(ToastImpl impl) {
+    void register(@NonNull ToastImpl impl) {
         mToastImpl = impl;
         if (mActivity == null) {
             return;

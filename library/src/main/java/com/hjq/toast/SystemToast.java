@@ -5,6 +5,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.hjq.toast.config.IToast;
 
 /**
@@ -16,16 +18,19 @@ import com.hjq.toast.config.IToast;
 @SuppressWarnings("deprecation")
 public class SystemToast extends Toast implements IToast {
 
+    @NonNull
     private final Application mApplication;
 
     /** 吐司消息 View */
+    @Nullable
     private TextView mMessageView;
 
-    public SystemToast(Application application) {
+    public SystemToast(@NonNull Application application) {
         super(application);
         mApplication = application;
     }
 
+    @NonNull
     @Override
     public Context getContext() {
         return mApplication;
@@ -42,7 +47,7 @@ public class SystemToast extends Toast implements IToast {
     }
 
     @Override
-    public void setText(CharSequence text) {
+    public void setText(@NonNull CharSequence text) {
         if (mMessageView == null) {
             try {
                 super.setText(text);
