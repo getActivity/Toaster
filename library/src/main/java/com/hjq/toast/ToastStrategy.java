@@ -226,8 +226,7 @@ public class ToastStrategy implements IToastStrategy {
                 }
                 case SHOW_STRATEGY_TYPE_QUEUE: {
                     // 计算出这个 Toast 显示时间
-                    long showToastMillis =
-                        SystemClock.uptimeMillis() + mToastParams.delayMillis + getBestShowDelayDuration(mToastParams);
+                    long showToastMillis = SystemClock.uptimeMillis() + mToastParams.delayMillis + getBestShowDelayDuration(mToastParams);
                     // 根据吐司的长短计算出等待时间
                     long waitMillis = generateToastWaitMillis(mToastParams);
                     // 如果当前显示的时间在上一个 Toast 的显示范围之内
