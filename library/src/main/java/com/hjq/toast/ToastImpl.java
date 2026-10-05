@@ -163,6 +163,13 @@ final class ToastImpl {
             params.windowAnimations = mToast.getAnimationsId();
             params.setTitle(WINDOW_TITLE);
 
+            // 修复挖孔区域会影响 Toast 横屏居中显示的效果
+            // Github issue 地址：https://github.com/getActivity/Toaster/issues/165
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                // 设置内容会延伸至屏幕短边的挖孔区域
+                params.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            }
+
             // 如果是全局显示
             if (mGlobalShow) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
