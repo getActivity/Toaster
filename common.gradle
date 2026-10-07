@@ -6,8 +6,8 @@ android {
     defaultConfig {
         // Android 版本适配指南：https://github.com/getActivity/AndroidVersionAdapter
         targetSdk 36
-        versionCode 1500
-        versionName "15.0"
+        versionCode 1520
+        versionName "15.2"
     }
 
     // 支持 Java JDK 8
